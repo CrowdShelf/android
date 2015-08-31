@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CrowdShelf</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="edit_message">edit_message</string>
+    <string name="button_send">button_send</string>
+    <string name="title_activity_scanner">ScannerActivity</string>
+</resources>
