@@ -22,6 +22,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Send mail"
+        android:id="@+id/button3"
+        android:layout_gravity="bottom"
+        android:onClick="sendMailButtonPressed"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/button_send"
         android:onClick="sendMessage"/>
 </LinearLayout>
