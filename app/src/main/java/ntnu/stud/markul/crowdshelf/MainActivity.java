@@ -8,15 +8,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class MainActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
     private GMailSender gMailSender;
+    private String YOUR_PROJECT_TOKEN = "93ef1952b96d0faa696176aadc2fbed4";
+    private MixpanelAPI mixpanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String projectToken = YOUR_PROJECT_TOKEN; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
+        mixpanel = MixpanelAPI.getInstance(this, projectToken);
         setContentView(R.layout.activity_main);
     }
 
@@ -57,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendMailButtonPressed(View view){
         sendMail("This is a subject", "This is the main text of the email", "kongen@slottet.no", "markuslund92@hotmail.com");
+        mixpanel.track("SendMailButtonPressed");
     }
 
     //Example of how mail can be sent
@@ -67,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 setUpGmailSender("kundestyrt", "crowdshelfmail@gmail.com");
 
             gMailSender.sendMail(subject, body, senderEmail, recipients);
+            mixpanel.track("MailSentSuccessfully");
+
         }catch (Exception e){
             Log.e("SendMail", e.getMessage(), e);
         }

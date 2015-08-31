@@ -2,74 +2,165 @@
 <items version="2" >
 
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars/classes.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-31493e446e7aa75d3eb52b2fb733a19511ce6b0f.jar" />
+        sha1="c2ac04c5b232f6f0658ee4f1c13be09cd76406e2">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-0ce549e1230b12971c8fedf71f85dcac87936bd3.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/me.dm7.barcodescanner/zxing/1.8.2/jars/classes.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="c87c4f493c82d2de01bddf6b1084c92dd670b053">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-a378ebb622a56d4b273d793d0bc8db1711a33840.jar" />
+        sha1="b99f0b78bbcb76b915bc6529a83b65d4d46990dd">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-7f2fd0c6a12d91866d7e80e30d30a60b09f363c6.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-d9adb464c2dbfa62b6d32b26174a072c7cc87c6e.jar" />
+        sha1="4a135d56554069e5d0ff80e3220e887e57146ee5">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-00b69ff73425cd6ab171249c41f1500f948b949a.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/me.dm7.barcodescanner/core/1.8.2/jars/classes.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="96c83d4de6289a3f674165f896ac992564a7138d">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-8fe46d1072877c11663515a3154f48d8a73e21d7.jar" />
+        sha1="edea92852b40eee716e910af8dad9eeaa58fb0e1">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-4b44aa5dc8deb225211206565d3acd9b7c7b3a47.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/libs/activation.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="d1257cbff6faa44c1f325ae0d9413522d4644383">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/activation-b53aa2dc86e861e51110911785ebdcde7adb8297.jar" />
+        sha1="cb6fab7a71fa9ec1f483d44c5fca65ab469d8aca">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-281a92630db531aa18e53f810fbd0855a9a9d3a4.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-19eaaecb60567708d38f18f17873518088ec0eaf.jar" />
+        sha1="c756d14e99d39471e99013a1e8fd2f3813ed42bf">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-c1a5f64ea6174c9b5ccc64f66d52c75f64a2d296.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/libs/mail.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="428e267abff0d10802ccde86b915da2c20471160">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/mail-ff0b1bc1e30ae336f938b83578f0afeca5e43ad3.jar" />
+        sha1="1ff30fa49c07a08c3035d7218a3efebf5680d522">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-e7ba2cb1edc58dd591aba1deaa0a194d2d3a2e9e.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/.gradle/caches/modules-2/files-2.1/com.google.zxing/core/3.2.0/e019d15a13a9786f881141d2df6654b8510bce8b/core-3.2.0.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="e019d15a13a9786f881141d2df6654b8510bce8b">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/core-3.2.0-512c683d814a6672526d624945cb5f234b2114ae.jar" />
+        sha1="98137c4d12c50923f5809852b1ef4d1c4e162081">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-d08ac527bc5575b465316e8afff52ab36726b447.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-a38c923ee187545ad86c94cdcb39f7c90fafb055.jar" />
+        sha1="2e24e5f1b11170163028277de63f709e42525db4">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-83e82dc0a249da8cf06d920e91a9ce2913b4b5e5.jar" />
     </item>
     <item
-        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/libs/additionnal.jar"
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="bd9e8dc422bb8c8405359947fe9f4282b49f57f4">
-        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/additionnal-aa4062d35425dfdcb27f58eb8170f9fab3657f5e.jar" />
+        sha1="42a1ee578b62fd1bd28b3307a679dc9ba0791587">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-18ec4c9b861f5330fb999de7f45147b29c2e661b.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="6e85edfc9b5346d216e50ccef1f8e825504144a3">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-5f7633c479eb65b0434d256ce5104b44fae8785a.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="c0c912d58c9468b1f9d9769c8975afdf2c85d681">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-46e0e360867fb9042587be9fd956f0801fbb1c80.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="c5cafb324568d954780abb858c25db7ce675ab3c">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-6eec247548ccb31040b824b17baa2c6c429ba6bf.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="130b32ed466fa0f63efd4c7d6250ccd2ed506790">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-eb9d614cfc71167459d60f52d0e9971924b25b95.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="0124ce31248c0e8acfa2b28283c6d1a4d76e73d2">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-37f794703b5b127bb3527a2d416a438eccae3e62.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="0632f06970823b7e3436f649bfa65b47035c91d0">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-6442f9f465334f6f8d3f20fb0a27acb386469a7f.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="adebe28e0c0c05d34a3bfd76f3275bf4d8ff87b6">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-97c2033ac0a8d9a101630d99e1d50cc58033c4cd.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="d11330ea68c0d964d30d5caed1f27e6b1488b189">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-6469d54df61d11f441c12f4ef8232d527d3996b4.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="77a9dcb5f8b1dba36aacaa9c150eb0942dbea158">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-29247fb0bfdb0f86daad8443b9e128207759fe18.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="2491ae1b2a848af1f4f0c795f3117c1bd6a1989f">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-47b9dec34adf23407acbb3392e8af8e2643136e7.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="166e458ee3b5fb5fcff0f936df3f3a788e6c54f3">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-385e0873ee2d10c72f95ab7c90402f3025f548e1.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="dcf8c83c3dead00a6c4fe313e95f7aaca20dc641">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-9e096dfcfe25fd9b06b466f81654bb50fe420ee1.jar" />
+    </item>
+    <item
+        jar="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="e23ea11124bb700eeddd4ab7aa848c615f493850">
+        <dex dex="/Users/markuslund92/AndroidStudioProjects/CrowdShelf/app/build/intermediates/pre-dexed/debug/classes-ffdfa1f2c072165cb86bf38dee37f587e927ae46.jar" />
     </item>
 
 </items>
