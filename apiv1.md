@@ -14,23 +14,32 @@
 #####Add new book or update existing book
 
 address:	`PUT /api/book`
+
 data:		book object
+
 response:	none
 
 #####Retrieve existing book
 address:	`GET /api/book/:isbn:/owner`
+
 data:		none
+
 response:	book object
 
 #####Add renter
+
 address:	`PUT /api/book/:isbn/:owner/addrenter/:renter`
+
 data:		none
+
 response:	none
 
 #####Remove renter
 
 address:	`PUT /api/book/:isbn/:owner/removerenter/:renter`
+
 data:		none
+
 response:	none
 
 ***
@@ -47,12 +56,16 @@ response:	none
 
 #####Retrieve existing crowd
 address:	`GET /api/crowd/:crowdId`
+
 data:		none
+
 response:	crowd object
 
 #####Create crowd
 address:	`POST /api/crowd`
+
 data:		name, creator, members
+
 response:	none
 
 
