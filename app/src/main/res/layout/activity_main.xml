@@ -1,35 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-    <EditText android:id="@+id/edit_message"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/edit_message" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scanner"
-        android:id="@+id/button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center_vertical"
-        android:onClick="openScanner"/>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send mail"
-        android:id="@+id/button3"
-        android:layout_gravity="bottom"
-        android:onClick="sendMailButtonPressed"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scanner"
+            android:id="@+id/button"
+            android:layout_gravity="center"
+            android:onClick="openScannerButtonPressed"
+            android:layout_row="0"
+            android:layout_column="0" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_send"
-        android:onClick="sendMessage"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send mail"
+            android:id="@+id/button3"
+            android:layout_gravity="center"
+            android:onClick="sendMailButtonPressed"
+            android:layout_row="0"
+            android:layout_column="1" />
+
+    </GridLayout>
+
 </LinearLayout>

@@ -7,21 +7,33 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
+    private final String MIXPANEL_TOKEN = "93ef1952b96d0faa696176aadc2fbed4";
+
     private GMailSender gMailSender;
-    private String YOUR_PROJECT_TOKEN = "93ef1952b96d0faa696176aadc2fbed4";
     private MixpanelAPI mixpanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String projectToken = YOUR_PROJECT_TOKEN; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
-        mixpanel = MixpanelAPI.getInstance(this, projectToken);
+
+        //Setup Mixpanel
+        if (mixpanel == null){
+            mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
+        }
+
+        //Checks if this activity was created with an intent containing a message/extra with name ISBN.
+        Intent intent = getIntent();
+        String ISBN = intent.getStringExtra("ISBN");
+        if (ISBN != null){
+            Log.i("MainActivity", "ISBN not null");
+            sendMail("Book scanned", "ISBN: " + ISBN, "no-reply@crowdshelf.com", "crowdshelfmail@gmail.com");
+        }
+
         setContentView(R.layout.activity_main);
     }
 
@@ -47,40 +59,33 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user clicks the Send button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
-    public void openScanner(View view) {
+
+    public void openScannerButtonPressed(View view) {
         Intent intent = new Intent(this, ScannerActivity.class);
         startActivity(intent);
     }
 
     public void sendMailButtonPressed(View view){
-        sendMail("This is a subject", "This is the main text of the email", "kongen@slottet.no", "markuslund92@hotmail.com");
+        sendMail("This is a subject", "This is the main text of the email", "kongen@slottet.no", "crowdshelfmail@hotmail.com");
         mixpanel.track("SendMailButtonPressed");
     }
 
     //Example of how mail can be sent
     public void sendMail(String subject, String body, String senderEmail, String recipients) {
         try{
-
             if (gMailSender == null)
-                setUpGmailSender("kundestyrt", "crowdshelfmail@gmail.com");
+                setUpGmailSender("crowdshelfmail@gmail.com", "kundestyrt");
 
             gMailSender.sendMail(subject, body, senderEmail, recipients);
             mixpanel.track("MailSentSuccessfully");
-
-        }catch (Exception e){
+        }
+        catch (Exception e){
             Log.e("SendMail", e.getMessage(), e);
         }
     }
 
-    private void setUpGmailSender(String password, String user) {
+    private void setUpGmailSender(String user, String password) {
         gMailSender = new GMailSender(user, password);
     }
+
 }
