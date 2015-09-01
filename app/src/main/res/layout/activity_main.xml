@@ -13,7 +13,6 @@
             android:layout_height="wrap_content"
             android:text="Scanner"
             android:id="@+id/button"
-            android:layout_gravity="center"
             android:onClick="openScannerButtonPressed"
             android:layout_row="0"
             android:layout_column="0" />
@@ -23,10 +22,20 @@
             android:layout_height="wrap_content"
             android:text="Send mail"
             android:id="@+id/button3"
-            android:layout_gravity="center"
             android:onClick="sendMailButtonPressed"
             android:layout_row="0"
             android:layout_column="1" />
+
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gridView"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnSpan="3"
+
+            android:choiceMode="singleChoice"
+            android:numColumns="3" />
 
     </GridLayout>
 
