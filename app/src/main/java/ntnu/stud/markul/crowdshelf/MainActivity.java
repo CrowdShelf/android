@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -98,6 +97,18 @@ public class MainActivity extends AppCompatActivity {
                     "crowdshelfmail@gmail.com");
         }
 
+        setContentView(R.layout.activity_main);
+    }
+
+    private void getInfoFromISBN(String bookInformationJsonAsString) {
+            Gson gson = new GsonBuilder().create();
+            try{
+                BookInfoGetter p = gson.fromJson(bookInformationJsonAsString, BookInfoGetter.class);
+                Log.i("getInfoFromISBN", p.toString());
+
+            }catch (Exception e) {
+                Log.e("gson.FromJSON", e.getMessage());
+            }
     }
 
     @Override
