@@ -1,5 +1,5 @@
 ###Book
-####Object:
+#####Object:
 ```
 {
     _id: String,
@@ -12,27 +12,43 @@
 ```
 
 #####Add new book or update existing book
+
 address:	`PUT /api/book`
+
+
 data:		book object
+
 response:	none
 
 #####Retrieve existing book
+
 address:	`GET /api/book/:isbn:/owner`
+
 data:		none
+
 response:	book object
 
+
 #####Add renter
+
 address:	`PUT /api/book/:isbn/:owner/addrenter/:renter`
+
 data:		none
+
 response:	none
+
 
 #####Remove renter
+
 address:	`PUT /api/book/:isbn/:owner/removerenter/:renter`
+
 data:		none
+
 response:	none
 
+***
 ###Crowd
-####Object:
+#####Object:
 ```
 {
     _id: String, 
@@ -43,27 +59,43 @@ response:	none
 ```
 
 #####Retrieve existing crowd
+
 address:	`GET /api/crowd/:crowdId`
+
 data:		none
+
 response:	crowd object
 
+
 #####Create crowd
+
 address:	`POST /api/crowd`
+
 data:		name, creator, members
+
 response:	none
+
 
 #####Add member to crowd
+
 address:	`PUT /api/crowd/:crowdId/addmember/:username`
+
 data:		none
+
 response:	none
+
 
 #####Remove member from crowd
+
 address:	`PUT /api/crowd/:crowdId/removemember/:username`
+
 data:		none
+
 response:	none
 
+***
 ###User
-####Object:
+#####Object:
 ```
 {
 	name: String
@@ -73,6 +105,9 @@ response:	none
 ```
 
 #####Get user
+
 address:	`GET /user/:user`
+
 data:		none
+
 response:	user object
