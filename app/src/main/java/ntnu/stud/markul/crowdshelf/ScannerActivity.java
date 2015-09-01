@@ -48,7 +48,9 @@ public class ScannerActivity extends Activity implements ZXingScannerView.Result
         Toast.makeText(getApplicationContext(), "Book scanned: " + ISBN, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, MainActivity.class);
+
         intent.putExtra("ISBN", ISBN);
+
         startActivity(intent); // Return to start page
     }
 }

@@ -2,6 +2,7 @@ package ntnu.stud.markul.crowdshelf;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,12 +33,19 @@ public class MainActivity extends AppCompatActivity {
             mixpanel = MixpanelAPI.getInstance(this, MIXPANEL_TOKEN);
         }
 
+        //Must be set to allow HTTPRequest
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         //Checks if this activity was created with an intent containing a message/extra with name ISBN.
         Intent intent = getIntent();
+
         String ISBN = intent.getStringExtra("ISBN");
+
         if (ISBN != null){
-            Log.i("MainActivity", "ISBN not null");
-            sendMail("Book scanned", "ISBN: " + ISBN, "no-reply@crowdshelf.com", "crowdshelfmail@gmail.com");
+            String htmlPage = getHTML("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN);
+
+            sendMail("Book scanned", "ISBN: " + ISBN + "\n" + htmlPage, "no-reply@crowdshelf.com", "crowdshelfmail@gmail.com");
         }
 
         setContentView(R.layout.activity_main);
@@ -58,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public void openScannerButtonPressed(View view) {
         Intent intent = new Intent(this, ScannerActivity.class);
@@ -87,5 +100,29 @@ public class MainActivity extends AppCompatActivity {
     private void setUpGmailSender(String user, String password) {
         gMailSender = new GMailSender(user, password);
     }
+
+    private String getHTML(String urlToRead) {
+        URL url;
+        HttpURLConnection conn;
+        BufferedReader rd;
+        String line;
+        StringBuilder result = new StringBuilder();
+        try {
+            url = new URL(urlToRead);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            rd.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+
+
+
 
 }
