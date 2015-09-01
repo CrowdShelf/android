@@ -9,22 +9,25 @@ public class Shelf {
     private ArrayList<Book> books;
     private User owner;
 
-    public Shelf(User owner, ArrayList<Book> books) {
-        this.owner = owner;
+    public Shelf(ArrayList<Book> books) {
         this.books = books;
     }
 
-    public ArrayList<Book> getBooks() {
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public ArrayList<Book> getBook() {
         return books;
     }
 
     public void addBook(Book book) {
-        if (!books.contains(book)) {
+        if (!books.contains(books)) {
             books.add(book);
         }
     }
 
-    public void removeBook(Book book) {
-        books.remove(book);
+    public void removeBook(BookInfo bookInfo) {
+        books.remove(bookInfo);
     }
 }

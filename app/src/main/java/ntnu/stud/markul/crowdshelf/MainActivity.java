@@ -19,8 +19,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+import ntnu.stud.markul.crowdshelf.models.User;
 
+public class MainActivity extends AppCompatActivity {
     private final String MIXPANEL_TOKEN = "93ef1952b96d0faa696176aadc2fbed4";
 
     private GMailSender gMailSender;

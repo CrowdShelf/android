@@ -12,7 +12,19 @@ public class User {
         this.shelf = shelf;
     }
 
+    public User(String name) {
+        this.name = name;
+    }
+
+    public void setShelf(Shelf shelf) {
+        this.shelf = shelf;
+    }
+
     public Shelf getShelf() {
         return shelf;
+    }
+
+    public String getName() {
+        return name;
     }
 }
