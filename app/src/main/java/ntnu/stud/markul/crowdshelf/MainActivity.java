@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.BufferedReader;
@@ -16,6 +18,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,9 +48,21 @@ public class MainActivity extends AppCompatActivity {
         String ISBN = intent.getStringExtra("ISBN");
 
         if (ISBN != null){
-            String htmlPage = getHTML("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN);
+            String bookInformationJsonAsString = getJsonAsStringFromISBN(ISBN);
 
-            sendMail("Book scanned", "ISBN: " + ISBN + "\n" + htmlPage, "no-reply@crowdshelf.com", "crowdshelfmail@gmail.com");
+            Map<String, Object> allBookInformationJson =
+                    new Gson().fromJson(bookInformationJsonAsString, new TypeToken<HashMap<String, Object>>() {
+                    }.getType());
+
+
+
+
+
+            sendMail("Book scanned",
+                    "ISBN: " + ISBN + "\n"
+                            + bookInformationJson.get(""), + "\n"
+                    "no-reply@crowdshelf.com",
+                    "crowdshelfmail@gmail.com");
         }
 
         setContentView(R.layout.activity_main);
@@ -101,14 +118,14 @@ public class MainActivity extends AppCompatActivity {
         gMailSender = new GMailSender(user, password);
     }
 
-    private String getHTML(String urlToRead) {
+    private String getJsonAsStringFromISBN(String isbn) {
         URL url;
         HttpURLConnection conn;
         BufferedReader rd;
         String line;
         StringBuilder result = new StringBuilder();
         try {
-            url = new URL(urlToRead);
+            url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -121,8 +138,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return result.toString();
     }
-
-
-
 
 }
