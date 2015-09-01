@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.BufferedReader;
@@ -18,9 +18,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //Setup Mixpanel
         if (mixpanel == null){
@@ -48,24 +46,26 @@ public class MainActivity extends AppCompatActivity {
         String ISBN = intent.getStringExtra("ISBN");
 
         if (ISBN != null){
-            String bookInformationJsonAsString = getJsonAsStringFromISBN(ISBN);
-
-            Map<String, Object> allBookInformationJson =
-                    new Gson().fromJson(bookInformationJsonAsString, new TypeToken<HashMap<String, Object>>() {
-                    }.getType());
-
-
-
-
+            getInfoFromISBN(getJsonAsStringFromISBN("9781847399304"));
 
             sendMail("Book scanned",
-                    "ISBN: " + ISBN + "\n"
-                            + bookInformationJson.get(""), + "\n"
+                    "ISBN: " + ISBN + "\n",
                     "no-reply@crowdshelf.com",
                     "crowdshelfmail@gmail.com");
         }
 
         setContentView(R.layout.activity_main);
+    }
+
+    private void getInfoFromISBN(String bookInformationJsonAsString) {
+            Gson gson = new GsonBuilder().create();
+            try{
+                GoogleBooksJSON p = gson.fromJson(bookInformationJsonAsString, GoogleBooksJSON.class);
+                Log.i("getInfoFromISBN", p.toString());
+
+            }catch (Exception e){
+                Log.e("gson.FromJSON", e.getMessage());
+            }
     }
 
     @Override
