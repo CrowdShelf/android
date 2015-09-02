@@ -157,8 +157,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
     private String getJsonAsStringFromISBN(String isbn) {
         URL url;
         HttpURLConnection conn;

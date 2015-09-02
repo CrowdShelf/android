@@ -27,7 +27,7 @@ public class NetworkController {
         NetworkHelper.sendPutRequest("/book", new Gson().toJson(book, Book.class));
     }
 
-    public static Book getBook(User owner, String isbn) {
+    public static void getBook(User owner, String isbn) {
         // GET /book/:isbn/:owner
         NetworkHelper.sendGetRequest("/book/"+isbn+"/"+owner.toString());
     }
@@ -56,7 +56,7 @@ public class NetworkController {
         NetworkHelper.sendPostRequest("/crowd", new Gson().toJson(crowd, Crowd.class));
     }
 
-    public static Crowd getCrowd(String crowdID) {
+    public static void getCrowd(String crowdID) {
         // GET /api/crowd/:crowdId
         NetworkHelper.sendGetRequest("/crowd/"+crowdID);
     }
@@ -71,7 +71,7 @@ public class NetworkController {
         NetworkHelper.sendPutRequest("/crowd/"+crowd.getId()+"/removemember", new Gson().toJson(user, User.class));
     }
 
-    public static User getUser(String username){
+    public static void getUser(String username){
         // GET /api/user/:username
         NetworkHelper.sendGetRequest("/user/"+username);
     }

@@ -136,15 +136,15 @@ public class NetworkHelper {
                         if (name.equals("isbn")) {
                             // Retrieved book
                             Book book = new Gson().fromJson(reader, Book.class);
-                            // todo: do something with book
+                            MainController.retrieveBook(book);
                         } else if (name.equals("memberOf")) {
                             // Retrieved User
                             User user = new Gson().fromJson(reader, User.class);
-                            // todo: do something with user
+                            MainController.retrieveUser(user);
                         } else if (name.equals("creator")) {
                             // Retrieved crowd
                             Crowd crowd = new Gson().fromJson(reader, Crowd.class);
-                            // todo: do something with crowd
+                            MainController.retrieveCrowd(crowd);
                         }  else {
                             reader.skipValue();
                         }
