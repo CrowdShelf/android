@@ -15,7 +15,7 @@
 
 	`PUT /api/book`
 
-data:		book object
+data:		book object # PS! _id should be -1 for new book
 
 response:	none
 
@@ -99,7 +99,7 @@ response:	none
 
 #####Get user
 
-	`GET /user/:user`
+	`GET /user/:username`
 
 data:		none
 
