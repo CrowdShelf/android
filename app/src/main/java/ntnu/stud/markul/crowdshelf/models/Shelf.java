@@ -13,11 +13,7 @@ public class Shelf {
         this.books = books;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public ArrayList<Book> getBook() {
+    public ArrayList<Book> getBooks() {
         return books;
     }
 
@@ -27,7 +23,7 @@ public class Shelf {
         }
     }
 
-    public void removeBook(BookInfo bookInfo) {
-        books.remove(bookInfo);
+    public void removeBook(Book book) {
+        books.remove(book);
     }
 }

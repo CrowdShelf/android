@@ -2,6 +2,7 @@ package ntnu.stud.markul.crowdshelf;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
@@ -12,6 +13,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ntnu.stud.markul.crowdshelf.gsonHelpers.BookDeserializer;
+import ntnu.stud.markul.crowdshelf.gsonHelpers.CrowdDeserializer;
+import ntnu.stud.markul.crowdshelf.gsonHelpers.UserDeserializer;
 import ntnu.stud.markul.crowdshelf.models.Book;
 import ntnu.stud.markul.crowdshelf.models.Crowd;
 import ntnu.stud.markul.crowdshelf.models.User;
@@ -21,10 +25,17 @@ import ntnu.stud.markul.crowdshelf.models.User;
  */
 public class NetworkHelper {
     private static String host = "https://crowdshelf.herokuapp.com";
+    // For converting json into java objects using GSON and custom deserializers for each class
+    private static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Book.class, new BookDeserializer())
+            .registerTypeAdapter(User.class, new UserDeserializer())
+            .registerTypeAdapter(Crowd.class, new CrowdDeserializer())
+            .create();
+
     public static void sendPostRequest(final String route, final String jsonData) {
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void,Void,JsonReader>(){
             @Override
-            protected Void doInBackground(Void... params){
+            protected JsonReader doInBackground(Void... params){
                 try {
                     // instantiate the URL object with the target URL of the resource to
                     // request
@@ -47,7 +58,8 @@ public class NetworkHelper {
                     // if there is a response code AND that response code is 200 OK, do
                     // stuff in the first if block
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        // TODO: handle response
+                        return new JsonReader(
+                                new InputStreamReader(connection.getInputStream()));
                         // So far, no POST request gets a response
                     } else {
                         // Server returned HTTP error code.
@@ -58,6 +70,10 @@ public class NetworkHelper {
                     //..
                 }
                 return null;
+            }
+            @Override
+            protected void onPostExecute(JsonReader reader) {
+                handleJsonResponse(reader);
             }
         }.execute();
     }
@@ -78,8 +94,7 @@ public class NetworkHelper {
                     writer.write(jsonData);
                     writer.close();
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        // TODO: do GSON stuff here
-                        //So far, no PUT request gets a response
+                        // TODO: handle reponse codes?
                     } else {
                         // Server returned HTTP error code.
                     }
@@ -129,32 +144,38 @@ public class NetworkHelper {
 
             @Override
             protected void onPostExecute(JsonReader reader) {
-                try {
-                    reader.beginObject();
-                    while (reader.hasNext()) {
-                        String name = reader.nextName();
-                        if (name.equals("isbn")) {
-                            // Retrieved book
-                            Book book = new Gson().fromJson(reader, Book.class);
-                            MainController.retrieveBook(book);
-                        } else if (name.equals("memberOf")) {
-                            // Retrieved User
-                            User user = new Gson().fromJson(reader, User.class);
-                            MainController.retrieveUser(user);
-                        } else if (name.equals("creator")) {
-                            // Retrieved crowd
-                            Crowd crowd = new Gson().fromJson(reader, Crowd.class);
-                            MainController.retrieveCrowd(crowd);
-                        }  else {
-                            reader.skipValue();
-                        }
-                    }
-                    reader.endObject();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                handleJsonResponse(reader);
             }
         }.execute();
+    }
+
+    public static void handleJsonResponse(JsonReader reader) {
+        try {
+            reader.beginObject();
+            while (reader.hasNext()) {
+                String name = reader.nextName();
+                // todo this needs checking and restructuring
+                if (name.equals("isbn")) {
+                    // Retrieved book
+                    Book book = new Gson().fromJson(reader, Book.class);
+                    MainController.retrieveBook(book);
+                } else if (name.equals("memberOf")) {
+                    // Retrieved User
+                    User user = new Gson().fromJson(reader, User.class);
+                    MainController.retrieveUser(user);
+                } else if (name.equals("creator")) {
+                    // Retrieved crowd
+                    Crowd crowd = new Gson().fromJson(reader, Crowd.class);
+                    MainController.retrieveCrowd(crowd);
+                }  else {
+                    reader.skipValue();
+                }
+            }
+            reader.endObject();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
