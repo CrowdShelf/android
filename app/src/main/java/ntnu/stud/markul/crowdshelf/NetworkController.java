@@ -30,14 +30,16 @@ public class NetworkController {
         for (User u: book.getRentedTo()) {
             rentedTo.add(u.getName());
         }
+        int numberOfCopies = book.getNumberOfCopies();
+        // @todo add above data to jsonData
         String jsonData = null;
-        NetworkHelper.sendPutRequest("api/book", jsonData);
+        NetworkHelper.sendPutRequest("/book", jsonData);
     }
 
-    public static Book getBook(User owner, String isbn) {
+    public static void getBook(User owner, String isbn) {
         // GET /book/:isbn/:owner
         NetworkHelper.sendGetRequest("api/book/"+isbn+"/"+owner.toString());
-        return new Book();
+        //return new Book();
     }
 
     public static void addRenter(User renter, Book book) {

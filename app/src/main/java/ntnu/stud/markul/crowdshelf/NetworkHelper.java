@@ -1,15 +1,19 @@
 package ntnu.stud.markul.crowdshelf;
 import android.os.AsyncTask;
 
-import java.io.BufferedReader;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.HttpURLConnection.*;
 import java.net.URL;
-import java.net.URLEncoder;
+
+import ntnu.stud.markul.crowdshelf.models.Book;
+import ntnu.stud.markul.crowdshelf.models.Crowd;
+import ntnu.stud.markul.crowdshelf.models.User;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -99,9 +103,9 @@ public class NetworkHelper {
     }
 
     public static void sendGetRequest(final String route) {
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void,Void,JsonReader>(){
             @Override
-            protected Void doInBackground(Void... params){
+            protected JsonReader doInBackground(Void... params){
                 InputStream inputStream = null;
                 try {
                     // instantiate the URL object with the target URL of the resource to
@@ -120,11 +124,11 @@ public class NetworkHelper {
 
                     connection.connect();
 
-                    inputStream = connection.getInputStream();
                     // if there is a response code AND that response code is 200 OK, do
                     // stuff in the first if block
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        // TODO: do GSON stuff here
+                        return new JsonReader(
+                                new InputStreamReader(connection.getInputStream()));
                     } else {
                         // Server returned HTTP error code.
                     }
@@ -143,10 +147,35 @@ public class NetworkHelper {
                 }
             return null;
             }
-        }.execute();
-    }
 
-    private static void printRequest() {
+            @Override
+            protected void onPostExecute(JsonReader reader) {
+                try {
+                    reader.beginObject();
+                    while (reader.hasNext()) {
+                        String name = reader.nextName();
+                        if (name.equals("isbn")) {
+                            // Retrieved book
+                            Book book = new Gson().fromJson(reader, Book.class);
+                            // todo do something with book
+                        } else if (name.equals("memberOf")) {
+                            // Retrieved User
+                            User user = new Gson().fromJson(reader, User.class);
+                            // todo do something with user
+                        } else if (name.equals("creator")) {
+                            // Retrieved crowd
+                            Crowd crowd = new Gson().fromJson(reader, Crowd.class);
+                            // todo do something with crowd
+                        }  else {
+                            reader.skipValue();
+                        }
+                    }
+                    reader.endObject();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
     }
 
 }
