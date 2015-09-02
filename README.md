@@ -15,12 +15,12 @@
 
 	`PUT /api/book`
 
-data:		book object
+data:		book object # PS! _id should be -1 for new book
 
 response:	none
 
 #####Retrieve existing book
-	`GET /api/book/:isbn:/owner`
+	`GET /api/book/:isbn:/ownername`
 
 data:		none
 
@@ -28,17 +28,17 @@ response:	book object
 
 #####Add renter
 
-	`PUT /api/book/:isbn/:owner/addrenter/:renter`
+	`PUT /api/book/:isbn/:ownername/addrenter`
 
-data:		none
+data:		user object # Of the renter
 
 response:	none
 
 #####Remove renter
 
-	`PUT /api/book/:isbn/:owner/removerenter/:renter`
+	`PUT /api/book/:isbn/:ownername/removerenter`
 
-data:		none
+data:		user object # Of the renter
 
 response:	none
 
@@ -64,25 +64,25 @@ response:	crowd object
 #####Create crowd
 	`POST /api/crowd`
 
-data:		name, creator, members
+data:		crowd object # PS! _id should be -1 
 
 response:	none
 
 
 #####Add member to crowd
 
-	`PUT /api/crowd/:crowdId/addmember/:username`
+	`PUT /api/crowd/:crowdId/addmember`
 
-data:		none
+data:		user object
 
 response:	none
 
 
 #####Remove member from crowd
 
-	`PUT /api/crowd/:crowdId/removemember/:username`
+	`PUT /api/crowd/:crowdId/removemember`
 
-data:		none
+data:		user object
 
 response:	none
 
@@ -99,7 +99,7 @@ response:	none
 
 #####Get user
 
-	`GET /user/:user`
+	`GET /api/user/:username`
 
 data:		none
 
