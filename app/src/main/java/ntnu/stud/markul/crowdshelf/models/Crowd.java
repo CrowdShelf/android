@@ -6,13 +6,13 @@ import java.util.ArrayList;
  * Created by Torstein on 01.09.2015.
  */
 public class Crowd {
-    private final String ID; // Unique, retrieved from server
+    private String id; // Unique, retrieved from server
     private String name;
     private ArrayList<User> members;
     private User owner;
 
     public Crowd(String ID, String name, ArrayList<User> members, User owner) {
-        this.ID = ID;
+        this.id = ID;
         this.name = name;
         this.members = members;
         this.owner = owner;
@@ -38,5 +38,13 @@ public class Crowd {
             shelves.add(u.getShelf());
         }
         return shelves;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

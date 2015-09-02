@@ -71,3 +71,9 @@ Thumbs.db
 .idea/tasks.xml
 .gradle
 build/
+.idea/workspace.xml
+CrowdShelf.iml
+local.properties
+build/intermediates/model_data.bin
+.idea/workspace.xml
+local.properties

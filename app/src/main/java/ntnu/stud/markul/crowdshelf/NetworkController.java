@@ -1,5 +1,7 @@
 package ntnu.stud.markul.crowdshelf;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -12,70 +14,65 @@ import ntnu.stud.markul.crowdshelf.models.User;
  * Created by Torstein on 01.09.2015.
  */
 public class NetworkController {
-    // TODO find a way to get User instance of the person using this app
-    private static User me = new User("me");
-
+    // add book to db or update existing one
     public static void addBook(Book book) {
         /* PUT /api/book
+        _id: String # ps! should be -1 for new book
         isbn: String
         owner: String,
         availableForRent: Integer,
         rentedTo: Array[string],
         numberOfCopies: Integer,
          */
-        String isbn = book.getBookInfo().getIsbn();
-        String owner = me.getName();
-        int availableForRent = (book.isAvailableForRent()) ? 1 : 0;
-        ArrayList<String> rentedTo = new ArrayList<String>();
-        for (User u: book.getRentedTo()) {
-            rentedTo.add(u.getName());
-        }
-        int numberOfCopies = book.getNumberOfCopies();
-        // @todo add above data to jsonData
-        String jsonData = null;
-        NetworkHelper.sendPutRequest("/book", jsonData);
+        NetworkHelper.sendPutRequest("/book", new Gson().toJson(book, Book.class));
     }
 
-    public static void getBook(User owner, String isbn) {
+    public static Book getBook(User owner, String isbn) {
         // GET /book/:isbn/:owner
-        NetworkHelper.sendGetRequest("api/book/"+isbn+"/"+owner.toString());
-        //return new Book();
+        NetworkHelper.sendGetRequest("/book/"+isbn+"/"+owner.toString());
     }
 
     public static void addRenter(User renter, Book book) {
-        // PUT /book/:isbn/:owner/addrenter/:renter
+        // PUT /book/:isbn/:owner/addrenter
         String isbn = book.getBookInfo().getIsbn();
         String ownerS = book.getOwner().getName();
-        String renterS = renter.getName();
-        NetworkHelper.sendPutRequest("api/book/"+isbn+"/"+ownerS+"/addrenter/"+renterS, null);
+        NetworkHelper.sendPutRequest("/book/"+isbn+"/"+ownerS+"/addrenter", new Gson().toJson(renter, User.class));
     }
 
     public static void removeRenter(User renter, Book book) {
-        // PUT /book/:isbn/:owner/removerenter/:renter
+        // PUT /book/:isbn/:owner/removerenter
         String isbn = book.getBookInfo().getIsbn();
         String ownerS = book.getOwner().getName();
-        String renterS = renter.getName();
-        NetworkHelper.sendPutRequest("api/book/"+isbn+"/"+ownerS+"/removerenter/"+renterS, null);
+        NetworkHelper.sendPutRequest("/book/"+isbn+"/"+ownerS+"/removerenter", new Gson().toJson(renter, User.class));
     }
 
-    public static void createCrowd(String name, ArrayList<User> members) {
+    public static void createCrowd(Crowd crowd) {
         /* POST /api/crowd
+    _id: String # PS! should be -1 for new crowd
     name: String,
     creator: String,
     members: Array[String]
          */
-        NetworkHelper.sendPostRequest("api/book/"+isbn+"/"+ownerS+"/removerenter/"+renterS, null);
+        NetworkHelper.sendPostRequest("/crowd", new Gson().toJson(crowd, Crowd.class));
     }
 
     public static Crowd getCrowd(String crowdID) {
-        return null;
+        // GET /api/crowd/:crowdId
+        NetworkHelper.sendGetRequest("/crowd/"+crowdID);
     }
 
     public static void addCrowdMember(Crowd crowd, User user) {
-        // PUT /api/crowd/:crowdId
+        // PUT /api/crowd/:crowdId/addmember
+        NetworkHelper.sendPutRequest("/crowd/"+crowd.getId()+"/addememeber", new Gson().toJson(user, User.class));
     }
 
     public static void removeCrowdMember(Crowd crowd, User user) {
+        // PUT /api/crowd/:crowdId/removemember
+        NetworkHelper.sendPutRequest("/crowd/"+crowd.getId()+"/removemember", new Gson().toJson(user, User.class));
+    }
 
+    public static User getUser(String username){
+        // GET /api/user/:username
+        NetworkHelper.sendGetRequest("/user/"+username);
     }
 }
