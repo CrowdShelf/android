@@ -1,5 +1,6 @@
 package ntnu.stud.markul.crowdshelf;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,10 +27,11 @@ import ntnu.stud.markul.crowdshelf.models.User;
 public class NetworkHelper {
     private static String host = "https://crowdshelf.herokuapp.com";
     // For converting json into java objects using GSON and custom deserializers for each class
+    // todo find out if deserializers are needed
     private static Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Book.class, new BookDeserializer())
-            .registerTypeAdapter(User.class, new UserDeserializer())
-            .registerTypeAdapter(Crowd.class, new CrowdDeserializer())
+            //.registerTypeAdapter(Book.class, new BookDeserializer())
+            //.registerTypeAdapter(User.class, new UserDeserializer())
+            //.registerTypeAdapter(Crowd.class, new CrowdDeserializer())
             .create();
 
     public static void sendPostRequest(final String route, final String jsonData) {
@@ -45,22 +47,16 @@ public class NetworkHelper {
                     // method of the protocol handler for this URL.
                     // This is the point where the connection is opened.
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    // set connection output to true
                     connection.setDoOutput(true);
                     connection.setRequestMethod("POST");
                     connection.setRequestProperty("Content-Type", "application/json");
-
                     OutputStreamWriter writer = new OutputStreamWriter(
                             connection.getOutputStream());
-
                     writer.write(jsonData);
                     writer.close();
-                    // if there is a response code AND that response code is 200 OK, do
-                    // stuff in the first if block
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         return new JsonReader(
                                 new InputStreamReader(connection.getInputStream()));
-                        // So far, no POST request gets a response
                     } else {
                         // Server returned HTTP error code.
                     }
@@ -79,9 +75,9 @@ public class NetworkHelper {
     }
 
     public static void sendPutRequest(final String route, final String jsonData) {
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void,Void,JsonReader>(){
             @Override
-            protected Void doInBackground(Void... params){
+            protected JsonReader doInBackground(Void... params){
                 try {
                     URL url = new URL(host + "/api" + route);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -94,7 +90,8 @@ public class NetworkHelper {
                     writer.write(jsonData);
                     writer.close();
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        // TODO: handle reponse codes?
+                        return new JsonReader(
+                                new InputStreamReader(connection.getInputStream()));
                     } else {
                         // Server returned HTTP error code.
                     }
@@ -105,6 +102,9 @@ public class NetworkHelper {
                 }
                 return null;
             }
+            protected void onPostExecute(JsonReader reader) {
+                handleJsonResponse(reader);
+            }
         }.execute();
     }
 
@@ -112,7 +112,6 @@ public class NetworkHelper {
         new AsyncTask<Void,Void,JsonReader>(){
             @Override
             protected JsonReader doInBackground(Void... params){
-                InputStream inputStream = null;
                 try {
                    URL url = new URL(host + "/api" + route);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -130,14 +129,6 @@ public class NetworkHelper {
                     // ...
                 } catch (IOException e) {
                     //..
-                } finally {
-                    if (inputStream != null) {
-                        try {
-                            inputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
             return null;
             }
@@ -151,6 +142,16 @@ public class NetworkHelper {
 
     public static void handleJsonResponse(JsonReader reader) {
         try {
+            /*
+            Possible reponses:
+            book object
+            crowd object
+            array of book objects
+            array of crowd objects
+            user object
+             */
+
+            //This needs to be reworked
             reader.beginObject();
             while (reader.hasNext()) {
                 String name = reader.nextName();
@@ -158,14 +159,21 @@ public class NetworkHelper {
                 if (name.equals("isbn")) {
                     // Retrieved book
                     Book book = new Gson().fromJson(reader, Book.class);
+                    System.out.print(book);
+                    Log.d("gotbook", "book");
                     MainController.retrieveBook(book);
                 } else if (name.equals("memberOf")) {
                     // Retrieved User
                     User user = new Gson().fromJson(reader, User.class);
+                    System.out.print(user);
+                    Log.d("gotbook", "book");
                     MainController.retrieveUser(user);
                 } else if (name.equals("creator")) {
                     // Retrieved crowd
                     Crowd crowd = new Gson().fromJson(reader, Crowd.class);
+                    System.out.print(crowd);
+
+                    Log.d("gotbook", "book");
                     MainController.retrieveCrowd(crowd);
                 }  else {
                     reader.skipValue();

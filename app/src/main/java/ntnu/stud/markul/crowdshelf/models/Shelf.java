@@ -6,6 +6,9 @@ import java.util.ArrayList;
  * Created by Torstein on 01.09.2015.
  */
 public class Shelf {
+
+    // todo this whole class needs to be reworked and retougth
+
     private ArrayList<Book> books;
     private User owner;
 

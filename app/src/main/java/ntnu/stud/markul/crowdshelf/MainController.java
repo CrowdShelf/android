@@ -1,5 +1,6 @@
 package ntnu.stud.markul.crowdshelf;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ntnu.stud.markul.crowdshelf.models.Book;
@@ -15,7 +16,7 @@ public class MainController {
     private static HashMap<String, User> users = new HashMap<String, User>(); // KEY = username
 
     //todo  get the user of this app
-    private static User mainUser = new User("me");
+    private static User mainUser = new User();
 
     // Create a _NEW_ user
     public static void createUser() {
@@ -27,6 +28,14 @@ public class MainController {
             NetworkController.getUser(username);
         }
         return users.get(username);
+    }
+
+    public static ArrayList<User> getUsers(ArrayList<String> usernames) {
+        ArrayList<User> usersObjs = new ArrayList<User>();
+        for (String username : usernames) {
+            usersObjs.add(getUser(username));
+        }
+        return usersObjs;
     }
 
     // Called ONLY when a user is sent from server
@@ -45,24 +54,42 @@ public class MainController {
         return crowds.get(_id);
     }
 
+    public static ArrayList<Crowd> getCrowds(ArrayList<String> crowdIds) {
+        ArrayList<Crowd> crowdObjs= new ArrayList<Crowd>();
+        for (String crowdId : crowdIds) {
+            crowdObjs.add(getCrowd(crowdId));
+        }
+        return crowdObjs;
+    }
+
     // Called ONLY when a crowd is sent from server
     public static void retrieveCrowd(Crowd crowd) {
         crowds.put(crowd.get_id(), crowd);
     }
 
-    public static void createBook(String isbn, int numberOfCopies) {
+    public static void createBook(String isbn, int numberOfCopies, boolean availableForRent) {
         // This book is never stored in the books hashmap. It is sent to the server
-        Book book = new Book("-1",isbn, mainUser, null, numberOfCopies);
+        Book book = new Book();
+        book.set_id("-1");
+        book.setIsbn(isbn);
+        book.setOwner(mainUser.getName());
+        book.setNumberOfCopies(numberOfCopies);
+        book.setAvailableForRent(availableForRent);
         NetworkController.addBook(book);
     }
 
+    // Obsolete? when is this needed??
+    @Deprecated
     public static Book getBook(String _id) {
         if (!books.containsKey(_id)) {
-            NetworkController.getBook(_id);
+
+            // NetworkController.getBook(_id);
         }
         return books.get(_id);
     }
 
+    // Obsolete? when is this needed??
+    @Deprecated
     // Called ONLY when a book is sent from server
     public static void retrieveBook(Book book) {
         books.put(book.get_id(), book);

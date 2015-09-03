@@ -3,6 +3,7 @@ package ntnu.stud.markul.crowdshelf.models;
 import java.util.ArrayList;
 
 import ntnu.stud.markul.crowdshelf.BookInfoGetter;
+import ntnu.stud.markul.crowdshelf.MainController;
 import ntnu.stud.markul.crowdshelf.NetworkController;
 
 /**
@@ -10,27 +11,18 @@ import ntnu.stud.markul.crowdshelf.NetworkController;
  */
 public class Book{
     private String _id;
-    private BookInfo bookInfo;
-    private User owner;
-    private ArrayList<User> rentedTo;
+    private String isbn;
+    private String owner;
     private int numberOfCopies;
-    private boolean availableForRent = true;
-
-    public Book(String _id, String isbn, User owner, ArrayList<User> rentedTo, int numberOfCopies) {
-        this._id = _id;
-        this.owner = owner;
-        this.rentedTo = rentedTo;
-        this.numberOfCopies = numberOfCopies;
-        bookInfo = BookInfoGetter.getBookInfo(isbn);
-        owner.getShelf().addBook(this);
-    }
+    private boolean availableForRent;
+    private ArrayList<String> rentedTo;
 
     public ArrayList<User> getRentedTo() {
-        return rentedTo;
+        return MainController.getUsers(rentedTo);
     }
 
     public User getOwner() {
-        return owner;
+        return MainController.getUser(owner);
     }
 
     public int getAvailableForRent() {
@@ -42,15 +34,15 @@ public class Book{
     }
 
     public void rentOut(User user) {
-        NetworkController.addRenter(user, this);
-        if (!rentedTo.contains(user)) {
-            rentedTo.add(user);
+        NetworkController.addRenter(this.isbn, owner, user.getName());
+        if (!rentedTo.contains(user.getName())) {
+            rentedTo.add(user.getName());
         }
     }
 
     public void takeInReturn(User user) {
-        NetworkController.removeRenter(user, this);
-        rentedTo.remove(user);
+        NetworkController.removeRenter(this.isbn, owner, user.getName());
+        rentedTo.remove(user.getName());
     }
 
     public int getNumberOfCopies() {
@@ -62,20 +54,26 @@ public class Book{
     }
 
     public BookInfo getBookInfo() {
-        return bookInfo;
-    }
-
-    public boolean equals(Book book)
-    {
-        if (bookInfo.getIsbn() == book.getBookInfo().getIsbn())
-        {
-            return true;
-        } else {
-            return false;
-        }
+        return BookInfoGetter.getBookInfo(this.isbn);
     }
 
     public String get_id() {
         return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setRentedTo(ArrayList<String> rentedTo) {
+        this.rentedTo = rentedTo;
     }
 }

@@ -9,30 +9,22 @@ import ntnu.stud.markul.crowdshelf.MainController;
  */
 public class User {
     private String name;
-    private Shelf shelf;
     private ArrayList<Book> booksOwned;
     private ArrayList<Book> booksRented;
-    private ArrayList<Crowd> crowds;
+    private ArrayList<String> crowds; // crowd _id
+    //private Shelf shelf;
 
-    public User(String name, ArrayList<Book> booksOwned, ArrayList<Book> booksRented, ArrayList<Crowd> crowds) {
-        this.name = name;
-        this.booksOwned = booksOwned;
-        this.booksRented = booksRented;
-        this.crowds = crowds;
-        // TODO
-        // Create shelf from above arrays
-    }
-
+    // todo rework
     private void setShelf(ArrayList<String> books) {
         ArrayList<Book> shelfBooks = new ArrayList<Book>();
         for(String _id : books) {
             shelfBooks.add(MainController.getBook(_id));
         }
-        this.shelf = new Shelf(shelfBooks);
+        //this.shelf = new Shelf(shelfBooks);
     }
 
-    public Shelf getShelf() {
-        return shelf;
+    public ArrayList<Crowd> getCrowds() {
+        return MainController.getCrowds(crowds);
     }
 
     public String getName() {
