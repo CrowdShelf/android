@@ -1,0 +1,186 @@
+package com.crowdshelf.app;
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONTokener;
+
+/**
+ * Created by Torstein on 01.09.2015.
+ */
+public class NetworkHelper {
+    private static String host = "https://crowdshelf.herokuapp.com";
+    // For converting json into java objects using GSON and custom deserializers for each class
+    // todo find out if deserializers are needed
+    private static Gson gson = new GsonBuilder()
+            //.registerTypeAdapter(Book.class, new BookDeserializer())
+            //.registerTypeAdapter(User.class, new UserDeserializer())
+            //.registerTypeAdapter(Crowd.class, new CrowdDeserializer())
+            .create();
+
+    public static void sendPostRequest(final String route, final String jsonData) {
+        new AsyncTask<Void,Void,InputStreamReader>(){
+            @Override
+            protected InputStreamReader doInBackground(Void... params){
+                try {
+                    // instantiate the URL object with the target URL of the resource to
+                    // request
+                    URL url = new URL(host + "/api" + route);
+                    // instantiate the HttpURLConnection with the URL object - A new
+                    // connection is opened every time by calling the openConnection
+                    // method of the protocol handler for this URL.
+                    // This is the point where the connection is opened.
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoOutput(true);
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    OutputStreamWriter writer = new OutputStreamWriter(
+                            connection.getOutputStream());
+                    writer.write(jsonData);
+                    writer.close();
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        return new InputStreamReader(connection.getInputStream());
+                    } else {
+                        // Server returned HTTP error code.
+                    }
+                } catch (java.net.MalformedURLException e) {
+                    // ...
+                } catch (IOException e) {
+                    //..
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(InputStreamReader reader) {
+                handleJsonResponse(reader);
+            }
+        }.execute();
+    }
+
+    public static void sendPutRequest(final String route, final String jsonData) {
+        new AsyncTask<Void,Void,InputStreamReader>(){
+            @Override
+            protected InputStreamReader doInBackground(Void... params){
+                try {
+                    URL url = new URL(host + "/api" + route);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoOutput(true);
+                    connection.setRequestMethod("PUT");
+                    connection.setRequestProperty("Content-Type", "application/json");
+
+                    OutputStreamWriter writer = new OutputStreamWriter(
+                            connection.getOutputStream());
+                    writer.write(jsonData);
+                    writer.close();
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        new InputStreamReader(connection.getInputStream());
+                    } else {
+                        // Server returned HTTP error code.
+                    }
+                } catch (java.net.MalformedURLException e) {
+                    // ...
+                } catch (IOException e) {
+                    //..
+                }
+                return null;
+            }
+            protected void onPostExecute(InputStreamReader reader) {
+                handleJsonResponse(reader);
+            }
+        }.execute();
+    }
+
+    public static void sendGetRequest(final String route) {
+        new AsyncTask<Void,Void,InputStreamReader>(){
+            @Override
+            protected InputStreamReader doInBackground(Void... params){
+                try {
+                   URL url = new URL(host + "/api" + route);
+                    System.out.print(url + "\n");
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoOutput(true);
+                    connection.setRequestMethod("GET");
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    connection.connect();
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        return new InputStreamReader(connection.getInputStream());
+                    } else {
+                        // Server returned HTTP error code.
+                    }
+                } catch (java.net.MalformedURLException e) {
+                    // ...
+                } catch (IOException e) {
+                    //..
+                }
+            return null;
+            }
+
+            @Override
+            protected void onPostExecute(InputStreamReader reader) {
+                handleJsonResponse(reader);
+            }
+        }.execute();
+    }
+
+    public static void handleJsonResponse(InputStreamReader iReader) {
+        try {
+            /*
+            Possible reponses:
+            book object
+            crowd object
+            array of book objects
+            array of crowd objects
+            user object
+             */
+
+            BufferedReader bReader = new BufferedReader(iReader);
+            StringBuilder builder = new StringBuilder();
+            for (String line = null; (line = bReader.readLine()) != null;) {
+                builder.append(line).append("\n");
+            }
+            String jsonString = builder.toString();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonParser jp = new JsonParser();
+            JsonElement je = jp.parse(jsonString);
+            System.out.print(gson.toJson(je));
+            JsonObject jo = je.getAsJsonObject();
+            if (jo.has("isbn")) {
+                // Retrieved book
+                Book book = new Gson().fromJson(jsonString, Book.class);
+                MainController.retrieveBook(book);
+            } else if (jo.has("username")) {
+                // Retrieved User
+                User user = new Gson().fromJson(jsonString, User.class);
+                MainController.retrieveUser(user);
+            } else if (jo.has("creator")) {
+                // Retrieved crowd
+                Crowd crowd = new Gson().fromJson(jsonString, Crowd.class);
+                MainController.retrieveCrowd(crowd);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
