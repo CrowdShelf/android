@@ -1,9 +1,9 @@
-package ntnu.stud.markul.crowdshelf.models;
+package models;
 
 import java.util.ArrayList;
 
-import ntnu.stud.markul.crowdshelf.MainController;
-import ntnu.stud.markul.crowdshelf.NetworkController;
+import MainController;
+import NetworkController;
 
 /**
  * Created by Torstein on 01.09.2015.

@@ -1,11 +1,9 @@
-package ntnu.stud.markul.crowdshelf;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ntnu.stud.markul.crowdshelf.models.Book;
-import ntnu.stud.markul.crowdshelf.models.Crowd;
-import ntnu.stud.markul.crowdshelf.models.User;
+import models.Book;
+import models.Crowd;
+import models.User;
 
 /**
  * Created by Torstein on 02.09.2015.

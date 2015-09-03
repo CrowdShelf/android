@@ -1,5 +1,3 @@
-package ntnu.stud.markul.crowdshelf;
-
 /**
  * Created by markuslund92 on 01.09.15.
  */
@@ -10,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import ntnu.stud.markul.crowdshelf.R;
 
 public class BookGrid extends BaseAdapter{
     private Context mContext;

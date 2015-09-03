@@ -1,4 +1,4 @@
-package ntnu.stud.markul.crowdshelf.jsonModels;
+package jsonModels;
 
 /**
  * Created by markuslund92 on 01.09.15.

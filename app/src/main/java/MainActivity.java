@@ -1,5 +1,3 @@
-package ntnu.stud.markul.crowdshelf;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -22,7 +20,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import ntnu.stud.markul.crowdshelf.jsonModels.GoogleBooksJSON;
+import ntnu.stud.markul.crowdshelf.R;
+import jsonModels.GoogleBooksJSON;
 
 public class MainActivity extends AppCompatActivity {
     private final String MIXPANEL_TOKEN = "93ef1952b96d0faa696176aadc2fbed4";

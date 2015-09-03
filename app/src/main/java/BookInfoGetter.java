@@ -1,13 +1,9 @@
-package ntnu.stud.markul.crowdshelf;
-
 import android.media.Image;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
-import ntnu.stud.markul.crowdshelf.models.BookInfo;
+import models.BookInfo;
 
 /**
  * Created by markuslund92 on 01.09.15.

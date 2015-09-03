@@ -1,20 +1,10 @@
-package ntnu.stud.markul.crowdshelf;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
-import ntnu.stud.markul.crowdshelf.gsonHelpers.BookDeserializer;
-import ntnu.stud.markul.crowdshelf.gsonHelpers.CrowdDeserializer;
-import ntnu.stud.markul.crowdshelf.gsonHelpers.UserDeserializer;
-import ntnu.stud.markul.crowdshelf.models.Book;
-import ntnu.stud.markul.crowdshelf.models.Crowd;
-import ntnu.stud.markul.crowdshelf.models.Shelf;
-import ntnu.stud.markul.crowdshelf.models.User;
+import models.Book;
+import models.Crowd;
+import models.User;
 
 /**
  * Created by Torstein on 01.09.2015.

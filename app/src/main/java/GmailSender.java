@@ -1,5 +1,3 @@
-package ntnu.stud.markul.crowdshelf;
-
 /**
  * Created by markuslund92 on 31.08.15.
  */

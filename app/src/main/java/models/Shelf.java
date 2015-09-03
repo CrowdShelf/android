@@ -1,4 +1,4 @@
-package ntnu.stud.markul.crowdshelf.models;
+package models;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package ntnu.stud.markul.crowdshelf.jsonModels;
+package jsonModels;
 
 import java.util.ArrayList;
 

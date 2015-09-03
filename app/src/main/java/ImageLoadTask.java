@@ -1,5 +1,3 @@
-package ntnu.stud.markul.crowdshelf;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;

@@ -1,25 +1,19 @@
-package ntnu.stud.markul.crowdshelf;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import ntnu.stud.markul.crowdshelf.gsonHelpers.BookDeserializer;
-import ntnu.stud.markul.crowdshelf.gsonHelpers.CrowdDeserializer;
-import ntnu.stud.markul.crowdshelf.gsonHelpers.UserDeserializer;
-import ntnu.stud.markul.crowdshelf.models.Book;
-import ntnu.stud.markul.crowdshelf.models.Crowd;
-import ntnu.stud.markul.crowdshelf.models.User;
+import models.Book;
+import models.Crowd;
+import models.User;
 
 /**
  * Created by Torstein on 01.09.2015.
