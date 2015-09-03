@@ -30,6 +30,6 @@ public class CrowdDeserializer implements JsonDeserializer<Crowd> {
         creator: String,
         members: Array[String]
          */
-        return null
+        return null;
     }
 }

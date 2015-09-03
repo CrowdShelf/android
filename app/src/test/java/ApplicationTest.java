@@ -1,5 +1,3 @@
-package ntnu.stud.markul.crowdshelf;
-
 import android.app.Application;
 import android.test.ApplicationTestCase;
 

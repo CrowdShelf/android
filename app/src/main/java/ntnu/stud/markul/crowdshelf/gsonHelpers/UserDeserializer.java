@@ -35,6 +35,7 @@ public class UserDeserializer implements JsonDeserializer<User> {
         ArrayList<Crowd> crowds = new ArrayList<Crowd>();
         //ArrayList<User> rentedTo = jsonHelper.usernamesToUsers(jsonObject.get("rentedTo").getAsJsonArray());
 
-        return new User(username, booksOwned, booksRented, crowds);
+        //return new User(username, booksOwned, booksRented, crowds);
+        return null;
     }
 }

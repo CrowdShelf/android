@@ -30,6 +30,7 @@ public class BookDeserializer implements JsonDeserializer<Book> {
         rentedTo: Array[string],
         numberOfCopies: Integer,
          */
-
+        return null;
     }
+
 }
