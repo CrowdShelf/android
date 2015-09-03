@@ -1,9 +1,6 @@
-import junit.framework.TestCase;
+public class NetworkHelperTest {
 
-import ntnu.stud.markul.crowdshelf.NetworkController;
-
-public class NetworkHelperTest extends TestCase {
-
+    @Test
     public void testSendPostRequest() throws Exception {
         /*
         {"_id":"55e6dcfff3f1beaf21673c8e","name":"The best crowd","owner":"esso","members":["esso","torstein"]}
