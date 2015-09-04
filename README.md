@@ -13,3 +13,5 @@ GSON tries to match the name-fields in the JSON-data with the name of the field 
 If a name and type match up, a new object is created using the default no-args constructor with all the matching fields set to the values found in the JSON data.
 
 If the fields do not match up, GSON need a serializer to create JSON-data from an object or a deserializer to create an object from JSON-data.
+
+GSON does not use non-default constructors, getters or setters, but the latter should be used to serialize or deserialize classes.
