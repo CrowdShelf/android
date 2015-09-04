@@ -12,6 +12,7 @@ import com.crowdshelf.app.models.Book;
 /**
  * Created by Torstein on 02.09.2015.
  */
+@Deprecated
 public class BookDeserializer implements JsonDeserializer<Book> {
     @Override
     public Book deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)

@@ -1,6 +1,8 @@
 package com.crowdshelf.app.gsonHelpers;
 
+import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.User;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -9,10 +11,12 @@ import java.util.ArrayList;
 
 import com.crowdshelf.app.MainController;
 
+import org.json.JSONException;
+
 /**
  * Created by Torstein on 02.09.2015.
  */
-public class jsonHelper {
+public class JsonHelper {
     @Deprecated
 
     public static ArrayList<User> usernamesToUsers(JsonArray usernames) {
@@ -31,21 +35,27 @@ public class jsonHelper {
         String name = jsonObject.get("name").getAsString();
         String username = jsonObject.get("creator").getAsString();
         User owner = MainController.getUser(username);
-        ArrayList<User> members = jsonHelper.usernamesToUsers(jsonObject.get("members").getAsJsonArray());
+        ArrayList<User> members = JsonHelper.usernamesToUsers(jsonObject.get("members").getAsJsonArray());
 
         //return new Crowd(_id, name, owner, members);
     }
 
-    public static void jsonEToBook(JsonElement json) {
-        JsonObject jsonObject = json.getAsJsonObject();
-        String _id = jsonObject.get("_id").getAsString();
-        String isbn = jsonObject.get("isbn").getAsString();
-        boolean availableForRent = jsonObject.get("availableForRent").getAsBoolean();
-        String username = jsonObject.get("owner").getAsString();
-        User owner = MainController.getUser(username);
-        ArrayList<User> rentedTo = jsonHelper.usernamesToUsers(jsonObject.get("rentedTo").getAsJsonArray());
-        int numberOfCopies = jsonObject.get("numberOfCopies").getAsInt();
+    public static ArrayList<String> jsonBookArrayToBookIdArrayList(JsonArray jArray) {
+        ArrayList<String> bookIds = new ArrayList<String>();
+        for (int i = 0; i < jArray.size(); i++) {
+            Book book = new Gson().fromJson(jArray.get(i), Book.class);
+            MainController.retrieveBook(book);
+            bookIds.add(book.get_id());
+        }
+        return bookIds;
+    }
 
-        //return new Book(_id, isbn, owner, rentedTo, numberOfCopies);
+    public static ArrayList<String> jsonArrayToStringArrayList(JsonArray jArray){
+        ArrayList<String> returnList = new ArrayList<String>();
+        for (int i = 0; i < jArray.size(); i++) {
+            String val = jArray.get(i).getAsString();
+            returnList.add(val);
+        }
+        return returnList;
     }
 }

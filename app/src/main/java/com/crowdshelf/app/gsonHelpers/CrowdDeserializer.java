@@ -12,6 +12,7 @@ import com.crowdshelf.app.models.Crowd;
 /**
  * Created by Torstein on 02.09.2015.
  */
+@Deprecated
 public class CrowdDeserializer implements JsonDeserializer<Crowd> {
     @Override
     public Crowd deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)

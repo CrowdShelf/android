@@ -14,9 +14,39 @@ public class Crowd {
     private String owner;
     private ArrayList<String> members;
 
-    public ArrayList<User> getMembers() {
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setMembers(ArrayList<String> members) {
+        this.members = members;
+    }
+
+    public ArrayList<String> getMembers() {
+        return this.members;
+    }
+
+    @Deprecated
+    public ArrayList<User> getMembers2() {
         return MainController.getUsers(members);
     }
+
 
     public void addMember(User user) {
         if (!members.contains(user.getName())) {

@@ -25,6 +25,10 @@ public class Book{
         return MainController.getUser(owner);
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
+
     public int getAvailableForRent() {
         return availableForRent;
     }
@@ -79,5 +83,15 @@ public class Book{
 
     public String toString() {
         return "_id: " + _id + "\nisbn: " + isbn + "\nowner: " + owner + "\navailableForRent: " + availableForRent + "\nnumberOfCopies: " + numberOfCopies;
+    }
+
+    // For JUnit testing
+    public boolean equals(Book book) {
+        // _id should not be tested
+        return this.isbn.equals(book.isbn)
+                && this.owner.equals(book.owner)
+                && this.rentedTo.equals(book.rentedTo)
+                && this.availableForRent == book.availableForRent
+                && this.numberOfCopies == book.numberOfCopies;
     }
 }

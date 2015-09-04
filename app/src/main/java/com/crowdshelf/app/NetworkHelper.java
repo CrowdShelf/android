@@ -3,6 +3,7 @@ package com.crowdshelf.app;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crowdshelf.app.gsonHelpers.UserDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -35,8 +36,9 @@ public class NetworkHelper {
     // todo find out if deserializers are needed
     private static Gson gson = new GsonBuilder()
             //.registerTypeAdapter(Book.class, new BookDeserializer())
-            //.registerTypeAdapter(User.class, new UserDeserializer())
+            .registerTypeAdapter(User.class, new UserDeserializer())
             //.registerTypeAdapter(Crowd.class, new CrowdDeserializer())
+            .setPrettyPrinting()
             .create();
 
     public static void sendPostRequest(final String route, final String jsonData) {
@@ -160,22 +162,21 @@ public class NetworkHelper {
                 builder.append(line).append("\n");
             }
             String jsonString = builder.toString();
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonParser jp = new JsonParser();
             JsonElement je = jp.parse(jsonString);
             System.out.print(gson.toJson(je));
             JsonObject jo = je.getAsJsonObject();
             if (jo.has("isbn")) {
                 // Retrieved book
-                Book book = new Gson().fromJson(jsonString, Book.class);
+                Book book = gson.fromJson(jsonString, Book.class);
                 MainController.retrieveBook(book);
             } else if (jo.has("username")) {
                 // Retrieved User
-                User user = new Gson().fromJson(jsonString, User.class);
+                User user = gson.fromJson(jsonString, User.class);
                 MainController.retrieveUser(user);
             } else if (jo.has("creator")) {
                 // Retrieved crowd
-                Crowd crowd = new Gson().fromJson(jsonString, Crowd.class);
+                Crowd crowd = gson.fromJson(jsonString, Crowd.class);
                 MainController.retrieveCrowd(crowd);
             }
         } catch (IOException e) {

@@ -1,5 +1,6 @@
 package com.crowdshelf.app.gsonHelpers;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -13,6 +14,8 @@ import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
 
+import org.json.JSONException;
+
 /**
  * Created by Torstein on 02.09.2015.
  */
@@ -22,18 +25,20 @@ public class UserDeserializer implements JsonDeserializer<User> {
             throws JsonParseException
     {
         /*
-        { username: String, booksOwned: Array[Book], booksRented: Array[Book], crowds: Array{Crowd] }
+        { username: String, booksOwned: Array[Book], booksRented: Array[Book], crowds: Array[String] # _id }
          */
         JsonObject jsonObject = json.getAsJsonObject();
-        String username = jsonObject.get("userName").getAsString();
-        ArrayList<Book> booksOwned = new ArrayList<Book>();
+        String username = jsonObject.get("username").getAsString();
+        ArrayList<String> crowds = JsonHelper.jsonArrayToStringArrayList(jsonObject.getAsJsonArray("crowds"));
+        ArrayList<String> booksOwned = JsonHelper.jsonBookArrayToBookIdArrayList(jsonObject.getAsJsonArray("booksOwned"));
+        ArrayList<String> booksRented = JsonHelper.jsonBookArrayToBookIdArrayList(jsonObject.getAsJsonArray("booksOwned"));
 
-        ArrayList<Book> booksRented = new ArrayList<Book>();
-
-        ArrayList<Crowd> crowds = new ArrayList<Crowd>();
-        //ArrayList<User> rentedTo = jsonHelper.usernamesToUsers(jsonObject.get("rentedTo").getAsJsonArray());
-
-        //return new User(username, booksOwned, booksRented, crowds);
-        return null;
+        User user = new User();
+        user.setUsername(username);
+        user.setCrowds(crowds);
+        user.setBooksOwned(booksOwned);
+        user.setBooksRented(booksRented);
+        user.toString();
+        return user;
     }
 }
