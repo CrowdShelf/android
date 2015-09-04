@@ -37,7 +37,8 @@
         android:id="@+id/borrowButton"
         android:text="@string/borrowButton"
         android:layout_above="@+id/returnButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="borrowButtonClick"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -45,7 +46,8 @@
         android:id="@+id/returnButton"
         android:text="@string/returnButton"
         android:layout_above="@+id/addButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="returnButtonClick"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -53,7 +55,8 @@
         android:id="@+id/addButton"
         android:text="@string/addButton"
         android:layout_above="@+id/removeButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="addButtonClick"/>
 
     <Button
         android:layout_width="wrap_content"

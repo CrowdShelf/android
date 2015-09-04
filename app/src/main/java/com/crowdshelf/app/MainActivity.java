@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = (ImageView)findViewById(R.id.imageView);
             Picasso.with(this)
                     .load(bookThumbnail)
+                    .resize(250, 400)
                     .into(imageView);
 
             TextView titleText = (TextView)findViewById(R.id.titleView);
@@ -178,4 +180,46 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    public void addButtonClick(View view) {
+        setContentView(R.layout.activity_main);
+        GoogleBooksJSON googleBooksJson = convertGoogleBooksJsonStringToObject(hardcodedJsonExample);
+
+        assert googleBooksJson != null;
+        final String[] bookTitles = {
+                googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getTitle()
+        };
+
+        String[] bookThumbnails = {
+                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
+                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail()
+        };
+
+        //TODO: Only for testing
+        GridView grid;
+        BookGrid adapter = new BookGrid(MainActivity.this, bookTitles, bookThumbnails);
+        grid=(GridView)findViewById(R.id.gridView);
+        grid.setAdapter(adapter);
+    }
+
+    public void returnButtonClick(View view) {
+        setContentView(R.layout.activity_main);
+    }
+
+    public void borrowButtonClick(View view) {
+        Button borrowButton = (Button)findViewById(R.id.borrowButton);
+        borrowButton.setClickable(false);
+        borrowButton.setEnabled(false);
+        Toast.makeText(getApplicationContext(), "Book is borrowed", Toast.LENGTH_SHORT).show();
+    }
 }
