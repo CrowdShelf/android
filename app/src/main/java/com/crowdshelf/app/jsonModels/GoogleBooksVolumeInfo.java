@@ -8,6 +8,7 @@ public class GoogleBooksVolumeInfo {
     private String subTitle;
     private String publisher;
     private String publishedDate;
+    private String description;
     private GoogleBooksImageLinks imageLinks;
     private String[] authors;
 
@@ -26,6 +27,8 @@ public class GoogleBooksVolumeInfo {
     public String getPublishedDate() {
         return publishedDate;
     }
+
+    public String getDescription() { return description;}
 
     public GoogleBooksImageLinks getImageLinks() {
         return imageLinks;

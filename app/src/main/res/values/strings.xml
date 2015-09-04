@@ -7,4 +7,8 @@
     <string name="edit_message">edit_message</string>
     <string name="button_send">button_send</string>
     <string name="title_activity_scanner">ScannerActivity</string>
+    <string name="borrowButton">Borrow</string>
+    <string name="returnButton">Return</string>
+    <string name="addButton">Add</string>
+    <string name="removeButton">Remove</string>
 </resources>

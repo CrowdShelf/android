@@ -48,4 +48,7 @@ dependencies {
 	//androidTestCompile 'org.hamcrest:hamcrest-library:1.1'
 	testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'junit:junit:4.12'
+
+    //Picasso
+    compile "com.squareup.picasso:picasso:2.4.0"
 }

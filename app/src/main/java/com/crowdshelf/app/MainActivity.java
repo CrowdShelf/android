@@ -1,6 +1,7 @@
 package com.crowdshelf.app;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,6 +27,7 @@ import java.net.URL;
 
 import ntnu.stud.markul.crowdshelf.R;
 import com.crowdshelf.app.jsonModels.GoogleBooksJSON;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     private final String MIXPANEL_TOKEN = "93ef1952b96d0faa696176aadc2fbed4";
@@ -36,45 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //TODO: Remove after testing
-        GoogleBooksJSON googleBooksJson = convertGoogleBooksJsonStringToObject(hardcodedJsonExample);
-
-        assert googleBooksJson != null;
-        final String[] bookTitles = {
-          googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
-          googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
-          googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
-          googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
-          googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
-          googleBooksJson.getItems().get(0).getVolumeInfo().getTitle(),
-          googleBooksJson.getItems().get(0).getVolumeInfo().getTitle()
-        };
-
-        String[] bookThumbnails = {
-                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
-                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
-                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
-                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
-                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
-                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail(),
-                googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail()
-        };
-
-        //TODO: Only for testing
-        GridView grid;
-        BookGrid adapter = new BookGrid(MainActivity.this, bookTitles, bookThumbnails);
-        grid=(GridView)findViewById(R.id.gridView);
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Toast.makeText(MainActivity.this, "You Clicked at " + bookTitles[+position], Toast.LENGTH_SHORT).show();
-
-            }
-        });
 
         //Setup Mixpanel
         if (mixpanel == null){
@@ -90,15 +55,32 @@ public class MainActivity extends AppCompatActivity {
         String ISBN = intent.getStringExtra("ISBN");
 
         if (ISBN != null){
-            convertGoogleBooksJsonStringToObject(getJsonAsStringFromISBN("9781847399304"));
+
+            GoogleBooksJSON googleBooksJson = convertGoogleBooksJsonStringToObject(getJsonAsStringFromISBN(ISBN));
 
             sendMail("Book scanned",
                     "ISBN: " + ISBN + "\n",
                     "no-reply@crowdshelf.com",
                     "crowdshelfmail@gmail.com");
-        }
+            setContentView(R.layout.activity_scanner);
 
-        setContentView(R.layout.activity_main);
+            assert googleBooksJson != null;
+            String bookTitle = googleBooksJson.getItems().get(0).getVolumeInfo().getTitle();
+            String bookThumbnail = googleBooksJson.getItems().get(0).getVolumeInfo().getImageLinks().getThumbnail();
+            String bookInfo = googleBooksJson.getItems().get(0).getVolumeInfo().getDescription();
+
+            ImageView imageView = (ImageView)findViewById(R.id.imageView);
+            Picasso.with(this)
+                    .load(bookThumbnail)
+                    .into(imageView);
+
+            TextView titleText = (TextView)findViewById(R.id.titleView);
+            titleText.setText(bookTitle);
+
+            TextView infoText = (TextView)findViewById(R.id.infoView);
+            infoText.setText(bookInfo);
+
+        }
     }
 
     private void getInfoFromISBN(String bookInformationJsonAsString) {
