@@ -20,7 +20,11 @@ public class MainController {
     //todo  get the user of this app
     private static User mainUser = new User();
 
-    // Create a _NEW_ user
+    /*
+    Users
+     */
+
+    // Create a new user
     public static void createUser(String username) {
         User user = new User();
         user.setUsername(username);
@@ -42,13 +46,27 @@ public class MainController {
         return usersObjs;
     }
 
+    /*
+    Crowds
+     */
+
     // Called ONLY when a user is sent from server
     public static void retrieveUser(User user) {
         users.put(user.getName(), user);
     }
 
-    public static void createCrowd(){
+    // Create new crowd
+    public static void createCrowd(String name, User owner, ArrayList<User> members){
         //todo
+        Crowd crowd = new Crowd();
+        crowd.setName(name);
+        crowd.setOwner(owner.getName());
+        ArrayList<String> memberNames = new ArrayList<String>();
+        for (User u : members) {
+            memberNames.add(u.getName());
+        }
+        crowd.setMembers(memberNames);
+        NetworkController.createCrowd(crowd);
     }
 
     public static Crowd getCrowd(String _id) {
@@ -71,6 +89,9 @@ public class MainController {
         crowds.put(crowd.get_id(), crowd);
     }
 
+    /*
+    Books
+     */
     public static void createBook(String isbn, int numberOfCopies, int availableForRent) {
         // This book is never stored in the books hashmap. It is sent to the server,
         // then retrieved to get the correct _id
@@ -97,12 +118,13 @@ public class MainController {
         isbnToId.get(isbn).add(_id);
     }
 
+    // Look up all stored books with the given isbn, e.g. the same book owned by different users
     public static ArrayList<Book> getBooksByISBN (String isbn) {
-        ArrayList<Book> b = new ArrayList<Book>();
+        ArrayList<Book> booksObj = new ArrayList<Book>();
         for(String _id : isbnToId.get(isbn)) {
-            b.add(books.get(_id));
+            booksObj.add(books.get(_id));
         }
-        return b;
+        return booksObj;
     }
 
     public static Book getBook(String _id) {

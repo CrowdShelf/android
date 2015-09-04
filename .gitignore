@@ -83,3 +83,7 @@ build/intermediates/dex-cache/cache.xml
 .gradle/2.4/taskArtifacts/fileHashes.bin
 .gradle/2.4/taskArtifacts/fileHashes.bin
 .gradle/2.4/taskArtifacts/taskArtifacts.bin
+local.properties
+.gradle/2.4/taskArtifacts/fileHashes.bin
+.gradle/2.4/taskArtifacts/fileSnapshots.bin
+.gradle/2.4/taskArtifacts/taskArtifacts.bin

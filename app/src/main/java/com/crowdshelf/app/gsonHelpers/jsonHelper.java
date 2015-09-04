@@ -11,14 +11,13 @@ import java.util.ArrayList;
 
 import com.crowdshelf.app.MainController;
 
-import org.json.JSONException;
 
 /**
  * Created by Torstein on 02.09.2015.
  */
 public class JsonHelper {
-    @Deprecated
 
+    @Deprecated
     public static ArrayList<User> usernamesToUsers(JsonArray usernames) {
         ArrayList<User> users = new ArrayList<User>();
         for (int i = 0, size = usernames.size(); i < size; i++)
@@ -29,6 +28,7 @@ public class JsonHelper {
         return users;
     }
 
+    @Deprecated
     public static void jsonEToCrowd(JsonElement json) {
         JsonObject jsonObject = json.getAsJsonObject();
         String _id = jsonObject.get("_id").getAsString();

@@ -1,6 +1,5 @@
 package com.crowdshelf.app.gsonHelpers;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -10,11 +9,8 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
 
-import org.json.JSONException;
 
 /**
  * Created by Torstein on 02.09.2015.
@@ -25,7 +21,7 @@ public class UserDeserializer implements JsonDeserializer<User> {
             throws JsonParseException
     {
         /*
-        { username: String, booksOwned: Array[Book], booksRented: Array[Book], crowds: Array[String] # _id }
+        { username: String, booksOwned: Array[Book], booksRented: Array[Book], crowds: Array[String# _id]  }
          */
         JsonObject jsonObject = json.getAsJsonObject();
         String username = jsonObject.get("username").getAsString();
@@ -38,7 +34,9 @@ public class UserDeserializer implements JsonDeserializer<User> {
         user.setCrowds(crowds);
         user.setBooksOwned(booksOwned);
         user.setBooksRented(booksRented);
+
         user.toString();
+
         return user;
     }
 }
