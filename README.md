@@ -15,3 +15,6 @@ If a name and type match up, a new object is created using the default no-args c
 If the fields do not match up, GSON need a serializer to create JSON-data from an object or a deserializer to create an object from JSON-data.
 
 GSON does not use non-default constructors, getters or setters, but the latter should be used to serialize or deserialize classes.
+
+## Structure and data model
+The `Book`, `Crowd`, and `User` classes are made to match the structure of the objects returned from the API as close as possible with only minor changes. To get or create an object of any of these classes, the rest of the program should use the `MainController` class which should take care of retrieving the necessary data from the server.
