@@ -1,10 +1,10 @@
 # CrowdShelf for Android
 ### Unit testing
 Unit testing is done with Robolectric.
-Robolectric lets us test classes and methods in the app without running the Android Emulator.
+This lets us test classes and methods in the app without running the Android Emulator.
 
 Test files should be placed in /src/main/test/java/com.crowdshelf.app/.
-Neither the testclasses or their methods need to follow a specific name-convention, but setup methods needs to be tagged with @Before and the test methods needs to be tagged with @Test.
+Neither the testclasses or their methods need to follow a specific name-convention, but setup methods needs to be tagged with `@Before` and the test methods needs to be tagged with `@Test`.
 
 For more info see: https://github.com/codepath/android_guides/wiki/Unit-Testing-with-Robolectric
 ### JSON parsing
