@@ -18,7 +18,7 @@ If the fields do not match up, GSON need a serializer to create JSON-data from a
 
 GSON does not use non-default constructors, getters or setters, but the latter should be used to serialize or deserialize classes.
 
-```
+```java
 Gson gson = new GsonBuilder()
             \\ Need deserialiser for user class, but not book class
             .registerTypeAdapter(User.class, new UserDeserializer())
