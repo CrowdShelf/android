@@ -2,9 +2,9 @@ package com.crowdshelf.app.models;
 
 import java.util.ArrayList;
 
-import com.crowdshelf.app.BookInfoGetter;
+import com.crowdshelf.app.bookInfo.BookInfoGetter;
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.NetworkController;
+import com.crowdshelf.app.network.NetworkController;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -14,7 +14,7 @@ public class Book{
     private String isbn;
     private String owner;
     private ArrayList<String> rentedTo;
-    private int availableForRent;
+    private int numAvailableForRent;
     private int numberOfCopies;
 
     public ArrayList<User> getRentedTo() {
@@ -29,12 +29,12 @@ public class Book{
         return isbn;
     }
 
-    public int getAvailableForRent() {
-        return availableForRent;
+    public int getNumAvailableForRent() {
+        return numAvailableForRent;
     }
 
-    public void setAvailableForRent(int availableForRent) {
-        this.availableForRent = availableForRent;
+    public void setNumAvailableForRent(int numAvailableForRent) {
+        this.numAvailableForRent = numAvailableForRent;
     }
 
     public void rentOut(User user) {
@@ -82,16 +82,25 @@ public class Book{
     }
 
     public String toString() {
-        return "_id: " + _id + "\nisbn: " + isbn + "\nowner: " + owner + "\navailableForRent: " + availableForRent + "\nnumberOfCopies: " + numberOfCopies;
+        return "_id: " + String.valueOf(_id) +
+                "\nisbn: " + String.valueOf(isbn) +
+                "\nowner: " + String.valueOf(owner) +
+                "\nnumAvailableForRent: " + String.valueOf(numAvailableForRent) +
+                "\nnumberOfCopies: " + String.valueOf(numberOfCopies) +
+                "\nrentedTo: " + String.valueOf(rentedTo);
     }
 
-    // For JUnit testing
-    public boolean equals(Book book) {
-        // _id should not be tested
-        return this.isbn.equals(book.isbn)
-                && this.owner.equals(book.owner)
-                && this.rentedTo.equals(book.rentedTo)
-                && this.availableForRent == book.availableForRent
-                && this.numberOfCopies == book.numberOfCopies;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        } else {
+            final Book book = (Book) obj;
+            return this.isbn.equals(book.isbn)
+                    && this.owner.equals(book.owner)
+                    && this.rentedTo.equals(book.rentedTo)
+                    && this.numAvailableForRent == book.numAvailableForRent
+                    && this.numberOfCopies == book.numberOfCopies;
+        }
     }
 }

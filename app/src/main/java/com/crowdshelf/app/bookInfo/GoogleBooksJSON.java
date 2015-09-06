@@ -1,4 +1,4 @@
-package com.crowdshelf.app.jsonModels;
+package com.crowdshelf.app.bookInfo;
 
 import java.util.ArrayList;
 

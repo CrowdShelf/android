@@ -40,6 +40,7 @@ public class JsonHelper {
         //return new Crowd(_id, name, owner, members);
     }
 
+    @Deprecated // Use gson typetoken instead
     public static ArrayList<String> jsonBookArrayToBookIdArrayList(JsonArray jArray) {
         ArrayList<String> bookIds = new ArrayList<String>();
         for (int i = 0; i < jArray.size(); i++) {
@@ -50,6 +51,7 @@ public class JsonHelper {
         return bookIds;
     }
 
+    @Deprecated // Use gson typetoken instead
     public static ArrayList<String> jsonArrayToStringArrayList(JsonArray jArray){
         ArrayList<String> returnList = new ArrayList<String>();
         for (int i = 0; i < jArray.size(); i++) {

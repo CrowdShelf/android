@@ -1,13 +1,10 @@
-package com.crowdshelf.app;
+package com.crowdshelf.app.network;
 
-import com.crowdshelf.app.gsonHelpers.UserDeserializer;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
-import com.crowdshelf.app.models.User;
 
 /**
  * Created by Torstein on 01.09.2015.

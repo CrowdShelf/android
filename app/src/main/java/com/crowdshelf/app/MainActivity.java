@@ -1,7 +1,6 @@
 package com.crowdshelf.app;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -9,13 +8,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crowdshelf.app.bookInfo.BookInfoGetter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -27,7 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ntnu.stud.markul.crowdshelf.R;
-import com.crowdshelf.app.jsonModels.GoogleBooksJSON;
+import com.crowdshelf.app.bookInfo.GoogleBooksJSON;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {

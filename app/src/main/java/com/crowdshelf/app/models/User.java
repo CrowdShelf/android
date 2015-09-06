@@ -59,10 +59,6 @@ public class User {
         return username;
     }
 
-    public String toString() {
-        return "username: " + username + booksOwned.toString() + booksRented.toString() + crowds.toString();
-    }
-
     public void addRentedBook(Book book) {String _id = book.get_id();
         if (!booksRented.contains(_id)) {
             booksRented.add(book.get_id());
@@ -76,11 +72,24 @@ public class User {
         }
     }
 
+    public String toString() {
+        return "username: " + String.valueOf(username) +
+                String.valueOf(booksOwned) +
+                String.valueOf(booksRented) +
+                String.valueOf(crowds);
+    }
+
     // For JUnit testing
-    public boolean equals(User user) {
-        return this.username.equals(user.getName())
-                && this.booksOwned.equals(user.getBooksOwned())
-                && this.booksRented.equals(user.getBooksRented())
-                && this.crowds.equals(user.getCrowds());
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        } else {
+            final User user = (User) obj;
+            return this.username.equals(user.getName())
+                    && this.booksOwned.equals(user.getBooksOwned())
+                    && this.booksRented.equals(user.getBooksRented())
+                    && this.crowds.equals(user.getCrowds());
+        }
     }
 }

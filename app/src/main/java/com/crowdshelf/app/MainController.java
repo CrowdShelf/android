@@ -7,14 +7,15 @@ import java.util.HashSet;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.network.NetworkController;
 
 /**
  * Created by Torstein on 02.09.2015.
  */
 public class MainController {
     private static HashMap<String, Crowd> crowds = new HashMap<String, Crowd>(); // KEY = crowd _id
-    private static HashMap<String, Book> books = new HashMap<String, Book>(); // KEY = book _id NOT ISBN
-    private static HashMap<String, HashSet<String>> isbnToId = new HashMap<String, HashSet<String>>(); // KEY = isbn, Value = HashSet[Book _id]
+    private static HashMap<String, Book> books = new HashMap<String, Book>(); // KEY = book _id (NOT isbn!)
+    private static HashMap<String, HashSet<String>> isbnToId = new HashMap<String, HashSet<String>>(); // KEY = isbn, Value = Set[Book _id]
     private static HashMap<String, User> users = new HashMap<String, User>(); // KEY = username
 
     //todo  get the user of this app
@@ -92,7 +93,7 @@ public class MainController {
     /*
     Books
      */
-    public static void createBook(String isbn, int numberOfCopies, int availableForRent) {
+    public static void createBook(String isbn, int numberOfCopies, int numAvailableForRent) {
         // This book is never stored in the books hashmap. It is sent to the server,
         // then retrieved to get the correct _id
         Book book = new Book();
@@ -100,15 +101,15 @@ public class MainController {
         book.setIsbn(isbn);
         book.setOwner(mainUser.getName());
         book.setNumberOfCopies(numberOfCopies);
-        book.setAvailableForRent(availableForRent);
+        book.setNumAvailableForRent(numAvailableForRent);
         NetworkController.createBook(book);
     }
 
     // Called ONLY when a book is sent from server
     public static void retrieveBook(Book book) {
-        getUser(book.getOwner().getUsername()).addOwnedBook(book);
+        //getUser(book.getOwner().getUsername()).addOwnedBook(book);
         books.put(book.get_id(), book);
-        isbnToId.get(book.getIsbn()).add(book.get_id());
+        coupleIsbnToId(book.getIsbn(), book.get_id());
     }
 
     public static void coupleIsbnToId(String isbn, String _id) {
@@ -119,7 +120,7 @@ public class MainController {
     }
 
     // Look up all stored books with the given isbn, e.g. the same book owned by different users
-    public static ArrayList<Book> getBooksByISBN (String isbn) {
+    public static ArrayList<Book> getBooksByIsbn (String isbn) {
         ArrayList<Book> booksObj = new ArrayList<Book>();
         for(String _id : isbnToId.get(isbn)) {
             booksObj.add(books.get(_id));
@@ -127,8 +128,13 @@ public class MainController {
         return booksObj;
     }
 
-    public static Book getBook(String _id) {
+    public static Book getBookById(String _id) {
         return books.get(_id);
+    }
+
+    public static Book getBookByIsbnOwner (String isbn, String owner) {
+        // todo
+        return null;
     }
 
 }
