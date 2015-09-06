@@ -1,5 +1,8 @@
 package com.crowdshelf.app.gsonHelpers;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.models.Book;
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -10,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import com.crowdshelf.app.models.User;
+import com.google.gson.reflect.TypeToken;
 
 
 /**
@@ -21,13 +25,39 @@ public class UserDeserializer implements JsonDeserializer<User> {
             throws JsonParseException
     {
         /*
-        { username: String, booksOwned: Array[Book], booksRented: Array[Book], crowds: Array[String# _id]  }
+        {
+        username: String,
+        booksOwned: Array[Book],
+        booksRented: Array[Book],
+        crowds: Array[String] // crowd _id
+        }
          */
         JsonObject jsonObject = json.getAsJsonObject();
         String username = jsonObject.get("username").getAsString();
-        ArrayList<String> crowds = JsonHelper.jsonArrayToStringArrayList(jsonObject.getAsJsonArray("crowds"));
-        ArrayList<String> booksOwned = JsonHelper.jsonBookArrayToBookIdArrayList(jsonObject.getAsJsonArray("booksOwned"));
-        ArrayList<String> booksRented = JsonHelper.jsonBookArrayToBookIdArrayList(jsonObject.getAsJsonArray("booksOwned"));
+
+        Type arrayListStringType = new TypeToken<ArrayList<String>>(){}.getType();
+        Type arrayListBookType = new TypeToken<ArrayList<Book>>(){}.getType();
+
+        /*
+        User objects are retrieved containing full book objects, but are stored only containing a
+        reference to the book. We therefore store the book _id's in the user object and the books
+        themselves in the MainController.
+        */
+        ArrayList<String> crowds = new Gson().fromJson(jsonObject.getAsJsonArray("crowds"), arrayListStringType);
+        ArrayList<Book> booksOwnedObj = new Gson().fromJson(jsonObject.getAsJsonArray("booksOwned"), arrayListBookType);
+        ArrayList<Book> booksRentedObj = new Gson().fromJson(jsonObject.getAsJsonArray("booksRented"), arrayListBookType);
+        ArrayList<String> booksOwned = new ArrayList<String>();
+        ArrayList<String> booksRented = new ArrayList<String>();
+
+        for (Book b : booksOwnedObj) {
+            //b.toString();
+            MainController.retrieveBook(b);
+            booksOwned.add(b.get_id());
+        }
+        for (Book b : booksRentedObj) {
+            MainController.retrieveBook(b);
+            booksRented.add(b.get_id());
+        }
 
         User user = new User();
         user.setUsername(username);

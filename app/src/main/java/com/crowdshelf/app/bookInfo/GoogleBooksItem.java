@@ -1,4 +1,4 @@
-package com.crowdshelf.app.jsonModels;
+package com.crowdshelf.app.bookInfo;
 
 /**
  * Created by markuslund92 on 01.09.15.

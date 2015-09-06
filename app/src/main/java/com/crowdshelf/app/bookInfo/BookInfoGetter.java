@@ -1,20 +1,21 @@
-package com.crowdshelf.app;
+package com.crowdshelf.app.bookInfo;
 
 import android.media.Image;
 
-import com.crowdshelf.app.models.BookInfo;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.crowdshelf.app.models.BookInfo;
+import com.google.gson.internal.LinkedTreeMap;
 
 /**
  * Created by markuslund92 on 01.09.15.
  */
 public class BookInfoGetter {
-    private static HashMap<String, BookInfo> bookInfoMap = new HashMap<String, BookInfo>();
     private String kind;
     private Integer totalItems;
-    private ArrayList<com.google.gson.internal.LinkedTreeMap<String, com.google.gson.internal.LinkedTreeMap>> items;
+    private ArrayList<LinkedTreeMap<String ,LinkedTreeMap>> items;
+    private static HashMap<String, BookInfo> bookInfoMap = new HashMap<String, BookInfo>(); // KEY: ISBN
     // The info is stored in a hashmap that is used by all individual books to avoid duplicate images etc.
 
     private static void downloadBookInfo(String isbn) {

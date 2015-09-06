@@ -1,8 +1,9 @@
-package com.crowdshelf.app;
+package com.crowdshelf.app.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.gsonHelpers.UserDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,11 +34,11 @@ import org.json.JSONTokener;
 public class NetworkHelper {
     private static String host = "https://crowdshelf.herokuapp.com";
     // For converting json into java objects using GSON and custom deserializers for each class
-    // todo find out if deserializers are needed
     private static Gson gson = new GsonBuilder()
             //.registerTypeAdapter(Book.class, new BookDeserializer())
             .registerTypeAdapter(User.class, new UserDeserializer())
             //.registerTypeAdapter(Crowd.class, new CrowdDeserializer())
+            // .serializeNulls() // json nulls for null fields
             .setPrettyPrinting()
             .create();
 
@@ -164,7 +165,10 @@ public class NetworkHelper {
             String jsonString = builder.toString();
             JsonParser jp = new JsonParser();
             JsonElement je = jp.parse(jsonString);
+
+            System.out.print("Received JSON-data: \n");
             System.out.print(gson.toJson(je));
+
             JsonObject jo = je.getAsJsonObject();
             if (jo.has("isbn")) {
                 // Retrieved book
