@@ -1,6 +1,8 @@
-package com.crowdshelf.app.bookInfo;
+package com.crowdshelf.app;
 
 import android.media.Image;
+
+import com.crowdshelf.app.models.BookInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import com.google.gson.internal.LinkedTreeMap;
  * Created by markuslund92 on 01.09.15.
  */
 public class BookInfoGetter {
+    private static HashMap<String, BookInfo> bookInfoMap = new HashMap<String, BookInfo>();
     private String kind;
     private Integer totalItems;
     private ArrayList<LinkedTreeMap<String ,LinkedTreeMap>> items;
