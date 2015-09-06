@@ -2,6 +2,7 @@ package com.crowdshelf.app.models;
 
 import java.util.ArrayList;
 
+import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.BookInfoGetter;
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.network.NetworkController;
@@ -17,16 +18,40 @@ public class Book{
     private int numAvailableForRent;
     private int numberOfCopies;
 
-    public ArrayList<User> getRentedTo() {
-        return MainController.getUsers(rentedTo);
+    public String getId() {
+        return _id;
+    }
+
+    public void setId(String _id) {
+        this._id = _id;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public User getOwner() {
         return MainController.getUser(owner);
     }
 
-    public String getIsbn() {
-        return isbn;
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public ArrayList<String> getRentedToName() {
+        return rentedTo;
+    }
+
+    public ArrayList<User> getRentedTo() {
+        return MainController.getUsers(rentedTo);
+    }
+
+    public void setRentedTo(ArrayList<String> rentedTo) {
+        this.rentedTo = rentedTo;
     }
 
     public int getNumAvailableForRent() {
@@ -37,18 +62,6 @@ public class Book{
         this.numAvailableForRent = numAvailableForRent;
     }
 
-    public void rentOut(User user) {
-        NetworkController.addRenter(this.isbn, owner, user.getName());
-        if (!rentedTo.contains(user.getName())) {
-            rentedTo.add(user.getName());
-        }
-    }
-
-    public void takeInReturn(User user) {
-        NetworkController.removeRenter(this.isbn, owner, user.getName());
-        rentedTo.remove(user.getName());
-    }
-
     public int getNumberOfCopies() {
         return numberOfCopies;
     }
@@ -57,28 +70,20 @@ public class Book{
         this.numberOfCopies = numberOfCopies;
     }
 
+    public void addRenter(String username) {
+        NetworkController.addRenter(this.isbn, owner, username);
+        if (!rentedTo.contains(username)) {
+            rentedTo.add(username);
+        }
+    }
+
+    public void removeRenter(String username) {
+        NetworkController.removeRenter(this.isbn, owner, username);
+        rentedTo.remove(username);
+    }
+
     public BookInfo getBookInfo() {
         return BookInfoGetter.getBookInfo(this.isbn);
-    }
-
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public void setRentedTo(ArrayList<String> rentedTo) {
-        this.rentedTo = rentedTo;
     }
 
     public String toString() {

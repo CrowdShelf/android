@@ -150,11 +150,11 @@ public class NetworkHelper {
         try {
             /*
             Possible reponses:
+            user object
             book object
             crowd object
             array of book objects
             array of crowd objects
-            user object
              */
 
             BufferedReader bReader = new BufferedReader(iReader);
@@ -163,22 +163,24 @@ public class NetworkHelper {
                 builder.append(line).append("\n");
             }
             String jsonString = builder.toString();
-            JsonParser jp = new JsonParser();
-            JsonElement je = jp.parse(jsonString);
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(jsonString);
 
             System.out.print("Received JSON-data: \n");
-            System.out.print(gson.toJson(je));
+            System.out.print(gson.toJson(jsonElement));
 
-            JsonObject jo = je.getAsJsonObject();
-            if (jo.has("isbn")) {
+            // TODO this also needs to handle arrays of obects!
+            
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            if (jsonObject.has("isbn")) {
                 // Retrieved book
                 Book book = gson.fromJson(jsonString, Book.class);
                 MainController.retrieveBook(book);
-            } else if (jo.has("username")) {
+            } else if (jsonObject.has("username")) {
                 // Retrieved User
                 User user = gson.fromJson(jsonString, User.class);
                 MainController.retrieveUser(user);
-            } else if (jo.has("creator")) {
+            } else if (jsonObject.has("owner")) {
                 // Retrieved crowd
                 Crowd crowd = gson.fromJson(jsonString, Crowd.class);
                 MainController.retrieveCrowd(crowd);

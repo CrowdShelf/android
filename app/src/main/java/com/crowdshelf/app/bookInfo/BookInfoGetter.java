@@ -5,7 +5,6 @@ import android.media.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.crowdshelf.app.models.BookInfo;
 import com.google.gson.internal.LinkedTreeMap;
 
 /**

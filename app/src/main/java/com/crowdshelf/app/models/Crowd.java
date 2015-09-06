@@ -14,8 +14,12 @@ public class Crowd {
     private String owner;
     private ArrayList<String> members;
 
-    public void set_id(String _id) {
+    public void setId(String _id) {
         this._id = _id;
+    }
+
+    public String getId() {
+        return _id;
     }
 
     public String getName() {
@@ -26,57 +30,47 @@ public class Crowd {
         this.name = name;
     }
 
-    public String getOwner() {
+    public String getOwnerName() {
         return owner;
+    }
+
+    public User getOwner() {
+        return MainController.getUser(owner);
     }
 
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
+    public ArrayList<String> getMembersNames() {
+        return this.members;
+    }
+
+    public ArrayList<User> getMembers() {
+        return MainController.getUsers(members);
+    }
+
     public void setMembers(ArrayList<String> members) {
         this.members = members;
     }
 
-    public ArrayList<String> getMembers() {
-        return this.members;
-    }
-
-    @Deprecated
-    public ArrayList<User> getMembers2() {
-        return MainController.getUsers(members);
-    }
-
-
-    public void addMember(User user) {
-        if (!members.contains(user.getName())) {
-            members.add(user.getName());
-            NetworkController.addCrowdMember(this._id, user.getName());
+    public void addMember(String username) {
+        if (!members.contains(username)) {
+            members.add(username);
+            NetworkController.addCrowdMember(this._id, username);
         }
     }
 
-    public void removeMember(User user) {
-        members.remove(user.getName());
-        NetworkController.removeCrowdMember(this._id, user.getName());
-    }
-
-    // todo rework rethink
-    public ArrayList<Shelf> getShelves() {
-        ArrayList<Shelf> shelves = new ArrayList<Shelf>();
-        //for (User u: members) {
-            //shelves.add(u.getShelf());
-        //}
-        return shelves;
-    }
-
-    public String get_id() {
-        return _id;
+    public void removeMember(String username) {
+        members.remove(username);
+        NetworkController.removeCrowdMember(this._id, username);
     }
 
     public String toString() {
         return "_id: " + String.valueOf(_id) +
                 "\nname: " + String.valueOf(name) +
-                "\nowner: " + String.valueOf(owner);
+                "\nowner: " + String.valueOf(owner) +
+                "\nmembers: " + String.valueOf(members);
     }
 
     // For JUnit testing
@@ -86,7 +80,7 @@ public class Crowd {
             return false;
         } else {
             final Crowd crowd = (Crowd) obj;
-            return this._id.equals(crowd.get_id())
+            return this._id.equals(crowd.getId())
                     && this.name.equals(crowd.getName())
                     && this.owner.equals(crowd.getMembers())
                     && this.members.equals(crowd.getMembers());

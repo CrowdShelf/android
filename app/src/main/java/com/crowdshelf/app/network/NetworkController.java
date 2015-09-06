@@ -23,9 +23,12 @@ public class NetworkController {
         NetworkHelper.sendPutRequest("/book", new Gson().toJson(book, Book.class));
     }
 
-    // Obsolete, should never be needed!
-    @Deprecated
-    public static void getBook(String owner, String isbn) {
+    public static void getBookById(String _id) {
+        // TODO implement api and update route below
+        NetworkHelper.sendGetRequest("/book");
+    }
+
+    public static void getBookByIsbnOwner(String isbn, String owner) {
         // GET /book/:isbn/:owner
         NetworkHelper.sendGetRequest("/book/" + isbn + "/" + owner);
     }
