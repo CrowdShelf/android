@@ -53,11 +53,5 @@ public class ScannerActivity extends Activity implements ZXingScannerView.Result
 
         super.onBackPressed();
         MainActivity.bookScanned(ISBN);
-
-//        Intent intent = new Intent(this, MainActivity.class);
-//
-//        intent.putExtra("ISBN", ISBN);
-//
-//        startActivity(intent); // Return to start page
     }
 }

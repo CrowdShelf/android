@@ -1,6 +1,6 @@
 package com.crowdshelf.app.jsonModels;
 
-import com.crowdshelf.app.jsonModels.GoogleBooksItem;
+import com.crowdshelf.app.bookInfo.GoogleBooksItem;
 
 import java.util.ArrayList;
 

@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crowdshelf.app.jsonModels.GoogleBooksVolumeInfo;
+import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 
 import java.util.List;
 
