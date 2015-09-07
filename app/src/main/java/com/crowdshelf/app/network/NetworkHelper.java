@@ -2,7 +2,7 @@ package com.crowdshelf.app.network;
 
 import android.os.AsyncTask;
 
-import com.crowdshelf.app.network.gsonHelpers.JsonHandler;
+import com.crowdshelf.app.network.responseHandlers.ResponseHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -25,7 +25,7 @@ public class NetworkHelper {
             .setPrettyPrinting()
             .create();
 
-    public static void sendPostRequest(final String route, final String jsonData, final JsonHandler jsonHandler) {
+    public static void sendPostRequest(final String route, final String jsonData, final ResponseHandler responseHandler) {
         new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
             protected InputStreamReader doInBackground(Void... params) {
@@ -48,7 +48,7 @@ public class NetworkHelper {
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         return new InputStreamReader(connection.getInputStream());
                     } else {
-                        // Server returned HTTP error code.
+                        handleHTTPError(connection.getResponseCode());
                     }
                 } catch (java.net.MalformedURLException e) {
                     // ...
@@ -60,12 +60,12 @@ public class NetworkHelper {
 
             @Override
             protected void onPostExecute(InputStreamReader reader) {
-                handleResponse(reader, jsonHandler);
+                handleResponse(reader, responseHandler);
             }
         }.execute();
     }
 
-    public static void sendPutRequest(final String route, final String jsonData, final JsonHandler jsonHandler) {
+    public static void sendPutRequest(final String route, final String jsonData, final ResponseHandler responseHandler) {
         new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
             protected InputStreamReader doInBackground(Void... params) {
@@ -84,6 +84,7 @@ public class NetworkHelper {
                         new InputStreamReader(connection.getInputStream());
                     } else {
                         // Server returned HTTP error code.
+                        handleHTTPError(connection.getResponseCode());
                     }
                 } catch (java.net.MalformedURLException e) {
                     // ...
@@ -94,12 +95,12 @@ public class NetworkHelper {
             }
 
             protected void onPostExecute(InputStreamReader reader) {
-                handleResponse(reader, jsonHandler);
+                handleResponse(reader, responseHandler);
             }
         }.execute();
     }
 
-    public static void sendGetRequest(final String route, final JsonHandler jsonHandler) {
+    public static void sendGetRequest(final String route, final ResponseHandler responseHandler) {
         new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
             protected InputStreamReader doInBackground(Void... params) {
@@ -115,6 +116,7 @@ public class NetworkHelper {
                         return new InputStreamReader(connection.getInputStream());
                     } else {
                         // Server returned HTTP error code.
+                        handleHTTPError(connection.getResponseCode());
                     }
                 } catch (java.net.MalformedURLException e) {
                     // ...
@@ -126,12 +128,12 @@ public class NetworkHelper {
 
             @Override
             protected void onPostExecute(InputStreamReader reader) {
-                handleResponse(reader, jsonHandler);
+                handleResponse(reader, responseHandler);
             }
         }.execute();
     }
 
-    public static void handleResponse(InputStreamReader iReader, JsonHandler jsonHandler) {
+    public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler) {
         try {
             /*
             Possible reponses:
@@ -152,12 +154,27 @@ public class NetworkHelper {
 
             System.out.print("Received JSON-data: \n");
             System.out.print(gson.toJson(jsonElement));
-            if (jsonHandler != null) {
-                jsonHandler.handleJsonResponse(jsonString);
+            if (responseHandler != null) {
+                responseHandler.handleJsonResponse(jsonString);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public static void handleHTTPError(int responseCode) {
+        String msg = String.valueOf(responseCode);
+        switch (responseCode) {
+            case HttpURLConnection.HTTP_CONFLICT:
+                msg = "409 Conflict. Already a renter OR Crowd name already in use OR Already a member of the crowd";
+                break;
+            case HttpURLConnection.HTTP_NOT_FOUND:
+                msg = "404 Not Found. The object you are looking for does not exist.";
+                break;
+            case 422:
+                msg = "422 Unprocessable entity. Something is wrong with the sent data, like a missing field";
+                break;
+        }
+        System.out.print(msg);
     }
 }

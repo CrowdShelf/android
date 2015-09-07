@@ -1,10 +1,10 @@
 package com.crowdshelf.app.network;
 
-import com.crowdshelf.app.network.gsonHelpers.ArrayListBookHandler;
-import com.crowdshelf.app.network.gsonHelpers.ArrayListCrowdHandler;
-import com.crowdshelf.app.network.gsonHelpers.BookHandler;
-import com.crowdshelf.app.network.gsonHelpers.CrowdHandler;
-import com.crowdshelf.app.network.gsonHelpers.UserHandler;
+import com.crowdshelf.app.network.responseHandlers.BookListHandler;
+import com.crowdshelf.app.network.responseHandlers.CrowdListHandler;
+import com.crowdshelf.app.network.responseHandlers.BookHandler;
+import com.crowdshelf.app.network.responseHandlers.CrowdHandler;
+import com.crowdshelf.app.network.responseHandlers.UserHandler;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -15,8 +15,8 @@ import com.crowdshelf.app.models.Crowd;
  * Created by Torstein on 01.09.2015.
  */
 public class NetworkController {
-    private static ArrayListBookHandler arrayListBookHandler = new ArrayListBookHandler();
-    private static ArrayListCrowdHandler arrayListCrowdHandler = new ArrayListCrowdHandler();
+    private static BookListHandler bookListHandler = new BookListHandler();
+    private static CrowdListHandler crowdListHandler = new CrowdListHandler();
     private static CrowdHandler crowdHandler = new CrowdHandler();
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
@@ -88,9 +88,9 @@ public class NetworkController {
     public static void getCrowds() {
         /*
          GET /crowd
-        response: arraylistcrowd
+        response: list of crowds
         */
-        NetworkHelper.sendGetRequest("/crowd", arrayListCrowdHandler);
+        NetworkHelper.sendGetRequest("/crowd", crowdListHandler);
     }
 
     public static void addCrowdMember(String crowdId, String username) {

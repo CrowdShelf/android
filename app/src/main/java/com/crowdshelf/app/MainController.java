@@ -95,7 +95,6 @@ public class MainController {
         receiveUsers(crowd.getMembers());
     }
 
-    @Deprecated
     public static void receiveCrowds(List<Crowd> crowds) {
         for (Crowd c : crowds) {
             receiveCrowd(c);
@@ -124,7 +123,6 @@ public class MainController {
         coupleIsbnToId(book.getIsbn(), book.getId());
     }
 
-    @Deprecated
     public static void receiveBooks(List<Book> books) {
         for (Book b : books) {
             receiveBook(b);
