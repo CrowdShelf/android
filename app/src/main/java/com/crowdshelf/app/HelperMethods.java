@@ -2,7 +2,7 @@ package com.crowdshelf.app;
 
 import android.util.Log;
 
-import com.crowdshelf.app.jsonModels.GoogleBooksMain;
+import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

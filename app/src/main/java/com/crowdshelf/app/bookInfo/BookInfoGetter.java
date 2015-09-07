@@ -1,11 +1,11 @@
-package com.crowdshelf.app;
+package com.crowdshelf.app.bookInfo;
 
 import android.media.Image;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.google.gson.internal.LinkedTreeMap;
 
 /**
  * Created by markuslund92 on 01.09.15.
