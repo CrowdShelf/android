@@ -1,6 +1,6 @@
 package com.crowdshelf.app.bookInfo;
 
-import android.media.Image;
+import android.graphics.Bitmap;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -12,9 +12,9 @@ public class BookInfo {
     private String author;
     private String publisher;
     private String pubDate;
-    private Image artwork; // Maybe we need multiple sizes
+    private Bitmap artwork; // Maybe we need multiple sizes
 
-    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, Image artwork) {
+    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, Bitmap artwork) {
         this.isbn = isbn;
         this.title = title;
         this.subtitle = subtitle;
@@ -48,7 +48,7 @@ public class BookInfo {
         return pubDate;
     }
 
-    public Image getArtwork() {
+    public Bitmap getArtwork() {
         return artwork;
     }
 
