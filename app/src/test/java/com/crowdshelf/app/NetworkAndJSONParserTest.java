@@ -33,8 +33,7 @@ public class NetworkAndJSONParserTest {
     Book bookExpected;
     Book newBookActual;
     Book newBookExpected;
-    User userActual;
-    User userExpected;
+    User userActual, userExpected, userRenter;
     Crowd crowdActual;
     Crowd crowdExpected;
 
@@ -78,19 +77,44 @@ public class NetworkAndJSONParserTest {
         newBookExpected.setNumberOfCopies(5);
         newBookExpected.setNumAvailableForRent(4);
         */
+
+        userRenter = new User();
+        userRenter.setUsername("katja");
     }
 
     @Test
+    public void testGetUserWithBooksThenAddAndRemoveRenter() throws Exception {
+        testGetUser();
+        testGetBookFromUser();
+        testAddRenter();
+        testRemoveRenter();
+    }
+
     public void testGetUser() throws Exception {
         userActual = mC.getUser("torstein");
         Assert.assertEquals("\nUser: ", userExpected, userActual);
+    }
 
+    public void testGetBookFromUser() throws Exception {
         // Verify that the books contained in the User object is retrieved and stored properly
         bookActual = mC.getBookById("55eb61c7b939d9110027e527");
         bookExpected.toString();
         bookActual.toString();
         Assert.assertEquals("\nBooks in user object: ", bookExpected, bookActual);
     }
+
+    public void testAddRenter() throws Exception{
+        bookActual.addRenter(userRenter);
+    }
+
+    public  void testRemoveRenter() throws Exception {
+
+    }
+
+    public void testGetBook() throws Exception {
+
+    }
+
 
     @Test
     public void testGetCrowd() throws Exception {
@@ -109,18 +133,9 @@ public class NetworkAndJSONParserTest {
         Assert.assertEquals(newBookExpected, newBookActual);
     }
 
-    @Test
-    public void testGetBook() throws Exception {
 
-    }
 
-    @Test
-    public void testAddRenter() throws Exception{
-    }
 
-    @Test
-    public  void testRemoveRenter() throws Exception {
-    }
 
     @Test
     public void testCreateCrowd() throws Exception {

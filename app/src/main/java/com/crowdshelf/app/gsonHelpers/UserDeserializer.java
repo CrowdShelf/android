@@ -50,13 +50,12 @@ public class UserDeserializer implements JsonDeserializer<User> {
         ArrayList<String> booksRented = new ArrayList<String>();
 
         for (Book b : booksOwnedObj) {
-            //b.toString();
             MainController.retrieveBook(b);
-            booksOwned.add(b.get_id());
+            booksOwned.add(b.getId());
         }
         for (Book b : booksRentedObj) {
             MainController.retrieveBook(b);
-            booksRented.add(b.get_id());
+            booksRented.add(b.getId());
         }
 
         User user = new User();

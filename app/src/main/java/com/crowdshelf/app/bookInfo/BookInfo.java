@@ -1,4 +1,4 @@
-package com.crowdshelf.app.models;
+package com.crowdshelf.app.bookInfo;
 
 import android.media.Image;
 

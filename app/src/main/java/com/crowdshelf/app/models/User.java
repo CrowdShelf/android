@@ -3,6 +3,7 @@ package com.crowdshelf.app.models;
 import java.util.ArrayList;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.network.NetworkController;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -12,63 +13,61 @@ public class User {
     private ArrayList<String> booksRented; // book _id
     private ArrayList<String> booksOwned; // book _id
     private ArrayList<String> crowds; // crowd _id
-    //private Shelf shelf;
-
-    public void setCrowds(ArrayList<String> crowds) {
-        this.crowds = crowds;
-    }
-
-    public void setBooksRented(ArrayList<String> booksRented) {
-        this.booksRented = booksRented;
-    }
-
-    public void setBooksOwned(ArrayList<String> booksOwned) {
-        this.booksOwned = booksOwned;
-    }
 
     public String getUsername() {
         return username;
-    }
-
-    public ArrayList<String> getBooksRented() {
-        return booksRented;
-    }
-
-    public ArrayList<String> getBooksOwned() {
-        return booksOwned;
-    }
-
-    // todo rework
-    private void setShelf(ArrayList<String> books) {
-        ArrayList<Book> shelfBooks = new ArrayList<Book>();
-        for(String _id : books) {
-            //shelfBooks.add(MainController.getBook(_id));
-        }
-        //this.shelf = new Shelf(shelfBooks);
-    }
-
-    public ArrayList<Crowd> getCrowds() {
-        return MainController.getCrowds(crowds);
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getName() {
-        return username;
+    public ArrayList<String> getBooksOwnedIds() {
+        return booksOwned;
     }
 
-    public void addRentedBook(Book book) {String _id = book.get_id();
+    public ArrayList<Book> getBooksOwned() {
+        return MainController.getBooksById(booksOwned);
+    }
+
+    public void setBooksOwned(ArrayList<String> booksOwned) {
+        this.booksOwned = booksOwned;
+    }
+
+    public ArrayList<String> getBooksRentedIds() {
+        return booksRented;
+    }
+
+    public ArrayList<Book> getBooksRented() {
+        return MainController.getBooksById(booksRented);
+    }
+
+    public void setBooksRented(ArrayList<String> booksRented) {
+        this.booksRented = booksRented;
+    }
+
+    public ArrayList<String> getCrowdsIds() {
+        return crowds;
+    }
+
+    public ArrayList<Crowd> getCrowds() {
+        return MainController.getCrowds(crowds);
+    }
+
+    public void setCrowds(ArrayList<String> crowds) {
+        this.crowds = crowds;
+    }
+
+    public void addRentedBook(Book book) {String _id = book.getId();
         if (!booksRented.contains(_id)) {
-            booksRented.add(book.get_id());
+            booksRented.add(book.getId());
         }
     }
 
     public void addOwnedBook(Book book) {
-        String _id = book.get_id();
+        String _id = book.getId();
         if (!booksOwned.contains(_id)) {
-            booksOwned.add(book.get_id());
+            booksOwned.add(book.getId());
         }
     }
 
@@ -86,7 +85,7 @@ public class User {
             return false;
         } else {
             final User user = (User) obj;
-            return this.username.equals(user.getName())
+            return this.username.equals(user.getUsername())
                     && this.booksOwned.equals(user.getBooksOwned())
                     && this.booksRented.equals(user.getBooksRented())
                     && this.crowds.equals(user.getCrowds());
