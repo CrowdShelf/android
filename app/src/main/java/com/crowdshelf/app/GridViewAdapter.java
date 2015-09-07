@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
+import com.crowdshelf.app.network.PopulateImageViewWithUrlTask;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class GridViewAdapter extends ArrayAdapter {
         if (books.get(position).getImageLinks() == null){
             imageView.setImageResource(R.mipmap.ic_launcher);
         }else{
-            new ImageLoadTask(books.get(position).getImageLinks().getThumbnail(), imageView).execute();
+            new PopulateImageViewWithUrlTask(books.get(position).getImageLinks().getThumbnail(), imageView).execute();
         }
         return grid;
     }

@@ -1,5 +1,8 @@
 package com.crowdshelf.app;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.util.Log;
 
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
@@ -14,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HelperMethods {
@@ -49,18 +53,16 @@ public class HelperMethods {
         return result.toString();
     }
 
-    public static boolean isJSONValid(String test) {
-        try {
-            new JSONObject(test);
-        } catch (JSONException ex) {
-            // edited, to include @Arthur's comment
-            // e.g. in case JSONArray is valid as well...
-            try {
-                new JSONArray(test);
-            } catch (JSONException ex1) {
-                return false;
+    public static String getAuthorsAsString(String[] authors) {
+        String authorString = "";
+        for (int i = 0; i < authors.length; i++) {
+            if (i == authors.length-1){
+                authorString += authors[i];
+            }else{
+                authorString += authors[i];
+                authorString += ", ";
             }
         }
-        return true;
+        return authorString;
     }
 }
