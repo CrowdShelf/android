@@ -46,7 +46,7 @@ public class JsonHelper {
         for (int i = 0; i < jArray.size(); i++) {
             Book book = new Gson().fromJson(jArray.get(i), Book.class);
             MainController.retrieveBook(book);
-            bookIds.add(book.get_id());
+            bookIds.add(book.getId());
         }
         return bookIds;
     }
