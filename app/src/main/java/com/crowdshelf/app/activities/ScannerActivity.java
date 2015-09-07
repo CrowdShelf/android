@@ -1,6 +1,7 @@
 package com.crowdshelf.app.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -51,7 +52,8 @@ public class ScannerActivity extends Activity implements ZXingScannerView.Result
         String ISBN = rawResult.getText(); // Stores the ISBN in a variable
         Toast.makeText(getApplicationContext(), "Book scanned: " + ISBN, Toast.LENGTH_SHORT).show();
 
-        super.onBackPressed();
-        MainActivity.bookScanned(ISBN);
+        Intent intent = new Intent(this, ScanResultActivity.class);
+        intent.putExtra("ISBN", ISBN);
+        startActivity(intent);
     }
 }
