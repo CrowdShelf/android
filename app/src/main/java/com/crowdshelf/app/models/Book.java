@@ -1,6 +1,7 @@
 package com.crowdshelf.app.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.BookInfoGetter;
@@ -14,7 +15,7 @@ public class Book{
     private String _id;
     private String isbn;
     private String owner;
-    private ArrayList<String> rentedTo;
+    private List<String> rentedTo = new ArrayList<String>();
     private int numAvailableForRent;
     private int numberOfCopies;
 
@@ -42,11 +43,11 @@ public class Book{
         this.owner = owner;
     }
 
-    public ArrayList<String> getRentedToName() {
+    public List<String> getRentedToName() {
         return rentedTo;
     }
 
-    public ArrayList<User> getRentedTo() {
+    public List<User> getRentedTo() {
         return MainController.getUsers(rentedTo);
     }
 

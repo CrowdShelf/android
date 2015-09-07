@@ -1,27 +1,29 @@
-package com.crowdshelf.app.gsonHelpers;
+package com.crowdshelf.app.network.gsonHelpers;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-import com.crowdshelf.app.models.User;
-import com.google.gson.reflect.TypeToken;
 
 
 /**
  * Created by Torstein on 02.09.2015.
  */
-public class UserDeserializer implements JsonDeserializer<User> {
+
+@Deprecated
+public class CrowdDeserializer implements JsonDeserializer<Crowd> {
     @Override
-    public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public Crowd deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException
     {
         /*
@@ -33,8 +35,9 @@ public class UserDeserializer implements JsonDeserializer<User> {
         }
          */
         JsonObject jsonObject = json.getAsJsonObject();
-        String username = jsonObject.get("username").getAsString();
-
+        String _id = jsonObject.get("_id").getAsString();
+        String name = jsonObject.get("name").getAsString();
+        String owner = jsonObject.get("owner").getAsString();
         Type arrayListStringType = new TypeToken<ArrayList<String>>(){}.getType();
         Type arrayListBookType = new TypeToken<ArrayList<Book>>(){}.getType();
 
@@ -50,22 +53,22 @@ public class UserDeserializer implements JsonDeserializer<User> {
         ArrayList<String> booksRented = new ArrayList<String>();
 
         for (Book b : booksOwnedObj) {
-            MainController.retrieveBook(b);
+            //MainController.retrieveBook(b);
             booksOwned.add(b.getId());
         }
         for (Book b : booksRentedObj) {
-            MainController.retrieveBook(b);
+            //MainController.retrieveBook(b);
             booksRented.add(b.getId());
         }
 
-        User user = new User();
-        user.setUsername(username);
-        user.setCrowds(crowds);
-        user.setBooksOwned(booksOwned);
-        user.setBooksRented(booksRented);
+        Crowd crowd = new Crowd();
+        //user.setUsername(username);
+        //user.setCrowds(crowds);
+        //user.setBooksOwned(booksOwned);
+        //user.setBooksRented(booksRented);
 
-        user.toString();
+        //user.toString();
 
-        return user;
+        return crowd;
     }
 }

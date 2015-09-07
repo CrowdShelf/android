@@ -1,36 +1,19 @@
 package com.crowdshelf.app.network;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.gsonHelpers.UserDeserializer;
+import com.crowdshelf.app.network.gsonHelpers.JsonHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-
-import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.Crowd;
-import com.crowdshelf.app.models.User;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONTokener;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -39,19 +22,13 @@ public class NetworkHelper {
     private static String host = "https://crowdshelf.herokuapp.com";
     // For converting json into java objects using GSON and custom deserializers for each class
     private static Gson gson = new GsonBuilder()
-            //.registerTypeAdapter(Book.class, new BookDeserializer())
-            .registerTypeAdapter(User.class, new UserDeserializer())
-            //.registerTypeAdapter(Crowd.class, new CrowdDeserializer())
-            // .serializeNulls() // json nulls for null fields
             .setPrettyPrinting()
             .create();
-    private static Type arrayListBookType = new TypeToken<ArrayList<Book>>(){}.getType();
-    private static Type arrayListCrowdType = new TypeToken<ArrayList<Crowd>>(){}.getType();
 
-    public static void sendPostRequest(final String route, final String jsonData) {
-        new AsyncTask<Void,Void,InputStreamReader>(){
+    public static void sendPostRequest(final String route, final String jsonData, final JsonHandler jsonHandler) {
+        new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
-            protected InputStreamReader doInBackground(Void... params){
+            protected InputStreamReader doInBackground(Void... params) {
                 try {
                     // instantiate the URL object with the target URL of the resource to
                     // request
@@ -80,17 +57,18 @@ public class NetworkHelper {
                 }
                 return null;
             }
+
             @Override
             protected void onPostExecute(InputStreamReader reader) {
-                handleJsonResponse(reader);
+                handleResponse(reader, jsonHandler);
             }
         }.execute();
     }
 
-    public static void sendPutRequest(final String route, final String jsonData) {
-        new AsyncTask<Void,Void,InputStreamReader>(){
+    public static void sendPutRequest(final String route, final String jsonData, final JsonHandler jsonHandler) {
+        new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
-            protected InputStreamReader doInBackground(Void... params){
+            protected InputStreamReader doInBackground(Void... params) {
                 try {
                     URL url = new URL(host + "/api" + route);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -114,18 +92,19 @@ public class NetworkHelper {
                 }
                 return null;
             }
+
             protected void onPostExecute(InputStreamReader reader) {
-                handleJsonResponse(reader);
+                handleResponse(reader, jsonHandler);
             }
         }.execute();
     }
 
-    public static void sendGetRequest(final String route) {
-        new AsyncTask<Void,Void,InputStreamReader>(){
+    public static void sendGetRequest(final String route, final JsonHandler jsonHandler) {
+        new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
-            protected InputStreamReader doInBackground(Void... params){
+            protected InputStreamReader doInBackground(Void... params) {
                 try {
-                   URL url = new URL(host + "/api" + route);
+                    URL url = new URL(host + "/api" + route);
                     System.out.print(url + "\n");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoOutput(true);
@@ -142,17 +121,17 @@ public class NetworkHelper {
                 } catch (IOException e) {
                     //..
                 }
-            return null;
+                return null;
             }
 
             @Override
             protected void onPostExecute(InputStreamReader reader) {
-                handleJsonResponse(reader);
+                handleResponse(reader, jsonHandler);
             }
         }.execute();
     }
 
-    public static void handleJsonResponse(InputStreamReader iReader) {
+    public static void handleResponse(InputStreamReader iReader, JsonHandler jsonHandler) {
         try {
             /*
             Possible reponses:
@@ -165,43 +144,20 @@ public class NetworkHelper {
 
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();
-            for (String line = null; (line = bReader.readLine()) != null;) {
+            for (String line = null; (line = bReader.readLine()) != null; ) {
                 builder.append(line).append("\n");
             }
             String jsonString = builder.toString();
-            JsonParser jsonParser = new JsonParser();
-            JsonElement jsonElement = jsonParser.parse(jsonString);
+            JsonElement jsonElement = new JsonParser().parse(jsonString);
 
             System.out.print("Received JSON-data: \n");
             System.out.print(gson.toJson(jsonElement));
-
-            // TODO this also needs to handle arrays of obects!
-
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            if (jsonObject.has("isbn")) {
-                // Retrieved book
-                Book book = gson.fromJson(jsonString, Book.class);
-                MainController.retrieveBook(book);
-            } else if (jsonObject.has("username")) {
-                // Retrieved User
-                User user = gson.fromJson(jsonString, User.class);
-                MainController.retrieveUser(user);
-            } else if (jsonObject.has("owner")) {
-                // Retrieved crowd
-                Crowd crowd = gson.fromJson(jsonString, Crowd.class);
-                MainController.retrieveCrowd(crowd);
-            } else if (jsonObject.has("crowds")) {
-                ArrayList<Crowd> crowds = gson.fromJson(jsonString, arrayListCrowdType);
-                MainController.retrieveCrowds(crowds);
-            } else if (jsonObject.has("books")) {
-                ArrayList<Book> books = gson.fromJson(jsonString, arrayListBookType);
-                MainController.retrieveBooks(books);
-            } else {
-                System.out.print("\nCould not handle!");
+            if (jsonHandler != null) {
+                jsonHandler.handleJsonResponse(jsonString);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
+    }
 }
