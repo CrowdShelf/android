@@ -1,6 +1,7 @@
 package com.crowdshelf.app.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.network.NetworkController;
@@ -12,7 +13,7 @@ public class Crowd {
     private String _id; // Unique identified
     private String name;
     private String owner;
-    private ArrayList<String> members;
+    private List<User> members; // = new ArrayList<User>();
 
     public void setId(String _id) {
         this._id = _id;
@@ -42,23 +43,23 @@ public class Crowd {
         this.owner = owner;
     }
 
-    public ArrayList<String> getMembersNames() {
+    public List<User> getMembers() {
         return this.members;
     }
 
-    public ArrayList<User> getMembers() {
-        return MainController.getUsers(members);
-    }
-
-    public void setMembers(ArrayList<String> members) {
+    public void setMembers(List<User> members) {
         this.members = members;
     }
 
-    public void addMember(String username) {
-        if (!members.contains(username)) {
-            members.add(username);
-            NetworkController.addCrowdMember(this._id, username);
+    public void addMember(User member) {
+        String username = member.getUsername();
+        for (User u : members) {
+            if (u.getUsername().equals(username)) {
+                members.remove(u);
+            }
         }
+        members.add(member);
+        NetworkController.addCrowdMember(this._id, username);
     }
 
     public void removeMember(String username) {

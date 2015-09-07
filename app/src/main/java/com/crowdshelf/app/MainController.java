@@ -1,13 +1,17 @@
 package com.crowdshelf.app;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.network.NetworkController;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Created by Torstein on 02.09.2015.
@@ -37,7 +41,7 @@ public class MainController {
         return users.get(username);
     }
 
-    public static ArrayList<User> getUsers(ArrayList<String> usernames) {
+    public static List<User> getUsers(List<String> usernames) {
         ArrayList<User> usersObjs = new ArrayList<User>();
         for (String username : usernames) {
             usersObjs.add(getUser(username));
@@ -45,16 +49,25 @@ public class MainController {
         return usersObjs;
     }
 
-    public static void retrieveUser(User user) {
+    public static void receiveUser(User user) {
         // Called ONLY when a user is sent from server
         users.put(user.getUsername(), user);
+        receiveBooks(user.getBooksOwned());
+        receiveBooks(user.getBooksRented());
+    }
+
+    public static void receiveUsers(List<User> users) {
+        // Called ONLY when a user is sent from server
+        for (User u : users) {
+            receiveUser(u);
+        }
     }
 
     /*
     Crowds
      */
 
-    public static void createCrowd(String name, String owner, ArrayList<String> members){
+    public static void createCrowd(String name, String owner, List<User> members){
         // Create new crowd
         Crowd crowd = new Crowd();
         crowd.setName(name);
@@ -68,7 +81,7 @@ public class MainController {
         return crowds.get(_id);
     }
 
-    public static ArrayList<Crowd> getCrowds(ArrayList<String> crowdIds) {
+    public static List<Crowd> getCrowds(List<String> crowdIds) {
         ArrayList<Crowd> crowdObjs= new ArrayList<Crowd>();
         for (String crowdId : crowdIds) {
             crowdObjs.add(getCrowd(crowdId));
@@ -76,9 +89,16 @@ public class MainController {
         return crowdObjs;
     }
 
-    public static void retrieveCrowd(Crowd crowd) {
+    public static void receiveCrowd(Crowd crowd) {
         // Called ONLY when a crowd is sent from server
         crowds.put(crowd.getId(), crowd);
+        receiveUsers(crowd.getMembers());
+    }
+
+    public static void receiveCrowds(List<Crowd> crowds) {
+        for (Crowd c : crowds) {
+            receiveCrowd(c);
+        }
     }
 
     /*
@@ -97,10 +117,16 @@ public class MainController {
         NetworkController.createBook(book);
     }
 
-    public static void retrieveBook(Book book) {
+    public static void receiveBook(Book book) {
         // Called ONLY when a book is sent from server
         books.put(book.getId(), book);
         coupleIsbnToId(book.getIsbn(), book.getId());
+    }
+
+    public static void receiveBooks(List<Book> books) {
+        for (Book b : books) {
+            receiveBook(b);
+        }
     }
 
     public static void coupleIsbnToId(String isbn, String _id) {
@@ -108,11 +134,6 @@ public class MainController {
             isbnToId.put(isbn, new HashSet<String>());
         }
         isbnToId.get(isbn).add(_id);
-    }
-
-    public static Book getBookById(String _id) {
-        NetworkController.getBookById(_id);
-        return books.get(_id);
     }
 
     public static Book getBookByIsbnOwner (String isbn, String owner) {
@@ -127,23 +148,13 @@ public class MainController {
         return null;
     }
 
-    public static ArrayList<Book> getBooksById (ArrayList<String> _ids) {
-        ArrayList<Book> booksObj = new ArrayList<Book>();
-        for (String _id : _ids) {
-            booksObj.add(getBookById(_id));
-        }
-        return booksObj;
-    }
-
-    public static ArrayList<Book> getBooksByIsbn (String isbn) {
+    public static List<Book> getBooksByIsbn (String isbn) {
         // Look up all stored books with the given isbn, e.g. the same book owned by different users
-        ArrayList<Book> booksObj = new ArrayList<Book>();
-        for(String _id : isbnToId.get(isbn)) {
-            booksObj.add(getBookById(_id));
-        }
-        return booksObj;
+
+        // Todo needs rework. Should it return _all_ books with the given ISBN, or only
+        // those that belong to a crowd you are a member of?
+
+        return null;
     }
-
-
 
 }

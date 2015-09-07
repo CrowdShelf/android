@@ -1,6 +1,5 @@
-package com.crowdshelf.app.gsonHelpers;
+package com.crowdshelf.app.network.responseHandlers;
 
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Book;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
@@ -19,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Created by Torstein on 02.09.2015.
  */
+@Deprecated
 public class UserDeserializer implements JsonDeserializer<User> {
     @Override
     public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -50,19 +50,19 @@ public class UserDeserializer implements JsonDeserializer<User> {
         ArrayList<String> booksRented = new ArrayList<String>();
 
         for (Book b : booksOwnedObj) {
-            MainController.retrieveBook(b);
+            //MainController.retrieveBook(b);
             booksOwned.add(b.getId());
         }
         for (Book b : booksRentedObj) {
-            MainController.retrieveBook(b);
+            //MainController.retrieveBook(b);
             booksRented.add(b.getId());
         }
 
         User user = new User();
         user.setUsername(username);
         user.setCrowds(crowds);
-        user.setBooksOwned(booksOwned);
-        user.setBooksRented(booksRented);
+        //user.setBooksOwned(booksOwned);
+        //user.setBooksRented(booksRented);
 
         user.toString();
 

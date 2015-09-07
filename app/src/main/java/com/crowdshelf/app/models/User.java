@@ -1,6 +1,7 @@
 package com.crowdshelf.app.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.network.NetworkController;
@@ -10,9 +11,9 @@ import com.crowdshelf.app.network.NetworkController;
  */
 public class User {
     private String username;
-    private ArrayList<String> booksRented; // book _id
-    private ArrayList<String> booksOwned; // book _id
-    private ArrayList<String> crowds; // crowd _id
+    private List<Book> booksOwned = new ArrayList<Book>();
+    private List<Book> booksRented = new ArrayList<Book>();
+    private List<String> crowds = new ArrayList<String>(); // crowd _id
 
     public String getUsername() {
         return username;
@@ -22,59 +23,58 @@ public class User {
         this.username = username;
     }
 
-    public ArrayList<String> getBooksOwnedIds() {
+    public List<Book> getBooksOwned() {
         return booksOwned;
     }
 
-    public ArrayList<Book> getBooksOwned() {
-        return MainController.getBooksById(booksOwned);
-    }
-
-    public void setBooksOwned(ArrayList<String> booksOwned) {
+    public void setBooksOwned(List<Book> booksOwned) {
         this.booksOwned = booksOwned;
     }
 
-    public ArrayList<String> getBooksRentedIds() {
+    public List<Book> getBooksRented() {
         return booksRented;
     }
 
-    public ArrayList<Book> getBooksRented() {
-        return MainController.getBooksById(booksRented);
-    }
-
-    public void setBooksRented(ArrayList<String> booksRented) {
+    public void setBooksRented(List<Book> booksRented) {
         this.booksRented = booksRented;
     }
 
-    public ArrayList<String> getCrowdsIds() {
+    public List<String> getCrowdsIds() {
         return crowds;
     }
 
-    public ArrayList<Crowd> getCrowds() {
+    public List<Crowd> getCrowds() {
         return MainController.getCrowds(crowds);
     }
 
-    public void setCrowds(ArrayList<String> crowds) {
+    public void setCrowds(List<String> crowds) {
         this.crowds = crowds;
     }
 
-    public void addRentedBook(Book book) {String _id = book.getId();
-        if (!booksRented.contains(_id)) {
-            booksRented.add(book.getId());
+    public void addRentedBook(Book book) {
+        String _id = book.getId();
+        for (Book b : booksRented) {
+            if (b.getId().equals(_id)) {
+                booksRented.remove(b);
+            }
         }
+        booksRented.add(book);
     }
 
     public void addOwnedBook(Book book) {
         String _id = book.getId();
-        if (!booksOwned.contains(_id)) {
-            booksOwned.add(book.getId());
+        for (Book b : booksOwned) {
+            if (b.getId().equals(_id)) {
+                booksOwned.remove(b);
+            }
         }
+        booksOwned.add(book);
     }
 
     public String toString() {
-        return "username: " + String.valueOf(username) +
-                String.valueOf(booksOwned) +
-                String.valueOf(booksRented) +
+        return "username: " + String.valueOf(username) + "\n" +
+                String.valueOf(booksOwned) + "\n" +
+                String.valueOf(booksRented) + "\n" +
                 String.valueOf(crowds);
     }
 
