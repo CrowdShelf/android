@@ -50,7 +50,7 @@ public class NetworkController {
          */
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("username", renter);
-        NetworkHelper.sendPutRequest("/book/"+isbn+"/"+owner+"/removerenter", jsonObj.getAsString());
+        NetworkHelper.sendPutRequest("/book/" + isbn + "/" + owner + "/removerenter", jsonObj.getAsString());
     }
 
     /*
@@ -69,6 +69,11 @@ public class NetworkController {
     public static void getCrowd(String crowdID) {
         // GET /crowd/:crowdId
         NetworkHelper.sendGetRequest("/crowd/" + crowdID);
+    }
+
+    public static void getCrowds() {
+        // GET /crowd
+        NetworkHelper.sendGetRequest("/crowd");
     }
 
     public static void addCrowdMember(String crowdId, String username) {

@@ -81,6 +81,12 @@ public class MainController {
         crowds.put(crowd.getId(), crowd);
     }
 
+    public static void retrieveCrowds(ArrayList<Crowd> crowds) {
+        for (Crowd c : crowds) {
+            retrieveCrowd(c);
+        }
+    }
+
     /*
     Books
      */
@@ -101,6 +107,12 @@ public class MainController {
         // Called ONLY when a book is sent from server
         books.put(book.getId(), book);
         coupleIsbnToId(book.getIsbn(), book.getId());
+    }
+
+    public static void retrieveBooks(ArrayList<Book> books) {
+        for (Book b : books) {
+            retrieveBook(b);
+        }
     }
 
     public static void coupleIsbnToId(String isbn, String _id) {

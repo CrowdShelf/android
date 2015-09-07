@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import java.io.BufferedInputStream;
@@ -17,8 +18,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
@@ -41,6 +45,8 @@ public class NetworkHelper {
             // .serializeNulls() // json nulls for null fields
             .setPrettyPrinting()
             .create();
+    private static Type arrayListBookType = new TypeToken<ArrayList<Book>>(){}.getType();
+    private static Type arrayListCrowdType = new TypeToken<ArrayList<Crowd>>(){}.getType();
 
     public static void sendPostRequest(final String route, final String jsonData) {
         new AsyncTask<Void,Void,InputStreamReader>(){
@@ -170,7 +176,7 @@ public class NetworkHelper {
             System.out.print(gson.toJson(jsonElement));
 
             // TODO this also needs to handle arrays of obects!
-            
+
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             if (jsonObject.has("isbn")) {
                 // Retrieved book
@@ -184,6 +190,14 @@ public class NetworkHelper {
                 // Retrieved crowd
                 Crowd crowd = gson.fromJson(jsonString, Crowd.class);
                 MainController.retrieveCrowd(crowd);
+            } else if (jsonObject.has("crowds")) {
+                ArrayList<Crowd> crowds = gson.fromJson(jsonString, arrayListCrowdType);
+                MainController.retrieveCrowds(crowds);
+            } else if (jsonObject.has("books")) {
+                ArrayList<Book> books = gson.fromJson(jsonString, arrayListBookType);
+                MainController.retrieveBooks(books);
+            } else {
+                System.out.print("\nCould not handle!");
             }
         } catch (IOException e) {
             e.printStackTrace();
