@@ -1,4 +1,4 @@
-package com.crowdshelf.app;
+package com.crowdshelf.app.network;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,12 +12,12 @@ import java.net.URL;
 /**
  * Created by markuslund92 on 01.09.15.
  */
-public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+public class PopulateImageViewWithUrlTask extends AsyncTask<Void, Void, Bitmap> {
 
     private String url;
     private ImageView imageView;
 
-    public ImageLoadTask(String url, ImageView imageView) {
+    public PopulateImageViewWithUrlTask(String url, ImageView imageView) {
         this.url = url;
         this.imageView = imageView;
     }

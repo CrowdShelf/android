@@ -15,7 +15,6 @@
 *.dmg
 *.gz
 *.iso
-*.jar
 *.rar
 *.tar
 *.zip
@@ -70,6 +69,7 @@ Thumbs.db
 .idea/libraries
 .idea/tasks.xml
 .gradle
+.gradle/*
 build/
 .idea/workspace.xml
 CrowdShelf.iml

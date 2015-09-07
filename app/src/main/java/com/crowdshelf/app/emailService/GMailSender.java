@@ -1,8 +1,18 @@
-package com.crowdshelf.app; /**
- * Created by markuslund92 on 31.08.15.
+package com.crowdshelf.app.emailService;
+
+/**
+ * Created by markuslund92 on 06.09.15.
  */
+
 import android.os.AsyncTask;
 import android.util.Log;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.Security;
+import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -12,14 +22,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.security.Security;
-import java.util.Properties;
 
-class GmailSender extends javax.mail.Authenticator {
+public class GMailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
     private String user;
     private String password;
@@ -29,7 +33,7 @@ class GmailSender extends javax.mail.Authenticator {
         Security.addProvider(new JSSEProvider());
     }
 
-    public GmailSender(String user, String password) {
+    public GMailSender(String user, String password) {
         this.user = user;
         this.password = password;
 
@@ -53,11 +57,11 @@ class GmailSender extends javax.mail.Authenticator {
 
     public synchronized void sendMail(final String subject, final String body, final String sender, final String recipients) throws Exception {
 
-        new AsyncTask<Void, Void, Void>(){
+        new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                try{
+                try {
                     Log.i("SendMail", "Trying to send mail");
 
                     MimeMessage message = new MimeMessage(session);
@@ -72,7 +76,7 @@ class GmailSender extends javax.mail.Authenticator {
                     Transport.send(message);
                     Log.i("SendMail", "Mail sent");
 
-                }catch(Exception e){
+                } catch (Exception e) {
                     Log.e("SendMail", e.getMessage(), e);
                 }
                 return null;

@@ -3,9 +3,9 @@ package com.crowdshelf.app.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.BookInfoGetter;
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.network.NetworkController;
 
 /**
