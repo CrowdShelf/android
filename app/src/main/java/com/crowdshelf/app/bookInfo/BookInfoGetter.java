@@ -7,7 +7,6 @@ import com.crowdshelf.app.models.BookInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.crowdshelf.app.models.BookInfo;
 import com.google.gson.internal.LinkedTreeMap;
 
 /**

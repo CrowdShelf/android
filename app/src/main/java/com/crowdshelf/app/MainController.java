@@ -25,17 +25,15 @@ public class MainController {
     Users
      */
 
-    // Create a new user
     public static void createUser(String username) {
+        // Create a new user
         User user = new User();
         user.setUsername(username);
         NetworkController.createUser(username);
     }
 
     public static User getUser(String username) {
-        if (!users.containsKey(username)) {
-            NetworkController.getUser(username);
-        }
+        NetworkController.getUser(username);
         return users.get(username);
     }
 
@@ -47,33 +45,26 @@ public class MainController {
         return usersObjs;
     }
 
+    public static void retrieveUser(User user) {
+        // Called ONLY when a user is sent from server
+        users.put(user.getUsername(), user);
+    }
+
     /*
     Crowds
      */
 
-    // Called ONLY when a user is sent from server
-    public static void retrieveUser(User user) {
-        users.put(user.getName(), user);
-    }
-
-    // Create new crowd
-    public static void createCrowd(String name, User owner, ArrayList<User> members){
-        //todo
+    public static void createCrowd(String name, String owner, ArrayList<String> members){
+        // Create new crowd
         Crowd crowd = new Crowd();
         crowd.setName(name);
-        crowd.setOwner(owner.getName());
-        ArrayList<String> memberNames = new ArrayList<String>();
-        for (User u : members) {
-            memberNames.add(u.getName());
-        }
-        crowd.setMembers(memberNames);
+        crowd.setOwner(owner);
+        crowd.setMembers(members);
         NetworkController.createCrowd(crowd);
     }
 
     public static Crowd getCrowd(String _id) {
-        if (!crowds.containsKey(_id)) {
-            NetworkController.getCrowd(_id);
-        }
+        NetworkController.getCrowd(_id);
         return crowds.get(_id);
     }
 
@@ -85,31 +76,31 @@ public class MainController {
         return crowdObjs;
     }
 
-    // Called ONLY when a crowd is sent from server
     public static void retrieveCrowd(Crowd crowd) {
-        crowds.put(crowd.get_id(), crowd);
+        // Called ONLY when a crowd is sent from server
+        crowds.put(crowd.getId(), crowd);
     }
 
     /*
     Books
      */
+
     public static void createBook(String isbn, int numberOfCopies, int numAvailableForRent) {
         // This book is never stored in the books hashmap. It is sent to the server,
         // then retrieved to get the correct _id
         Book book = new Book();
-        book.set_id("-1");
+        book.setId("-1");
         book.setIsbn(isbn);
-        book.setOwner(mainUser.getName());
+        book.setOwner(mainUser.getUsername());
         book.setNumberOfCopies(numberOfCopies);
         book.setNumAvailableForRent(numAvailableForRent);
         NetworkController.createBook(book);
     }
 
-    // Called ONLY when a book is sent from server
     public static void retrieveBook(Book book) {
-        //getUser(book.getOwner().getUsername()).addOwnedBook(book);
-        books.put(book.get_id(), book);
-        coupleIsbnToId(book.getIsbn(), book.get_id());
+        // Called ONLY when a book is sent from server
+        books.put(book.getId(), book);
+        coupleIsbnToId(book.getIsbn(), book.getId());
     }
 
     public static void coupleIsbnToId(String isbn, String _id) {
@@ -119,22 +110,40 @@ public class MainController {
         isbnToId.get(isbn).add(_id);
     }
 
-    // Look up all stored books with the given isbn, e.g. the same book owned by different users
-    public static ArrayList<Book> getBooksByIsbn (String isbn) {
-        ArrayList<Book> booksObj = new ArrayList<Book>();
-        for(String _id : isbnToId.get(isbn)) {
-            booksObj.add(books.get(_id));
-        }
-        return booksObj;
-    }
-
     public static Book getBookById(String _id) {
+        NetworkController.getBookById(_id);
         return books.get(_id);
     }
 
     public static Book getBookByIsbnOwner (String isbn, String owner) {
-        // todo
+        //todo this is ugly
+        NetworkController.getBookByIsbnOwner(isbn, owner);
+        for (String _id : isbnToId.get(isbn)) {
+            Book b = books.get(_id);
+            if (b.getOwner().equals(owner)) {
+                return b;
+            }
+        }
         return null;
     }
+
+    public static ArrayList<Book> getBooksById (ArrayList<String> _ids) {
+        ArrayList<Book> booksObj = new ArrayList<Book>();
+        for (String _id : _ids) {
+            booksObj.add(getBookById(_id));
+        }
+        return booksObj;
+    }
+
+    public static ArrayList<Book> getBooksByIsbn (String isbn) {
+        // Look up all stored books with the given isbn, e.g. the same book owned by different users
+        ArrayList<Book> booksObj = new ArrayList<Book>();
+        for(String _id : isbnToId.get(isbn)) {
+            booksObj.add(getBookById(_id));
+        }
+        return booksObj;
+    }
+
+
 
 }
