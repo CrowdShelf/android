@@ -3,6 +3,8 @@
 Unit testing is done with Robolectric.
 This lets us test classes and methods in the app without running the Android Emulator.
 
+To enable Robolectric, go to "Build variables" in the pane to the left in Android Studio / IntelliJ, and under "Test Artifact" choose "Unit Test".
+
 Test classes should be placed in /src/main/test/java/com/crowdshelf/app/.
 Neither the testclasses nor their methods need to follow any specific name convention, but setup methods needs to be tagged with `@Before` and the test methods needs to be tagged with `@Test`.
 
