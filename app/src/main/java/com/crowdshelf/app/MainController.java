@@ -19,7 +19,7 @@ import com.google.gson.reflect.TypeToken;
 public class MainController {
     private static HashMap<String, Crowd> crowds = new HashMap<String, Crowd>(); // KEY = crowd _id
     private static HashMap<String, Book> books = new HashMap<String, Book>(); // KEY = book _id (NOT isbn!)
-    private static HashMap<String, HashSet<String>> isbnToId = new HashMap<String, HashSet<String>>(); // KEY = isbn, Value = Set[Book _id]
+    private static HashMap<String, HashSet<String>> isbnToId = new HashMap<String, HashSet<String>>(); // KEY = isbn, Value = Hashset[Book _id]
     private static HashMap<String, User> users = new HashMap<String, User>(); // KEY = username
 
     //todo  get the user of this app

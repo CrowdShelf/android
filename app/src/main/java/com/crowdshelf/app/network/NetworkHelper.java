@@ -25,61 +25,25 @@ public class NetworkHelper {
             .setPrettyPrinting()
             .create();
 
-    public static void sendPostRequest(final String route, final String jsonData, final ResponseHandler responseHandler) {
+    public static void sendRequest(final String requestMethod, final String route, final String jsonData, final ResponseHandler responseHandler) {
         new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
             protected InputStreamReader doInBackground(Void... params) {
                 try {
-                    // instantiate the URL object with the target URL of the resource to
-                    // request
                     URL url = new URL(host + "/api" + route);
-                    // instantiate the HttpURLConnection with the URL object - A new
-                    // connection is opened every time by calling the openConnection
-                    // method of the protocol handler for this URL.
-                    // This is the point where the connection is opened.
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoOutput(true);
-                    connection.setRequestMethod("POST");
+                    connection.setRequestMethod(requestMethod);
                     connection.setRequestProperty("Content-Type", "application/json");
-                    OutputStreamWriter writer = new OutputStreamWriter(
-                            connection.getOutputStream());
-                    writer.write(jsonData);
-                    writer.close();
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        return new InputStreamReader(connection.getInputStream());
-                    } else {
-                        handleHTTPError(connection.getResponseCode());
+                    connection.connect();
+
+                    if (jsonData != null) {
+                        OutputStreamWriter writer = new OutputStreamWriter(
+                                connection.getOutputStream());
+                        writer.write(jsonData);
+                        writer.close();
                     }
-                } catch (java.net.MalformedURLException e) {
-                    // ...
-                } catch (IOException e) {
-                    //..
-                }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(InputStreamReader reader) {
-                handleResponse(reader, responseHandler);
-            }
-        }.execute();
-    }
-
-    public static void sendPutRequest(final String route, final String jsonData, final ResponseHandler responseHandler) {
-        new AsyncTask<Void, Void, InputStreamReader>() {
-            @Override
-            protected InputStreamReader doInBackground(Void... params) {
-                try {
-                    URL url = new URL(host + "/api" + route);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoOutput(true);
-                    connection.setRequestMethod("PUT");
-                    connection.setRequestProperty("Content-Type", "application/json");
-
-                    OutputStreamWriter writer = new OutputStreamWriter(
-                            connection.getOutputStream());
-                    writer.write(jsonData);
-                    writer.close();
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         new InputStreamReader(connection.getInputStream());
                     } else {
@@ -87,46 +51,13 @@ public class NetworkHelper {
                         handleHTTPError(connection.getResponseCode());
                     }
                 } catch (java.net.MalformedURLException e) {
-                    // ...
+                    e.printStackTrace();
                 } catch (IOException e) {
-                    //..
+                    e.printStackTrace();
                 }
                 return null;
             }
 
-            protected void onPostExecute(InputStreamReader reader) {
-                handleResponse(reader, responseHandler);
-            }
-        }.execute();
-    }
-
-    public static void sendGetRequest(final String route, final ResponseHandler responseHandler) {
-        new AsyncTask<Void, Void, InputStreamReader>() {
-            @Override
-            protected InputStreamReader doInBackground(Void... params) {
-                try {
-                    URL url = new URL(host + "/api" + route);
-                    System.out.print(url + "\n");
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoOutput(true);
-                    connection.setRequestMethod("GET");
-                    connection.setRequestProperty("Content-Type", "application/json");
-                    connection.connect();
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        return new InputStreamReader(connection.getInputStream());
-                    } else {
-                        // Server returned HTTP error code.
-                        handleHTTPError(connection.getResponseCode());
-                    }
-                } catch (java.net.MalformedURLException e) {
-                    // ...
-                } catch (IOException e) {
-                    //..
-                }
-                return null;
-            }
-
-            @Override
             protected void onPostExecute(InputStreamReader reader) {
                 handleResponse(reader, responseHandler);
             }
@@ -135,15 +66,6 @@ public class NetworkHelper {
 
     public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler) {
         try {
-            /*
-            Possible reponses:
-            user object
-            book object
-            crowd object
-            array of book objects
-            array of crowd objects
-             */
-
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();
             for (String line = null; (line = bReader.readLine()) != null; ) {
