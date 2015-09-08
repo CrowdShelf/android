@@ -25,7 +25,7 @@ public class NetworkHelper {
             .setPrettyPrinting()
             .create();
 
-    public static void sendRequest(final String requestMethod, final String route, final String jsonData, final ResponseHandler responseHandler) {
+    public static void sendRequest(final HTTPRequestMethod requestMethod, final String route, final String jsonData, final ResponseHandler responseHandler) {
         new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
             protected InputStreamReader doInBackground(Void... params) {
@@ -33,7 +33,7 @@ public class NetworkHelper {
                     URL url = new URL(host + "/api" + route);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoOutput(true);
-                    connection.setRequestMethod(requestMethod);
+                    connection.setRequestMethod(requestMethod.toString());
                     connection.setRequestProperty("Content-Type", "application/json");
                     connection.connect();
 

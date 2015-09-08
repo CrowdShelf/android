@@ -31,7 +31,8 @@ public class NetworkController {
         data: book object
         response: book object
          */
-        NetworkHelper.sendRequest("PUT", "/book", new Gson().toJson(book, Book.class), bookHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/book",
+                new Gson().toJson(book, Book.class), bookHandler);
     }
 
     public static void getBookByIsbnOwner(String isbn, String owner) {
@@ -39,7 +40,8 @@ public class NetworkController {
         GET /book/:isbn/:owner
         respone: book object
          */
-        NetworkHelper.sendRequest("GET", "/book/" + isbn + "/" + owner, null, bookHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/book/" + isbn + "/" + owner,
+                null, bookHandler);
     }
 
     public static void addRenter(String isbn, String owner, String renter) {
@@ -50,7 +52,8 @@ public class NetworkController {
          */
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("username", renter);
-        NetworkHelper.sendRequest("PUT", "/book/" + isbn + "/" + owner + "/addrenter", jsonObj.getAsString(), null);
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/book/" + isbn + "/" + owner + "/addrenter",
+                jsonObj.getAsString(), null);
     }
 
     public static void removeRenter(String isbn, String owner, String renter) {
@@ -61,7 +64,8 @@ public class NetworkController {
          */
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("username", renter);
-        NetworkHelper.sendRequest("PUT", "/book/" + isbn + "/" + owner + "/removerenter", jsonObj.getAsString(), null);
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/book/" + isbn + "/" + owner + "/removerenter",
+                jsonObj.getAsString(), null);
     }
 
     /*
@@ -74,7 +78,8 @@ public class NetworkController {
         data: crowd object
         response: crowd object (with correct _id)
          */
-        NetworkHelper.sendRequest("POST", "/crowd", new Gson().toJson(crowd, Crowd.class), crowdHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.POST, "/crowd",
+                new Gson().toJson(crowd, Crowd.class), crowdHandler);
     }
 
     public static void getCrowd(String crowdID) {
@@ -82,7 +87,8 @@ public class NetworkController {
         GET /crowd/:crowdId
         response: crowd object
         */
-        NetworkHelper.sendRequest("GET", "/crowd/" + crowdID, null, crowdHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/crowd/" + crowdID,
+                null, crowdHandler);
     }
 
     public static void getCrowds() {
@@ -90,7 +96,8 @@ public class NetworkController {
          GET /crowd
         response: list of crowds
         */
-        NetworkHelper.sendRequest("GET", "/crowd", null, crowdListHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/crowd",
+                null, crowdListHandler);
     }
 
     public static void addCrowdMember(String crowdId, String username) {
@@ -101,7 +108,8 @@ public class NetworkController {
          */
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("username", username);
-        NetworkHelper.sendRequest("PUT", "/crowd/" + crowdId + "/addememeber", jsonObj.getAsString(), null);
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/" + crowdId + "/addememeber",
+                jsonObj.getAsString(), null);
     }
 
     public static void removeCrowdMember(String crowdId, String username) {
@@ -112,7 +120,8 @@ public class NetworkController {
          */
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("username", username);
-        NetworkHelper.sendRequest("PUT", "/crowd/"+crowdId+"/removemember", jsonObj.getAsString(), null);
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/"+crowdId+"/removemember",
+                jsonObj.getAsString(), null);
     }
 
     /*
@@ -128,6 +137,7 @@ public class NetworkController {
          GET /api/user/:username
          response: user object
           */
-        NetworkHelper.sendRequest("GET", "/user/"+username, null, userHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/user/"+username,
+                null, userHandler);
     }
 }
