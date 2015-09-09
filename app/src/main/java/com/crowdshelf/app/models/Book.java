@@ -39,6 +39,10 @@ public class Book{
         return MainController.getUser(owner);
     }
 
+    public String getOwnerName() {
+        return owner;
+    }
+
     public void setOwner(String owner) {
         this.owner = owner;
     }

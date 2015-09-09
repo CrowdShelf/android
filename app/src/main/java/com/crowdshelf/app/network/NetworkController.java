@@ -20,6 +20,7 @@ public class NetworkController {
     private static CrowdHandler crowdHandler = new CrowdHandler();
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
+
     /*
     Books
      */
@@ -38,10 +39,19 @@ public class NetworkController {
     public static void getBookByIsbnOwner(String isbn, String owner) {
         /*
         GET /book/:isbn/:owner
-        respone: book object
+        response: book object
          */
         NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/book/" + isbn + "/" + owner,
                 null, bookHandler);
+    }
+
+    public static void getBooksByIsbn(String isbn) {
+        /*
+        GET /book/:isbn
+        response: list book objects
+         */
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/book/" + isbn + "/",
+                null, bookListHandler);
     }
 
     public static void addRenter(String isbn, String owner, String renter) {
@@ -108,7 +118,7 @@ public class NetworkController {
          */
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("username", username);
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/" + crowdId + "/addememeber",
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/" + crowdId + "/addmember",
                 jsonObj.getAsString(), null);
     }
 
@@ -120,7 +130,7 @@ public class NetworkController {
          */
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("username", username);
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/"+crowdId+"/removemember",
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/" + crowdId + "/removemember",
                 jsonObj.getAsString(), null);
     }
 
@@ -137,7 +147,7 @@ public class NetworkController {
          GET /api/user/:username
          response: user object
           */
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/user/"+username,
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/user/" + username,
                 null, userHandler);
     }
 }

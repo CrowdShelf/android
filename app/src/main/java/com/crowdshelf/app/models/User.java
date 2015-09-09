@@ -52,23 +52,19 @@ public class User {
     }
 
     public void addRentedBook(Book book) {
-        String _id = book.getId();
-        for (Book b : booksRented) {
-            if (b.getId().equals(_id)) {
-                booksRented.remove(b);
-            }
+        if (!booksRented.contains(book)) {
+            booksRented.add(book);
         }
-        booksRented.add(book);
     }
 
     public void addOwnedBook(Book book) {
-        String _id = book.getId();
-        for (Book b : booksOwned) {
-            if (b.getId().equals(_id)) {
-                booksOwned.remove(b);
-            }
+        if (!booksOwned.contains(book)) {
+            booksOwned.add(book);
         }
-        booksOwned.add(book);
+    }
+
+    public boolean isMemberOf(String crowdId) {
+        return crowds.contains(crowdId);
     }
 
     public String toString() {

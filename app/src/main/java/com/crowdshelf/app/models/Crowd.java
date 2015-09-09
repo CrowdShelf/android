@@ -67,6 +67,15 @@ public class Crowd {
         NetworkController.removeCrowdMember(this._id, username);
     }
 
+    public List<Book> getBooks() {
+        List<Book> books = new ArrayList<Book>();
+        for (User u : members) {
+            books.addAll(u.getBooksOwned());
+            books.addAll(u.getBooksRented());
+        }
+        return books;
+    }
+
     public String toString() {
         return "_id: " + String.valueOf(_id) +
                 "\nname: " + String.valueOf(name) +

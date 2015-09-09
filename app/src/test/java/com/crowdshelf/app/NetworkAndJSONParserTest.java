@@ -129,7 +129,7 @@ public class NetworkAndJSONParserTest {
 
     public void testCreateBook() throws Exception {
         nC.createBook(newBookExpected);
-        for (Book b : mC.getBooksByIsbn(newBookExpected.getIsbn())) {
+        for (Book b : mC.getBooksByIsbnOwnedByYourCrowds(newBookExpected.getIsbn())) {
             if (b.getOwner().getUsername().equals(newBookExpected.getOwner().getUsername())) {
                 newBookActual = b;
             }

@@ -24,12 +24,14 @@ public class BookListHandler implements ResponseHandler {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.getAsJsonArray("books");
 
+        /*
         // Method 1
         BookHandler bookHandler = new BookHandler();
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonElement e = jsonArray.get(i);
             bookHandler.handleJsonResponse(e.toString());
         }
+        */
 
         //Method 2
         List<Book> books = gson.fromJson(jsonArray, bookListType);

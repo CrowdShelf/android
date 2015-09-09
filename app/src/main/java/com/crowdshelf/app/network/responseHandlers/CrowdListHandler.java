@@ -25,12 +25,14 @@ public class CrowdListHandler implements ResponseHandler {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonArray jsonArray = jsonObject.getAsJsonArray("crowds");
 
+        /*
         // Method 1
         CrowdHandler crowdHandler = new CrowdHandler();
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonElement e = jsonArray.get(i);
             crowdHandler.handleJsonResponse(e.toString());
         }
+        */
 
         // Method 2
         List<Crowd> crowds = gson.fromJson(jsonArray, crowdListType);

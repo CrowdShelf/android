@@ -26,6 +26,14 @@ public class MainController {
     private static User mainUser = new User();
 
     /*
+    4 types of methods:
+    Create: Create new object and send it to server
+    Get: Get object stored locally, and if not found, retrieve it
+    Retrieve: Send command to download object from server
+    Receive: Receive the object from server
+     */
+
+    /*
     Users
      */
 
@@ -37,16 +45,28 @@ public class MainController {
     }
 
     public static User getUser(String username) {
-        NetworkController.getUser(username);
+        if (!users.containsKey(username)) {
+            retrieveUser(username);
+        }
         return users.get(username);
     }
 
     public static List<User> getUsers(List<String> usernames) {
-        ArrayList<User> usersObjs = new ArrayList<User>();
+        List<User> usersObjs = new ArrayList<User>();
         for (String username : usernames) {
             usersObjs.add(getUser(username));
         }
         return usersObjs;
+    }
+
+    public static void retrieveUser(String username) {
+        NetworkController.getUser(username);
+    }
+
+    public static void retrieveUsers(List<String> usernames) {
+        for (String username : usernames) {
+            retrieveUser(username);
+        }
     }
 
     public static void receiveUser(User user) {
@@ -76,9 +96,11 @@ public class MainController {
         NetworkController.createCrowd(crowd);
     }
 
-    public static Crowd getCrowd(String _id) {
-        NetworkController.getCrowd(_id);
-        return crowds.get(_id);
+    public static Crowd getCrowd(String crowdId) {
+        if (!crowds.containsKey(crowdId)) {
+            retrieveCrowd(crowdId);
+        }
+        return crowds.get(crowdId);
     }
 
     public static List<Crowd> getCrowds(List<String> crowdIds) {
@@ -87,6 +109,16 @@ public class MainController {
             crowdObjs.add(getCrowd(crowdId));
         }
         return crowdObjs;
+    }
+
+    public static void retrieveCrowd(String crowdId) {
+        NetworkController.getCrowd(crowdId);
+    }
+
+    public static void retrieveCrowds(List<String> crowdIds) {
+        for (String id : crowdIds) {
+            retrieveCrowd(id);
+        }
     }
 
     public static void receiveCrowd(Crowd crowd) {
@@ -106,7 +138,7 @@ public class MainController {
      */
 
     public static void createBook(String isbn, int numberOfCopies, int numAvailableForRent) {
-        // This book is never stored in the books hashmap. It is sent to the server,
+        // This book is never stored in the books hash map. It is sent to the server,
         // then retrieved to get the correct _id
         Book book = new Book();
         book.setId("-1");
@@ -119,6 +151,10 @@ public class MainController {
 
     public static void receiveBook(Book book) {
         // Called ONLY when a book is sent from server
+        book.getOwner().addOwnedBook(book);
+        for (User u : book.getRentedTo()) {
+            u.addRentedBook(book);
+        }
         books.put(book.getId(), book);
         coupleIsbnToId(book.getIsbn(), book.getId());
     }
@@ -148,13 +184,31 @@ public class MainController {
         return null;
     }
 
-    public static List<Book> getBooksByIsbn (String isbn) {
+    public static List<Book> getBooksByIsbnOwnedByAll (String isbn) {
         // Look up all stored books with the given isbn, e.g. the same book owned by different users
+        // Todo needs rework.
 
-        // Todo needs rework. Should it return _all_ books with the given ISBN, or only
-        // those that belong to a crowd you are a member of?
+        NetworkController.getBooksByIsbn(isbn);
 
         return null;
+    }
+
+    public static List<Book> getBooksByIsbnOwnedByYourCrowds (String isbn) {
+        // Returns all the books with a given ISBN that the main user
+        // actually can borrow, e.g. books owned or rented by members of the crowds that the main user
+        // is a member of.
+        List<String> crowdIds = mainUser.getCrowdsIds();
+        HashSet<String> bookIds = isbnToId.get(isbn);
+        List<Book> rentableBooks = new ArrayList<Book>();
+        for (String bookId : bookIds) {
+            for (String crowdId : crowdIds) {
+                Book b = books.get(bookId);
+                if (b.getOwner().isMemberOf(crowdId)) {
+                    rentableBooks.add(b);
+                }
+            }
+        }
+        return rentableBooks;
     }
 
 }

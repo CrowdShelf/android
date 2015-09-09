@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "You removed " + booksAddedArrayList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
                 booksAddedArrayList.remove(position);
                 gridViewAdapter.notifyDataSetChanged();
+
+
+
+            /*
+            @TODO
+            On startup do:
+            User mainUser = MainController.getUser("username");
+            mainUser.getCrowds(); // To download all the crowds of the main user, the members of these crowds, and their books
+             */
+
             }
         });
 
