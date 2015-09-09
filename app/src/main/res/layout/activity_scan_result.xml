@@ -64,7 +64,8 @@
         android:id="@+id/removeButton"
         android:text="@string/removeButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/addButton" />
+        android:layout_alignStart="@+id/addButton"
+        android:onClick="removeButtonClick"/>
 
 
 </RelativeLayout>
