@@ -211,4 +211,27 @@ public class MainController {
         return rentableBooks;
     }
 
+    public List<Book> getBooksByTitle(String title) {
+        // Assumes book already downloaded
+        List<Book> booksByTitle = new ArrayList<Book>();
+        String t = title.toLowerCase();
+        for (Book b : books.values()) {
+            if (b.getBookInfo().getTitle().toLowerCase().contains(t)) {
+                booksByTitle.add(b);
+            }
+        }
+        return booksByTitle;
+    }
+
+    public List<Book> getBooksByAuthor(String author) {
+        // Assumes book already downloaded
+        List<Book> booksByAuthor = new ArrayList<Book>();
+        String a = author.toLowerCase();
+        for (Book b : books.values()) {
+            if (b.getBookInfo().getAuthor().toLowerCase().contains(a)) {
+                booksByAuthor.add(b);
+            }
+        }
+        return booksByAuthor;
+    }
 }

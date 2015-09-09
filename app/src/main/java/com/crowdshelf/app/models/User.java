@@ -67,6 +67,17 @@ public class User {
         return crowds.contains(crowdId);
     }
 
+    public List<Book> getBooksRentedToOthers() {
+        // As a USER I want a list of all BOOKS I'm lending to others
+        List<Book> rented = new ArrayList<Book>();
+        for (Book b : booksOwned) {
+            if(b.getRentedTo() != null && b.getRentedTo().size() > 0) {
+                rented.add(b);
+            }
+        }
+        return rented;
+    }
+
     public String toString() {
         return "username: " + String.valueOf(username) + "\n" +
                 String.valueOf(booksOwned) + "\n" +
