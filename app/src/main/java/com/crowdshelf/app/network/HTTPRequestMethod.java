@@ -10,7 +10,7 @@ public enum HTTPRequestMethod {
 
     private final String requestMethod;
 
-    private HTTPRequestMethod(String requestMethod) {
+    HTTPRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
     }
 

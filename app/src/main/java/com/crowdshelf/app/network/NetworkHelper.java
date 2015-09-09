@@ -45,7 +45,7 @@ public class NetworkHelper {
                     }
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        new InputStreamReader(connection.getInputStream());
+                        return new InputStreamReader(connection.getInputStream());
                     } else {
                         // Server returned HTTP error code.
                         handleHTTPError(connection.getResponseCode());
@@ -59,7 +59,9 @@ public class NetworkHelper {
             }
 
             protected void onPostExecute(InputStreamReader reader) {
-                handleResponse(reader, responseHandler);
+                if (reader != null) {
+                    handleResponse(reader, responseHandler);
+                }
             }
         }.execute();
     }
@@ -68,7 +70,9 @@ public class NetworkHelper {
         try {
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();
-            for (String line = null; (line = bReader.readLine()) != null; ) {
+            String line = null;
+            while ((line = bReader.readLine()) != null)
+            {
                 builder.append(line).append("\n");
             }
             String jsonString = builder.toString();
@@ -80,6 +84,8 @@ public class NetworkHelper {
                 responseHandler.handleJsonResponse(jsonString);
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }

@@ -50,19 +50,18 @@ public class NetworkAndJSONParserTest {
         userExpected.setCrowds(crowds);
 
         bookExpected = new Book();
-        bookExpected.setId("55eb61c7b939d9110027e527");
-        bookExpected.setIsbn("1231313");
-        bookExpected.setOwner("torstein");
+        bookExpected.setId("55f01fdef0a5fad2120bb1dc");
+        bookExpected.setIsbn("23981038");
+        bookExpected.setOwner("esso");
         ArrayList<String> rentedTo = new ArrayList<String>();
-        rentedTo.add("øyvind");
-        rentedTo.add("esso");
+        rentedTo.add("torstein");
         bookExpected.setRentedTo(rentedTo);
         bookExpected.setNumberOfCopies(5);
-        bookExpected.setNumAvailableForRent(4);
+        bookExpected.setNumAvailableForRent(3);
 
         crowdExpected = new Crowd();
-        crowdExpected.setId("55e9d5f1e4b003e0910cba58");
-        crowdExpected.setName("The best crowd");
+        crowdExpected.setId("55f01f29f0a5fad2120bb1db");
+        crowdExpected.setName("herpaderp");
         crowdExpected.setOwner("esso");
         List<User> members = new ArrayList<User>();
         crowdExpected.setMembers(members);
@@ -86,6 +85,9 @@ public class NetworkAndJSONParserTest {
 
     public void testGetCrowds() throws Exception {
         nC.getCrowds();
+        crowdActual = MainController.getCrowd("55f01f29f0a5fad2120bb1db");
+        System.out.print(crowdActual.toString());
+        //Assert.assertEquals(crowdExpected, crowdActual);
     }
 
     //@Test
