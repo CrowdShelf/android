@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -34,7 +35,12 @@ public class BookListHandler implements ResponseHandler {
         */
 
         //Method 2
-        List<Book> books = gson.fromJson(jsonArray, bookListType);
-        MainController.receiveBooks(books);
+        try {
+            List<Book> books = gson.fromJson(jsonArray, bookListType);
+            MainController.receiveBooks(books);
+        } catch (JsonSyntaxException e) {
+            System.out.print("Received books was not in expected format\n");
+            e.printStackTrace();
+        }
     }
 }

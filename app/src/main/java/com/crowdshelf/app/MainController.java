@@ -29,7 +29,7 @@ public class MainController {
     4 types of methods:
     Create: Create new object and send it to server
     Get: Get object stored locally, and if not found, retrieve it
-    Retrieve: Send command to download object from server
+    Retrieve: Send command to download object from server. You need to use this if you want to force downloading the object again.
     Receive: Receive the object from server
      */
 
@@ -139,15 +139,14 @@ public class MainController {
 
     public static void createBook(String isbn, int numberOfCopies, int numAvailableForRent) {
         // This book is never stored in the books hash map. It is sent to the server,
-        // then retrieved to get the correct _id
+        // then retrieved to be stored with the correct _id
         Book book = new Book();
-        book.setId("-1");
         book.setIsbn(isbn);
         book.setOwner(mainUser.getUsername());
         book.setNumberOfCopies(numberOfCopies);
         book.setNumAvailableForRent(numAvailableForRent);
         NetworkController.createBook(book);
-    }
+}
 
     public static void receiveBook(Book book) {
         // Called ONLY when a book is sent from server
@@ -233,5 +232,17 @@ public class MainController {
             }
         }
         return booksByAuthor;
+    }
+
+    public List<Book> searchBook(String searchSting) {
+        if (searchSting.matches("[0-9]+")) {
+            // Just numbers, assume ISBN
+            return getBooksByIsbnOwnedByAll(searchSting);
+        } else {
+            List<Book> books = new ArrayList<Book>();
+            books.addAll(getBooksByAuthor(searchSting));
+            books.addAll(getBooksByTitle(searchSting));
+            return books;
+        }
     }
 }

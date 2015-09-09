@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -35,7 +36,12 @@ public class CrowdListHandler implements ResponseHandler {
         */
 
         // Method 2
-        List<Crowd> crowds = gson.fromJson(jsonArray, crowdListType);
-        MainController.receiveCrowds(crowds);
+        try {
+            List<Crowd> crowds = gson.fromJson(jsonArray, crowdListType);
+            MainController.receiveCrowds(crowds);
+        } catch (JsonSyntaxException e) {
+            System.out.print("Received crowds was not in expected format\n");
+            e.printStackTrace();
+        }
     }
 }
