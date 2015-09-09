@@ -27,7 +27,7 @@
             android:launchMode="singleTask">
         </activity>
         <activity
-            android:name="com.crowdshelf.app.activities.ScanResultActivity"
+            android:name="com.crowdshelf.app.activities.ViewBookActivity"
             android:label="Result"
             android:launchMode="singleTask">
         </activity>

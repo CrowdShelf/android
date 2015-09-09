@@ -47,6 +47,25 @@ public class User {
         return MainController.getCrowds(crowds);
     }
 
+    public boolean ownsBook(String isbn) {
+        for (Book b : booksOwned) {
+            if (b.getIsbn().equals(isbn)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean rentsBook(String isbn) {
+        for (Book b : booksRented) {
+            if (b.getIsbn().equals(isbn)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void setCrowds(List<String> crowds) {
         this.crowds = crowds;
     }

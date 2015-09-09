@@ -193,6 +193,7 @@ public class MainController {
     }
 
     public static List<Book> getBooksByIsbnOwnedByYourCrowds (String isbn) {
+        // todo maybe this should includes booksOwned & booksRented of main user depending on where it's natural to use this method
         // Returns all the books with a given ISBN that the main user
         // actually can borrow, e.g. books owned or rented by members of the crowds that the main user
         // is a member of.
@@ -234,6 +235,7 @@ public class MainController {
         return booksByAuthor;
     }
 
+    // If we implement a search field to search for books, call this
     public List<Book> searchBook(String searchSting) {
         if (searchSting.matches("[0-9]+")) {
             // Just numbers, assume ISBN
