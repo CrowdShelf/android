@@ -61,11 +61,12 @@ public class ViewBookActivity extends Activity {
             infoText.setText(bookInfo);
         }
 
-        // todo: Display a list of people who you can rent this book from
+        /*        // todo: Display a list of people who you can rent this book from
         List<Book> books = MainController.getBooksByIsbnOwnedByYourCrowds(ISBN);
         for (Book b : books) {
             b.getOwner();
         }
+        /*
 
         /*
         Buttons to show and when to show them:
@@ -100,7 +101,10 @@ public class ViewBookActivity extends Activity {
     public void addButtonClick(View view) {
         // Add book to my shelf
         Toast.makeText(ViewBookActivity.this, "Add a book: " + ISBN, Toast.LENGTH_SHORT).show();
-        MainController.createBook(ISBN, 1, 1);
+        //MainController.createBook(ISBN, 1, 1);
+        Intent intent = new Intent(this, ShelfActivity.class);
+        intent.putExtra("ISBN", ISBN);
+        startActivity(intent);
     }
 
     public void borrowButtonClick(View view) {

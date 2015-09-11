@@ -11,4 +11,5 @@
     <string name="returnButton">Return</string>
     <string name="addButton">Add</string>
     <string name="removeButton">Remove</string>
+    <string name="title_activity_shelf">ShelfActivity</string>
 </resources>
