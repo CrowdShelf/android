@@ -101,7 +101,7 @@ public class ViewBookActivity extends Activity {
     public void addButtonClick(View view) {
         // Add book to my shelf
         Toast.makeText(ViewBookActivity.this, "Add a book: " + ISBN, Toast.LENGTH_SHORT).show();
-        //MainController.createBook(ISBN, 1, 1);
+        MainController.createBook(ISBN, 1, 1);
         Intent intent = new Intent(this, ShelfActivity.class);
         intent.putExtra("ISBN", ISBN);
         startActivity(intent);
