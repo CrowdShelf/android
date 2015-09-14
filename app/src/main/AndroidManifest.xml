@@ -22,11 +22,6 @@
             <!--</intent-filter>-->
         </activity>
         <activity
-            android:name="com.crowdshelf.app.activities.ScannerActivity"
-            android:label="@string/title_activity_scanner"
-            android:launchMode="singleTask" >
-        </activity>
-        <activity
             android:name="com.crowdshelf.app.activities.ViewBookActivity"
             android:label="Result"
             android:launchMode="singleTask" >

@@ -64,7 +64,7 @@ public class ScannerFragment extends Fragment implements MessageDialogFragment.M
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
     }
 
     public void onCreateOptionsMenu (Menu menu, MenuInflater inflater) {
@@ -124,6 +124,7 @@ public class ScannerFragment extends Fragment implements MessageDialogFragment.M
             r.play();
         } catch (Exception e) {}
         mListener.isbnReceived(rawResult.getText());
+//        onDialogPositiveClick(null);
         showMessageDialog("Contents = " + rawResult.getText() + ", Format = " + rawResult.getBarcodeFormat().toString());
     }
 
@@ -184,10 +185,13 @@ public class ScannerFragment extends Fragment implements MessageDialogFragment.M
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof MainTabbedActivity){
             Log.i(MainTabbedActivity.TAG, "onAttach, is MainTabbedActivity");
             try {
+
                 mListener = (ScannerScreenFragment.OnScannerScreenInteractionListener) context;
+
             } catch (ClassCastException e) {
                 throw new ClassCastException(context.toString()
                         + " must implement OnFragmentInteractionListener");

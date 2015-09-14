@@ -2,6 +2,7 @@ package com.crowdshelf.app.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,13 +13,14 @@ import android.widget.Toast;
 
 import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.ScannedBookActions;
+import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
-import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.network.GetBookInfoAsyncTask;
+import com.crowdshelf.app.network.GetBookPreviewInfoAsync;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import ntnu.stud.markul.crowdshelf.R;
 
@@ -28,6 +30,7 @@ import ntnu.stud.markul.crowdshelf.R;
 public class ViewBookActivity extends Activity {
 
     private String ISBN = "";
+    private BookInfo scannedBookInfo;
     //private User mainUser = new User("Morten"); // TODO: Only for testing
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,29 +44,13 @@ public class ViewBookActivity extends Activity {
     public void setBook(String ISBN) {
 
         Log.i("ScanResult", ISBN);
-        String jsonAsStringFromISBN = HelperMethods.getJsonFromGoogleBooksApiUsingISBN(ISBN);
 
-        GoogleBooksMain googleBooksMain = HelperMethods.convertGoogleBooksJsonStringToObject(jsonAsStringFromISBN);
+        TextView titleTextView = (TextView)findViewById(R.id.titleView);
 
-        assert googleBooksMain != null;
-        if (googleBooksMain.getTotalItems() > 0){
-            GoogleBooksVolumeInfo a = googleBooksMain.getItems().get(0).getVolumeInfo();
+        ImageView imageView = (ImageView)findViewById(R.id.imageView);
 
-            String bookTitle = a.getTitle();
-            TextView titleText = (TextView)findViewById(R.id.titleView);
-            titleText.setText(bookTitle);
-
-            String bookThumbnail = a.getImageLinks().getThumbnail();
-            ImageView imageView = (ImageView)findViewById(R.id.imageView);
-            Picasso.with(this)
-                    .load(bookThumbnail)
-                    .resize(250, 400)
-                    .into(imageView);
-
-            String bookInfo = a.getDescription();
-            TextView infoText = (TextView)findViewById(R.id.infoView);
-            infoText.setText(bookInfo);
-    }
+        TextView infoTextView = (TextView)findViewById(R.id.infoView);
+        new GetBookPreviewInfoAsync(ISBN, titleTextView, imageView, infoTextView).execute();
 
         /*        // todo: Display a list of people who you can rent this book from
         List<Book> books = MainController.getBooksByIsbnOwnedByYourCrowds(ISBN);
@@ -106,14 +93,24 @@ public class ViewBookActivity extends Activity {
         // Add book to my shelf
         Toast.makeText(ViewBookActivity.this, "Add a book: " + ISBN, Toast.LENGTH_SHORT).show();
         MainController.createBook(ISBN, 1, 1);
-        Intent intent = new Intent(this, ShelfActivity.class);
-        intent.putExtra("ISBN", ISBN);
-        startActivity(intent);
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", ScannedBookActions.ADD.value);
+        setResult(RESULT_OK, returnIntent);
+        finish();
+
+//        Intent intent = new Intent(this, ShelfActivity.class);
+//        intent.putExtra("ISBN", ISBN);
+//        startActivity(intent);
     }
 
     public void borrowButtonClick(View view) {
         // Borrow book from another user
         Toast.makeText(ViewBookActivity.this, "Borrow book: " + ISBN, Toast.LENGTH_SHORT).show();
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", ScannedBookActions.BORROW.value);
+        setResult(RESULT_OK, returnIntent);
+        finish();
 
         // todo switch to ViewUsersActivity
     }
@@ -121,6 +118,10 @@ public class ViewBookActivity extends Activity {
     public void returnButtonClick(View view) {
         // Return a book you borrow to its owner
         Toast.makeText(ViewBookActivity.this, "Return book: " + ISBN, Toast.LENGTH_SHORT).show();
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", ScannedBookActions.RETURN.value);
+        setResult(RESULT_OK, returnIntent);
+        finish();
         // todo switch to ViewUsersActivity
 
     }

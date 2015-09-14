@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openScannerButtonPressed(View view) {
-        Intent intent = new Intent(this, ScannerActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, ScannerActivity.class);
+//        startActivity(intent);
     }
 
     public void sendMailButtonPressed(View view) {

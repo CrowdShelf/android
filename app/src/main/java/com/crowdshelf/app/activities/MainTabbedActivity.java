@@ -2,12 +2,14 @@ package com.crowdshelf.app.activities;
 
 import java.util.Locale;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.fragments.UserScreenFragment;
@@ -24,6 +27,8 @@ import ntnu.stud.markul.crowdshelf.R;
 public class MainTabbedActivity extends AppCompatActivity implements ScannerScreenFragment.OnScannerScreenInteractionListener{
 
     public static final String TAG = "com.crowdshelf.app";
+    public final int GET_SCANNED_BOOK_ACTION = 1;
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,6 +44,7 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    private String lastScannedBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +81,44 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "onActivityResult");
+        if (requestCode == GET_SCANNED_BOOK_ACTION) {
+            if(resultCode == RESULT_OK){
+                int enumInt = data.getIntExtra("result", 0);
+                ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
+
+                String ISBNOfScannedBook = lastScannedBook; //TODO: Remove
+
+                Log.i(TAG, "onActivityResult action: " + action);
+                switch (action){
+                    case ADD:
+                        //TODO: Add book to user shelf
+                    case RETURN:
+                        //TODO: Return book to owner
+                    case BORROW:
+                        //TODO Borrow book from owner
+
+                }
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
+
+    @Override
     public void isbnReceived(String ISBN) {
         Toast.makeText(getBaseContext(), "ISBN: " + ISBN, Toast.LENGTH_SHORT).show();
+        lastScannedBook = ISBN;
+        Intent intent = new Intent(this, ViewBookActivity.class);
+        intent.putExtra("ISBN", ISBN);
+        startActivityForResult(intent, GET_SCANNED_BOOK_ACTION);
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.activities.MainTabbedActivity;
@@ -18,14 +21,19 @@ import java.net.URL;
 /**
  * Created by markuslund92 on 07.09.15.
  */
-public class GetBookInfoAsyncTask extends AsyncTask<Void, Void, BookInfo> {
+public class GetBookPreviewInfoAsync extends AsyncTask<Void, Void, BookInfo> {
 
-    private BookInfo bookInfo;
-    private String isbn;
 
-    public GetBookInfoAsyncTask(String isbn, BookInfo bookInfo) {
-        this.bookInfo = bookInfo;
+    private final String isbn;
+    private final TextView titleTextView;
+    private final ImageView imageView;
+    private final TextView infoTextView;
+
+    public GetBookPreviewInfoAsync(String isbn, TextView titleTextView, ImageView imageView, TextView infoTextView) {
         this.isbn = isbn;
+        this.titleTextView = titleTextView;
+        this.imageView = imageView;
+        this.infoTextView = infoTextView;
     }
 
     @Override
@@ -59,8 +67,10 @@ public class GetBookInfoAsyncTask extends AsyncTask<Void, Void, BookInfo> {
     @Override
     protected void onPostExecute(BookInfo result) {
         super.onPostExecute(result);
-        Log.i(MainTabbedActivity.TAG, "GetBookInfoAsyncTask-onPostExecute result title:" + result.getTitle());
-        this.bookInfo = result;
+        Log.i(MainTabbedActivity.TAG, "GetBookPreviewInfoAsync-onPostExecute result title:" + result.getTitle());
+        this.imageView.setImageBitmap(result.getArtwork());
+        this.titleTextView.setText(result.getTitle());
+        this.infoTextView.setText(result.getDescription());
     }
 
     private Bitmap downloadArtworkFromUrl(String url) {
