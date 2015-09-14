@@ -1,0 +1,18 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.crowdshelf.app.fragments.ScannerScreenFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+        android:text="Scanner screen"
+        android:id="@+id/scannerscreen" />
+
+    <fragment
+        android:layout_width="284dp"
+        android:layout_height="371dp"
+        android:name="com.crowdshelf.app.fragments.ScannerFragment"
+        android:id="@+id/fragment"
+        android:layout_gravity="center" />
+
+</FrameLayout>
