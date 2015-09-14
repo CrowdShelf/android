@@ -118,10 +118,10 @@ public class User implements BookOwner{
             return false;
         } else {
             final User user = (User) obj;
-            return this.username.equals(user.getUsername())
-                    && this.booksOwned.equals(user.getBooksOwned())
-                    && this.booksRented.equals(user.getBooksRented())
-                    && this.crowds.equals(user.getCrowds());
+            return this.username.equals(user.username)
+                    && this.booksOwned.equals(user.booksOwned)
+                    && this.booksRented.equals(user.booksRented)
+                    && this.crowds.equals(user.crowds);
         }
     }
 }

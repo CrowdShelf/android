@@ -150,12 +150,16 @@ public class MainController {
 
     public static void receiveBook(Book book) {
         // Called ONLY when a book is sent from server
-        book.getOwner().addOwnedBook(book);
-        for (User u : book.getRentedTo()) {
-            u.addRentedBook(book);
+        if (book != null) {
+            // book.getOwner().addOwnedBook(book);
+            /*
+            for (User u : book.getRentedTo()) {
+                u.addRentedBook(book);
+            }
+            */
+            books.put(book.getId(), book);
+            coupleIsbnToId(book.getIsbn(), book.getId());
         }
-        books.put(book.getId(), book);
-        coupleIsbnToId(book.getIsbn(), book.getId());
     }
 
     public static void receiveBooks(List<Book> books) {

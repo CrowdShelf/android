@@ -107,9 +107,9 @@ public class Crowd implements BookOwner{
         } else {
             final Crowd crowd = (Crowd) obj;
             return this._id.equals(crowd.getId())
-                    && this.name.equals(crowd.getName())
-                    && this.owner.equals(crowd.getMembers())
-                    && this.members.equals(crowd.getMembers());
+                    && this.name.equals(crowd.name)
+                    && this.owner.equals(crowd.owner)
+                    && this.members.equals(crowd.members);
         }
     }
 }
