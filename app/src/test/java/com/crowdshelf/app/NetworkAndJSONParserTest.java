@@ -30,8 +30,8 @@ import ntnu.stud.markul.crowdshelf.BuildConfig;
 public class NetworkAndJSONParserTest {
     NetworkController nC;
     MainController mC;
-    Book bookActual, bookExpected, newBookActual, newBookExpected;
-    User userActual, userExpected, userRenter;
+    Book bookActual, bookExpected, newBookActual, newBookExpected, book1, book2;
+    User userActual, userExpected, userRenter, user1;
     Crowd crowdActual, crowdExpected;
 
     @Before
@@ -39,15 +39,7 @@ public class NetworkAndJSONParserTest {
         nC = new NetworkController();
         mC = new MainController();
 
-        userExpected = new User();
-        userExpected.setUsername("torstein");
-        List<Book> booksOwned = new ArrayList<Book>();
-        List<Book> booksRented = new ArrayList<Book>();
-        booksOwned.add(bookExpected);
-        userExpected.setBooksOwned(booksOwned);
-        userExpected.setBooksRented(booksRented);
-        List<String> crowds = new ArrayList<String>();
-        userExpected.setCrowds(crowds);
+        /*
 
         bookExpected = new Book();
         bookExpected.setId("55f01fdef0a5fad2120bb1dc");
@@ -59,13 +51,6 @@ public class NetworkAndJSONParserTest {
         bookExpected.setNumberOfCopies(5);
         bookExpected.setNumAvailableForRent(3);
 
-        crowdExpected = new Crowd();
-        crowdExpected.setId("55f01f29f0a5fad2120bb1db");
-        crowdExpected.setName("herpaderp");
-        crowdExpected.setOwner("esso");
-        List<User> members = new ArrayList<User>();
-        crowdExpected.setMembers(members);
-
 
         newBookExpected = new Book();
         newBookExpected.setIsbn("123321");
@@ -76,6 +61,7 @@ public class NetworkAndJSONParserTest {
 
         userRenter = new User();
         userRenter.setUsername("katja");
+        */
     }
 
     @Test
@@ -84,49 +70,51 @@ public class NetworkAndJSONParserTest {
     }
 
     public void testGetCrowds() throws Exception {
-        nC.getCrowds();
-        crowdActual = MainController.getCrowd("55f01f29f0a5fad2120bb1db");
-        System.out.print(crowdActual.toString());
-        //Assert.assertEquals(crowdExpected, crowdActual);
-    }
+        userExpected = new User();
+        userExpected.setUsername("esso");
+        List<Book> booksOwned = new ArrayList<Book>();
+        List<Book> booksRented = new ArrayList<Book>();
+        List<String> crowds = new ArrayList<String>();
+        crowds.add("55f01f29f0a5fad2120bb1db");
+        userExpected.setCrowds(crowds);
 
-    //@Test
-    public void testGetUserWithBooksThenAddAndRemoveRenter() throws Exception {
-        testGetUser();
-        testGetBookFromUser();
-        testAddRenter();
-        testRemoveRenter();
-    }
+        book1 = new Book();
+        book1.setId("55f0661d4384b31100c056a6");
+        book1.setIsbn("1231313");
+        book1.setOwner("morten");
+        ArrayList<String> rentedTo1 = new ArrayList<String>();
+        rentedTo1.add("øyvind");
+        rentedTo1.add("esso");
+        book1.setRentedTo(rentedTo1);
+        book1.setNumberOfCopies(5);
+        book1.setNumAvailableForRent(4);
 
-    public void testGetUser() throws Exception {
-        userActual = mC.getUser("torstein");
-        System.out.print(userActual.toString());
-        //Assert.assertEquals("\nUser: ", userExpected, userActual);
-    }
+        book2 = new Book();
+        book2.setId("55f01fdef0a5fad2120bb1dc");
+        book2.setIsbn("23981038");
+        book2.setOwner("esso");
+        ArrayList<String> rentedTo2 = new ArrayList<String>();
+        rentedTo2.add("torstein");
+        book2.setRentedTo(rentedTo2);
+        book2.setNumberOfCopies(5);
+        book2.setNumAvailableForRent(3);
 
-    public void testGetBookFromUser() throws Exception {
-        // Verify that the books contained in the User object is retrieved and stored properly
-        //bookActual = mC.getBookById("55eb61c7b939d9110027e527");
-        bookExpected.toString();
-        bookActual.toString();
-        Assert.assertEquals("\nBooks in user object: ", bookExpected, bookActual);
-    }
+        booksRented.add(book1);
+        booksOwned.add(book2);
+        userExpected.setBooksOwned(booksOwned);
+        userExpected.setBooksRented(booksRented);
 
-    public void testAddRenter() throws Exception{
-        bookActual.addRenter(userRenter.getUsername());
-    }
+        crowdExpected = new Crowd();
+        crowdExpected.setId("55f01f29f0a5fad2120bb1db");
+        crowdExpected.setName("herpaderp");
+        crowdExpected.setOwner("esso");
+        List<User> members = new ArrayList<User>();
+        members.add(userExpected);
+        crowdExpected.setMembers(members);
 
-    public  void testRemoveRenter() throws Exception {
-
-    }
-
-    public void testGetBook() throws Exception {
-
-    }
-
-    public void testGetCrowd() throws Exception {
-        //crowdActual = mC.getCrowd("55e9d5f1e4b003e0910cba58");
-        //Assert.assertEquals(crowdExpected, crowdActual);
+        mC.retrieveCrowd("55f01f29f0a5fad2120bb1db"); // Download crowd from server
+        crowdActual = MainController.getCrowd("55f01f29f0a5fad2120bb1db"); // Get the one stored locally
+        Assert.assertEquals(crowdExpected, crowdActual);
     }
 
     public void testCreateBook() throws Exception {
@@ -141,7 +129,6 @@ public class NetworkAndJSONParserTest {
 
     public void testCreateCrowd() throws Exception {
     }
-
 
     public void testAddCrowdMember() throws Exception {
     }

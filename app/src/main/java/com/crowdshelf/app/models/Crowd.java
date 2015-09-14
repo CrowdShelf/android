@@ -9,7 +9,7 @@ import com.crowdshelf.app.network.NetworkController;
 /**
  * Created by Torstein on 01.09.2015.
  */
-public class Crowd {
+public class Crowd implements BookOwner{
     private String _id; // Unique identified
     private String name;
     private String owner;
@@ -76,6 +76,22 @@ public class Crowd {
         return books;
     }
 
+    public List<Book> getBooksOwned() {
+        List<Book> books = new ArrayList<Book>();
+        for (User u : members) {
+            books.addAll(u.getBooksOwned());
+        }
+        return books;
+    }
+
+    public List<Book> getBooksRented() {
+        List<Book> books = new ArrayList<Book>();
+        for (User u : members) {
+            books.addAll(u.getBooksRented());
+        }
+        return books;
+    }
+
     public String toString() {
         return "_id: " + String.valueOf(_id) +
                 "\nname: " + String.valueOf(name) +
@@ -91,9 +107,9 @@ public class Crowd {
         } else {
             final Crowd crowd = (Crowd) obj;
             return this._id.equals(crowd.getId())
-                    && this.name.equals(crowd.getName())
-                    && this.owner.equals(crowd.getMembers())
-                    && this.members.equals(crowd.getMembers());
+                    && this.name.equals(crowd.name)
+                    && this.owner.equals(crowd.owner)
+                    && this.members.equals(crowd.members);
         }
     }
 }

@@ -9,7 +9,7 @@ import com.crowdshelf.app.network.NetworkController;
 /**
  * Created by Torstein on 01.09.2015.
  */
-public class User {
+public class User implements BookOwner{
     private String username;
     private List<Book> booksOwned = new ArrayList<Book>();
     private List<Book> booksRented = new ArrayList<Book>();
@@ -21,6 +21,13 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    // Return both books owned and books rented in the same list
+    public List<Book> getBooks() {
+        List<Book> allBooks = new ArrayList<Book>(booksOwned);
+        allBooks.addAll(booksRented);
+        return allBooks;
     }
 
     public List<Book> getBooksOwned() {
@@ -111,10 +118,10 @@ public class User {
             return false;
         } else {
             final User user = (User) obj;
-            return this.username.equals(user.getUsername())
-                    && this.booksOwned.equals(user.getBooksOwned())
-                    && this.booksRented.equals(user.getBooksRented())
-                    && this.crowds.equals(user.getCrowds());
+            return this.username.equals(user.username)
+                    && this.booksOwned.equals(user.booksOwned)
+                    && this.booksRented.equals(user.booksRented)
+                    && this.crowds.equals(user.crowds);
         }
     }
 }

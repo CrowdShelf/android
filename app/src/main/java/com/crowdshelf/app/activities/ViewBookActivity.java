@@ -35,6 +35,10 @@ public class ViewBookActivity extends Activity {
         Intent intent = getIntent();
         ISBN = intent.getStringExtra("ISBN");
         setContentView(R.layout.activity_scan_result);
+        setBook(ISBN);
+    }
+
+    public void setBook(String ISBN) {
 
         Log.i("ScanResult", ISBN);
         String jsonAsStringFromISBN = HelperMethods.getJsonFromGoogleBooksApiUsingISBN(ISBN);
@@ -59,7 +63,7 @@ public class ViewBookActivity extends Activity {
             String bookInfo = a.getDescription();
             TextView infoText = (TextView)findViewById(R.id.infoView);
             infoText.setText(bookInfo);
-        }
+    }
 
         /*        // todo: Display a list of people who you can rent this book from
         List<Book> books = MainController.getBooksByIsbnOwnedByYourCrowds(ISBN);

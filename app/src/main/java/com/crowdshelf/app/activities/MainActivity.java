@@ -15,6 +15,7 @@ import com.crowdshelf.app.emailService.GMailSender;
 import com.crowdshelf.app.GridViewAdapter;
 import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
+import com.crowdshelf.app.models.User;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,12 @@ import ntnu.stud.markul.crowdshelf.R;
 
 public class MainActivity extends AppCompatActivity {
     private final String MIXPANEL_TOKEN = "93ef1952b96d0faa696176aadc2fbed4";
+
+    private static User mainUser = new User();
+
+    public static User getMainUser() {
+        return mainUser;
+    }
 
     private GMailSender gMailSender;
 //    private MixpanelAPI mixpanel;
