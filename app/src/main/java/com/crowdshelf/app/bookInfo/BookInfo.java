@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
  * Created by Torstein on 01.09.2015.
  */
 public class BookInfo {
+    private String description;
     private String isbn;
     private String title;
     private String subtitle;
@@ -14,7 +15,7 @@ public class BookInfo {
     private String pubDate;
     private Bitmap artwork; // Maybe we need multiple sizes
 
-    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, Bitmap artwork) {
+    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, Bitmap artwork, String description) {
         this.isbn = isbn;
         this.title = title;
         this.subtitle = subtitle;
@@ -22,6 +23,7 @@ public class BookInfo {
         this.publisher = publisher;
         this.pubDate = pubDate;
         this.artwork = artwork;
+        this.description = description;
     }
 
     public String getIsbn() {
@@ -52,4 +54,7 @@ public class BookInfo {
         return artwork;
     }
 
+    public String getDescription() {
+        return description;
+    }
 }

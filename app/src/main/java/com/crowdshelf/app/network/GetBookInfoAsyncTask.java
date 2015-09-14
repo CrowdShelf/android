@@ -42,8 +42,9 @@ public class GetBookInfoAsyncTask extends AsyncTask<Void, Void, BookInfo> {
                 String publisher = info.getPublisher();
                 String pubDate = info.getPublishedDate();
                 Bitmap artwork = downloadArtworkFromUrl(info.getImageLinks().getThumbnail());
+                String description = info.getDescription();
 
-                return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artwork);
+                return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artwork, description);
             }else{
                 //TODO: Do something if books does not exist in google books
             }
