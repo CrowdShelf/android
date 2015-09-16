@@ -75,6 +75,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(this);
 
     }
 
@@ -159,12 +160,17 @@ public class MainTabbedActivity extends AppCompatActivity implements
         switch (position){
             case 0:
                 Log.i(TAG, "onPageSelected position: " + position);
+                userShelfGridViewAdapter.notifyDataSetChanged();
+                break;
             case 1:
                 Log.i(TAG, "onPageSelected position: " + position);
+                break;
             case 2:
                 Log.i(TAG, "onPageSelected position: " + position);
+                break;
             default:
                 Log.i(TAG, "onPageSelected positiondefault: " + position);
+                break;
         }
 
     }
