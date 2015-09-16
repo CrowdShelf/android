@@ -64,19 +64,15 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: id
+          name: bookId
           description: Book id
           required: true
-          type: array
-          items:
-            type: string
-          collectionFormat: multi
+          type: string
       responses:
         '200':
           description: OK
           schema:
-            type:
-              $ref: '#/definitions/Book'
+            $ref: '#/definitions/Book'
         '404':
           description: Not found
   '/book/{bookId}/renter':
@@ -93,6 +89,7 @@ paths:
           name: bookId
           description: id of book
           required: true
+          type: string
       responses:
         '200':
           description: OK
@@ -118,7 +115,7 @@ paths:
         - in: path
           name: username
           description: username of user to be added as a renter
-          requried: true
+          required: true
           type: string
       responses:
         '200':
@@ -127,7 +124,7 @@ paths:
           description: Conflict
         '422':
           description: '?? esso hva skjer her'
-    del:
+    delete:
       tags:
         - book
       summary: Remove a renter from a book
@@ -142,7 +139,7 @@ paths:
         - in: path
           name: username
           description: username of user to be removed as a renter
-          requried: true
+          required: true
           type: string
       responses:
         '200':
@@ -217,7 +214,7 @@ paths:
             $ref: '#/definitions/Crowd'
         '404':
           description: Not found
-    del:
+    delete:
       tags:
         - crowd
       summary: Delete crowd by ID
@@ -259,7 +256,7 @@ paths:
           description: OK
         '409':
           description: asdsda
-    del:
+    delete:
       tags:
         - crowd
       summary: Remove a member from a crowd
@@ -285,7 +282,6 @@ paths:
     post:
       tags:
         - user
-        - create
       summary: Create user
       description: ''
       operationId: createUser
@@ -356,7 +352,7 @@ definitions:
           $ref: '#/definitions/Book'
       crowds:
         type: array
-        description: array of crowd id's
+        description: "array of crowd id's"
         items:
           type: string
   Book:
