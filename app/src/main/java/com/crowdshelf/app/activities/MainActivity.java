@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         booksAddedArrayList = new ArrayList<>();
 
-        gridViewAdapter = new GridViewAdapter(MainActivity.this, R.layout.book_single, booksAddedArrayList);
+//        gridViewAdapter = new GridViewAdapter(MainActivity.this, R.layout.book_single, booksAddedArrayList);
         GridView gridView = (GridView) findViewById(R.id.gridView);
         gridView.setAdapter(gridViewAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

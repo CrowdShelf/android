@@ -1,5 +1,7 @@
 package com.crowdshelf.app.activities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.content.Intent;
@@ -17,14 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.crowdshelf.app.GridViewAdapter;
 import com.crowdshelf.app.ScannedBookActions;
+import com.crowdshelf.app.bookInfo.BookInfo;
+import com.crowdshelf.app.bookInfo.BookInfoGetter;
 import com.crowdshelf.app.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.fragments.UserScreenFragment;
 
 import ntnu.stud.markul.crowdshelf.R;
 
-public class MainTabbedActivity extends AppCompatActivity implements ScannerScreenFragment.OnScannerScreenInteractionListener{
+public class MainTabbedActivity extends AppCompatActivity implements ScannerScreenFragment.OnScannerScreenInteractionListener, UserScreenFragment.OnUserScreenFragmentInteractionListener{
 
     public static final String TAG = "com.crowdshelf.app";
     public final int GET_SCANNED_BOOK_ACTION = 1;
@@ -38,19 +43,27 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+    SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
-    private String lastScannedBook;
+    private String lastScannedBookISBN;
+    private ArrayList<String> userShelfISBNs;
+    private BookInfoGetter bookInfoGetter;
+    private UserScreenFragment userScreenFragment;
+    private List<BookInfo> booksAddedArrayList;
+    private GridViewAdapter userShelfGridViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbed);
 
+        bookInfoGetter = new BookInfoGetter();
+        booksAddedArrayList = new ArrayList<>();
+        userShelfGridViewAdapter = new GridViewAdapter(MainTabbedActivity.this, R.layout.book_single, booksAddedArrayList);
+//        userScreenFragment.initiate(userShelfGridViewAdapter);
+
+        userScreenFragment = UserScreenFragment.newInstance(userShelfGridViewAdapter);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -60,6 +73,13 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+    }
+
+    private void loginUser(String username) {
+        //TODO: Login user
+        Toast.makeText(MainTabbedActivity.this, "User: " + username + " logged in.", Toast.LENGTH_SHORT).show();
+        userShelfISBNs = new ArrayList<>();
+        //TODO: populate userShelfISBNs with users books.
     }
 
 
@@ -79,6 +99,7 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            loginUser("markus");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -92,12 +113,12 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
                 int enumInt = data.getIntExtra("result", 0);
                 ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
 
-                String ISBNOfScannedBook = lastScannedBook; //TODO: Remove
-
                 Log.i(TAG, "onActivityResult action: " + action);
                 switch (action){
                     case ADD:
                         //TODO: Add book to user shelf
+                        booksAddedArrayList.add(new BookInfo("isbn", "Dette er en tittel!", "subitle", "", "", "", null, "Dette er beskrivelsen av boka."));
+                        userShelfGridViewAdapter.notifyDataSetChanged();
                     case RETURN:
                         //TODO: Return book to owner
                     case BORROW:
@@ -114,10 +135,15 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
     @Override
     public void isbnReceived(String ISBN) {
         Toast.makeText(getBaseContext(), "ISBN: " + ISBN, Toast.LENGTH_SHORT).show();
-        lastScannedBook = ISBN;
+        lastScannedBookISBN = ISBN;
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("ISBN", ISBN);
         startActivityForResult(intent, GET_SCANNED_BOOK_ACTION);
+    }
+
+    @Override
+    public void removeBookFromShelf(String isbn) {
+
     }
 
     /**
@@ -136,7 +162,7 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position){
                 case 0:
-                    return UserScreenFragment.newInstance(null, null);
+                    return userScreenFragment;
                 case 1:
                     return ScannerScreenFragment.newInstance(null, null);
                 case 2:
@@ -166,7 +192,11 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
             }
             return null;
         }
+
+
     }
+
+
 
     /**
      * A placeholder fragment containing a simple view.

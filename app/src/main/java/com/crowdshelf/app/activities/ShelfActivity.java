@@ -1,15 +1,11 @@
 package com.crowdshelf.app.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.GridViewAdapter;
@@ -18,11 +14,8 @@ import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookOwner;
-import com.crowdshelf.app.models.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ntnu.stud.markul.crowdshelf.R;
@@ -50,35 +43,13 @@ public class ShelfActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-     public boolean onCreateOptionsMenu(Menu menu) {
-         // Inflate the menu; this adds items to the action bar if it is present.
-         getMenuInflater().inflate(R.menu.menu_shelf, menu);
-         return true;
-     }
-
-     @Override
-     public boolean onOptionsItemSelected(MenuItem item) {
-         // Handle action bar item clicks here. The action bar will
-         // automatically handle clicks on the Home/Up button, so long
-         // as you specify a parent activity in AndroidManifest.xml.
-         int id = item.getItemId();
-
-         //noinspection SimplifiableIfStatement
-         if (id == R.id.action_settings) {
-             return true;
-         }
-
-         return super.onOptionsItemSelected(item);
-     }
-
     private void initiate(){
         Intent intent = getIntent();
         String ISBN = intent.getStringExtra("ISBN");
         setContentView(R.layout.activity_shelf);
 
         booksAddedArrayList = new ArrayList<>();
-        gridViewAdapter = new GridViewAdapter(ShelfActivity.this, R.layout.book_single, booksAddedArrayList);
+//        gridViewAdapter = new GridViewAdapter(ShelfActivity.this, R.layout.book_single, booksAddedArrayList);
         gridView = (GridView) findViewById(R.id.gridViewShelf);
         gridView.setAdapter(gridViewAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

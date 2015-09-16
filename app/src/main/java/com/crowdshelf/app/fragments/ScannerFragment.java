@@ -194,7 +194,7 @@ public class ScannerFragment extends Fragment implements MessageDialogFragment.M
 
             } catch (ClassCastException e) {
                 throw new ClassCastException(context.toString()
-                        + " must implement OnFragmentInteractionListener");
+                        + " must implement OnUserScreenFragmentInteractionListener");
             }
         }
     }

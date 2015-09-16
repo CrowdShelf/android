@@ -2,7 +2,6 @@ package com.crowdshelf.app.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,16 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.bookInfo.BookInfo;
-import com.crowdshelf.app.bookInfo.GoogleBooksMain;
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.network.GetBookInfoAsyncTask;
 import com.crowdshelf.app.network.GetBookPreviewInfoAsync;
-import com.squareup.picasso.Picasso;
 
 import ntnu.stud.markul.crowdshelf.R;
 
