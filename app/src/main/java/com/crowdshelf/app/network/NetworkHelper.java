@@ -78,8 +78,8 @@ public class NetworkHelper {
             String jsonString = builder.toString();
             JsonElement jsonElement = new JsonParser().parse(jsonString);
 
-            System.out.print("Received JSON-data: \n");
-            System.out.print(gson.toJson(jsonElement));
+            //System.out.print("Received JSON-data in NetworkHelper: \n");
+            //System.out.print(gson.toJson(jsonElement));
             if (responseHandler != null) {
                 responseHandler.handleJsonResponse(jsonString);
             }
