@@ -29,7 +29,10 @@ import com.crowdshelf.app.fragments.UserScreenFragment;
 
 import ntnu.stud.markul.crowdshelf.R;
 
-public class MainTabbedActivity extends AppCompatActivity implements ScannerScreenFragment.OnScannerScreenInteractionListener, UserScreenFragment.OnUserScreenFragmentInteractionListener{
+public class MainTabbedActivity extends AppCompatActivity implements
+        ScannerScreenFragment.OnScannerScreenInteractionListener,
+        UserScreenFragment.OnUserScreenFragmentInteractionListener,
+        ViewPager.OnPageChangeListener{
 
     public static final String TAG = "com.crowdshelf.app";
     public final int GET_SCANNED_BOOK_ACTION = 1;
@@ -143,6 +146,31 @@ public class MainTabbedActivity extends AppCompatActivity implements ScannerScre
 
     @Override
     public void removeBookFromShelf(String isbn) {
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        switch (position){
+            case 0:
+                Log.i(TAG, "onPageSelected position: " + position);
+            case 1:
+                Log.i(TAG, "onPageSelected position: " + position);
+            case 2:
+                Log.i(TAG, "onPageSelected position: " + position);
+            default:
+                Log.i(TAG, "onPageSelected positiondefault: " + position);
+        }
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
 
     }
 
