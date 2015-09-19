@@ -6,21 +6,38 @@ import java.util.List;
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.network.NetworkController;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Torstein on 01.09.2015.
  */
-public class Crowd implements BookOwner{
-    private String _id; // Unique identified
+public class Crowd extends RealmObject {
+    private String rev;
+    @PrimaryKey
+    private String id; // Unique identifier
+    @Index
     private String name;
-    private String owner;
-    private List<User> members; // = new ArrayList<User>();
+    private String owner; // _id of member
+    @Index
+    private RealmList<MemberId> members; // _id of member
 
-    public void setId(String _id) {
-        this._id = _id;
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
     }
 
     public String getId() {
-        return _id;
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -31,69 +48,25 @@ public class Crowd implements BookOwner{
         this.name = name;
     }
 
-    public String getOwnerName() {
+    public String getOwner() {
         return owner;
     }
 
-    public User getOwner() {
-        return MainController.getUser(owner);
-    }
-
-    public void setOwner(String owner) {
+    public void setOwner(String userId) {
         this.owner = owner;
     }
 
-    public List<User> getMembers() {
+    public RealmList<MemberId> getMembers() {
         return this.members;
     }
 
-    public void setMembers(List<User> members) {
-        this.members = members;
+    public void setMembers(RealmList<MemberId> userIds) {
+        this.members = userIds;
     }
 
-    public void addMember(User member) {
-        String username = member.getUsername();
-        for (User u : members) {
-            if (u.getUsername().equals(username)) {
-                members.remove(u);
-            }
-        }
-        members.add(member);
-        NetworkController.addCrowdMember(this._id, username);
-    }
-
-    public void removeMember(String username) {
-        members.remove(username);
-        NetworkController.removeCrowdMember(this._id, username);
-    }
-
-    public List<Book> getBooks() {
-        List<Book> books = new ArrayList<Book>();
-        for (User u : members) {
-            books.addAll(u.getBooksOwned());
-            books.addAll(u.getBooksRented());
-        }
-        return books;
-    }
-
-    public List<Book> getBooksOwned() {
-        List<Book> books = new ArrayList<Book>();
-        for (User u : members) {
-            books.addAll(u.getBooksOwned());
-        }
-        return books;
-    }
-
-    public List<Book> getBooksRented() {
-        List<Book> books = new ArrayList<Book>();
-        for (User u : members) {
-            books.addAll(u.getBooksRented());
-        }
-        return books;
-    }
-
+    /* Does not work with realm
     public String toString() {
-        return "_id: " + String.valueOf(_id) +
+        return "_id: " + String.valueOf(id) +
                 "\nname: " + String.valueOf(name) +
                 "\nowner: " + String.valueOf(owner) +
                 "\nmembers: " + String.valueOf(members);
@@ -106,10 +79,11 @@ public class Crowd implements BookOwner{
             return false;
         } else {
             final Crowd crowd = (Crowd) obj;
-            return this._id.equals(crowd.getId())
+            return this.id.equals(crowd.getId())
                     && this.name.equals(crowd.name)
                     && this.owner.equals(crowd.owner)
                     && this.members.equals(crowd.members);
         }
     }
+    */
 }

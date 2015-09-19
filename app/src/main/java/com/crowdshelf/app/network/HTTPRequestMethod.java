@@ -6,7 +6,8 @@ package com.crowdshelf.app.network;
 public enum HTTPRequestMethod {
     POST("POST"),
     PUT("PUT"),
-    GET("GET");
+    GET("GET"),
+    DELETE("DELETE");
 
     private final String requestMethod;
 

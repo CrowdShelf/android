@@ -1,8 +1,9 @@
 package com.crowdshelf.app.network.responseHandlers;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.User;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,30 +17,30 @@ import io.realm.Realm;
 /**
  * Created by Torstein on 07.09.2015.
  */
-public class BookListHandler implements ResponseHandler {
-    //private static Type bookListType = new TypeToken<List<Book>>(){}.getType();
+public class UserListHandler implements ResponseHandler {
+    private static Type crowdListType = new TypeToken<List<Crowd>>(){}.getType();
 
     @Override
     public void handleJsonResponse(String jsonString) {
         JsonParser jsonParser = new JsonParser();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray("books");
+            JSONArray jsonArray = jsonObject.getJSONArray("users");
 
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
-            realm.createAllFromJson(Book.class, jsonArray);
+            realm.createOrUpdateAllFromJson(User.class, jsonArray);
             realm.commitTransaction();
         } catch (JSONException e){
             e.printStackTrace();
         }
-
         /*
+        // Method 2
         try {
-            List<Book> books = gson.fromJson(jsonArray, bookListType);
-            MainController.receiveBooks(books);
+            List<Crowd> crowds = gson.fromJson(jsonArray, crowdListType);
+            MainController.receiveCrowds(crowds);
         } catch (JsonSyntaxException e) {
-            System.out.print("Received books was not in expected format\n");
+            System.out.print("Received crowds was not in expected format\n");
             e.printStackTrace();
         }
         */
