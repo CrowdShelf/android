@@ -4,12 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crowdshelf.app.HelperMethods;
-import com.crowdshelf.app.activities.MainTabbedActivity;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
@@ -70,7 +69,9 @@ public class GetBookPreviewInfoAsync extends AsyncTask<Void, Void, BookInfo> {
         Log.i(MainTabbedActivity.TAG, "GetBookPreviewInfoAsync-onPostExecute result title:" + result.getTitle());
         this.imageView.setImageBitmap(result.getArtwork());
         this.titleTextView.setText(result.getTitle());
-        this.infoTextView.setText(result.getDescription());
+        if (this.infoTextView != null){
+            this.infoTextView.setText(result.getDescription());
+        }
     }
 
     private Bitmap downloadArtworkFromUrl(String url) {

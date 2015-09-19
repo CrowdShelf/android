@@ -1,41 +1,35 @@
-package com.crowdshelf.app.fragments;
+package com.crowdshelf.app.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.crowdshelf.app.GridViewAdapter;
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.bookInfo.BookInfo;
+import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ntnu.stud.markul.crowdshelf.R;
 
 
 public class UserScreenFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
 
     private OnUserScreenFragmentInteractionListener mListener;
 
-    private static GridViewAdapter gridViewAdapter;
-
-    private static GridView gridView;
-    private static ArrayList<BookInfo> booksAddedArrayList;
-    private TextView numberOfBooksTextView;
+    private BookGridViewFragment bookGridViewFragment;
 
     // TODO: Rename and change types and number of parameters
-    public static UserScreenFragment newInstance(GridViewAdapter gridViewAdapter) {
+    public static UserScreenFragment newInstance() {
         UserScreenFragment fragment = new UserScreenFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, gridViewAdapter);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -46,9 +40,6 @@ public class UserScreenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            gridViewAdapter = (GridViewAdapter)getArguments().getSerializable(ARG_PARAM1);
-        }
     }
 
     @Override
@@ -56,9 +47,14 @@ public class UserScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_screen, container, false);
-        gridView = (GridView) view.findViewById(R.id.gridViewShelf);
-        numberOfBooksTextView = (TextView) view.findViewById(R.id.numberOfBooksTextView);
-        gridView.setAdapter(gridViewAdapter);
+        List<Fragment> userScreenFragments = getChildFragmentManager().getFragments();
+        bookGridViewFragment = null;
+
+        for (Fragment fragment: userScreenFragments){
+            if (fragment.getClass().equals(BookGridViewFragment.class)){
+                bookGridViewFragment = (BookGridViewFragment) fragment;
+            }
+        }
         return view;
     }
 
@@ -85,18 +81,9 @@ public class UserScreenFragment extends Fragment {
         mListener = null;
     }
 
-    public void initiate(GridViewAdapter gridViewAdapter) {
-        gridView.setAdapter(gridViewAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Toast.makeText(getContext(), "You clicked " + booksAddedArrayList.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-                //TODO Notify mainAcitivty of book clicked
-//                booksAddedArrayList.remove(position);
-//                gridViewAdapter.notifyDataSetChanged();
-            }
-        });
+    public void updateBookShelf(List<Book> userBooks){
+        Log.i(MainTabbedActivity.TAG, "UserScreenFragment - updateBookShelf");
+        bookGridViewFragment.setmItems(userBooks);
     }
 
     public interface OnUserScreenFragmentInteractionListener {

@@ -1,4 +1,4 @@
-package com.crowdshelf.app.fragments;
+package com.crowdshelf.app.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import ntnu.stud.markul.crowdshelf.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.crowdshelf.app.fragments.ScannerScreenFragment.OnScannerScreenInteractionListener} interface
+ * {@link com.crowdshelf.app.ui.fragments.ScannerScreenFragment.OnScannerScreenInteractionListener} interface
  * to handle interaction events.
  * Use the {@link ScannerScreenFragment#newInstance} factory method to
  * create an instance of this fragment.

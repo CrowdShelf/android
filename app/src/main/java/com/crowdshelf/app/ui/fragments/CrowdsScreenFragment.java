@@ -1,4 +1,4 @@
-package com.crowdshelf.app.fragments;
+package com.crowdshelf.app.ui.fragments;
 
 import android.app.Activity;
 import android.net.Uri;

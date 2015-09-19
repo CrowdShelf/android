@@ -1,4 +1,4 @@
-package com.crowdshelf.app.activities;
+package com.crowdshelf.app.ui.activities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,20 +12,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.crowdshelf.app.GridViewAdapter;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.bookInfo.BookInfo;
-import com.crowdshelf.app.bookInfo.BookInfoGetter;
-import com.crowdshelf.app.fragments.CrowdsScreenFragment;
-import com.crowdshelf.app.fragments.ScannerScreenFragment;
-import com.crowdshelf.app.fragments.UserScreenFragment;
+import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
+import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
+import com.crowdshelf.app.ui.fragments.UserScreenFragment;
 
 import ntnu.stud.markul.crowdshelf.R;
 
@@ -37,36 +33,17 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public static final String TAG = "com.crowdshelf.app";
     public final int GET_SCANNED_BOOK_ACTION = 1;
 
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
-    private String lastScannedBookISBN;
-    private ArrayList<String> userShelfISBNs;
-    private BookInfoGetter bookInfoGetter;
     private UserScreenFragment userScreenFragment;
-    private List<BookInfo> booksAddedArrayList;
-    private GridViewAdapter userShelfGridViewAdapter;
+    private List<Book> userBooks;
+    private String lastScannedBookIsbn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbed);
 
-        bookInfoGetter = new BookInfoGetter();
-        booksAddedArrayList = new ArrayList<>();
-        userShelfGridViewAdapter = new GridViewAdapter(MainTabbedActivity.this, R.layout.book_single, booksAddedArrayList);
-//        userScreenFragment.initiate(userShelfGridViewAdapter);
-
-        userScreenFragment = UserScreenFragment.newInstance(userShelfGridViewAdapter);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -77,12 +54,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
+        userScreenFragment = UserScreenFragment.newInstance();
+        userBooks = new ArrayList<>();
     }
 
     private void loginUser(String username) {
         //TODO: Login user
         Toast.makeText(MainTabbedActivity.this, "User: " + username + " logged in.", Toast.LENGTH_SHORT).show();
-        userShelfISBNs = new ArrayList<>();
         //TODO: populate userShelfISBNs with users books.
     }
 
@@ -121,8 +99,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 switch (action){
                     case ADD:
                         //TODO: Add book to user shelf
-                        booksAddedArrayList.add(new BookInfo("isbn", "Dette er en tittel!", "subitle", "", "", "", null, "Dette er beskrivelsen av boka."));
-                        userShelfGridViewAdapter.notifyDataSetChanged();
+                        Book book = new Book();
+                        book.setIsbn(lastScannedBookIsbn);
+                        userBooks.add(book);
+                        userScreenFragment.updateBookShelf(userBooks);
                     case RETURN:
                         //TODO: Return book to owner
                     case BORROW:
@@ -139,9 +119,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public void isbnReceived(String ISBN) {
         Toast.makeText(getBaseContext(), "ISBN: " + ISBN, Toast.LENGTH_SHORT).show();
-        lastScannedBookISBN = ISBN;
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("ISBN", ISBN);
+        lastScannedBookIsbn = ISBN;
         startActivityForResult(intent, GET_SCANNED_BOOK_ACTION);
     }
 
@@ -160,7 +140,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         switch (position){
             case 0:
                 Log.i(TAG, "onPageSelected position: " + position);
-                userShelfGridViewAdapter.notifyDataSetChanged();
                 break;
             case 1:
                 Log.i(TAG, "onPageSelected position: " + position);
@@ -202,7 +181,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 case 2:
                     return CrowdsScreenFragment.newInstance(null, null);
                 default:
-                    return PlaceholderFragment.newInstance(position + 1);
+                    return CrowdsScreenFragment.newInstance(null, null);
             }
 
         }
@@ -226,43 +205,5 @@ public class MainTabbedActivity extends AppCompatActivity implements
             }
             return null;
         }
-
-
     }
-
-
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main_tabbed, container, false);
-            return rootView;
-        }
-    }
-
 }

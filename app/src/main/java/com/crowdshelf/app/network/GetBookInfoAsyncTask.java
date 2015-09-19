@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.crowdshelf.app.HelperMethods;
-import com.crowdshelf.app.activities.MainTabbedActivity;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;

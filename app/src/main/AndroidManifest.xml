@@ -12,26 +12,12 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.crowdshelf.app.activities.MainActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" >
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-        <activity
-            android:name="com.crowdshelf.app.activities.ViewBookActivity"
+            android:name="com.crowdshelf.app.ui.activities.ViewBookActivity"
             android:label="Result"
             android:launchMode="singleTask" >
         </activity>
         <activity
-            android:name="com.crowdshelf.app.activities.ShelfActivity"
-            android:label="@string/title_activity_shelf" >
-        </activity>
-        <activity
-            android:name="com.crowdshelf.app.activities.MainTabbedActivity"
+            android:name="com.crowdshelf.app.ui.activities.MainTabbedActivity"
             android:label="@string/title_activity_main_tabbed" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

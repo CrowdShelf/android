@@ -1,4 +1,4 @@
-package com.crowdshelf.app.fragments;
+package com.crowdshelf.app.ui.fragments;
 
         import android.content.Context;
         import android.media.Ringtone;
@@ -17,7 +17,7 @@ package com.crowdshelf.app.fragments;
         import android.view.View;
         import android.view.ViewGroup;
 
-        import com.crowdshelf.app.activities.MainTabbedActivity;
+        import com.crowdshelf.app.ui.activities.MainTabbedActivity;
         import com.google.zxing.BarcodeFormat;
         import com.google.zxing.Result;
 

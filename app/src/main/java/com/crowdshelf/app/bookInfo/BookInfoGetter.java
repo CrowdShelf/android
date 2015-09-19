@@ -1,6 +1,9 @@
 package com.crowdshelf.app.bookInfo;
 
+import android.util.Log;
+
 import com.crowdshelf.app.network.GetBookInfoAsyncTask;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 
 import java.util.HashMap;
 
@@ -18,7 +21,9 @@ public class BookInfoGetter {
     }
 
     public static BookInfo getBookInfo(String isbn) {
+        Log.i(MainTabbedActivity.TAG, "BookInfoGetter - getBookInfo");
         if (!bookInfoMap.containsKey(isbn)) {
+            Log.i(MainTabbedActivity.TAG, "BookInfoGetter - getBookInfo - isbnNotInHashMap");
             downloadBookInfo(isbn);
         }
         return bookInfoMap.get(isbn);

@@ -88,6 +88,7 @@ public class Book{
     }
 
     public BookInfo getBookInfo() {
+
         return BookInfoGetter.getBookInfo(this.isbn);
     }
 
