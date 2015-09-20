@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.GridViewAdapter;
@@ -17,14 +15,11 @@ import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.BookOwner;
-import com.crowdshelf.app.models.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class ShelfActivity extends AppCompatActivity {
@@ -38,12 +33,10 @@ public class ShelfActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initiate();
-        displayBooksInShelf(MainActivity.getMainUser()); // Todo: Move to another activity
+        //displayBooksInShelf(MainActivity.getMainUser()); // Todo: Move to another activity
     }
 
-    public static void displayBooksInShelf(BookOwner bookOwner) {
-        List<Book> books = bookOwner.getBooks();
-        addBookToShelf("9780670921607");    // Todo: Remove. For testing while user have no books
+    public static void displayBooksInShelf(RealmList<Book> books) {
         for (Book book : books) {
             addBookToShelf(book.getIsbn());
             //Toast.makeText(ShelfActivity.this, "You tried to add " + book.getIsbn(), Toast.LENGTH_SHORT).show();

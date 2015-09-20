@@ -1,40 +1,44 @@
 package com.crowdshelf.app.network.responseHandlers;
 
+import android.util.Log;
+
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Book;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Created by Torstein on 07.09.2015.
  */
 public class BookListHandler implements ResponseHandler {
-    private static Type bookListType = new TypeToken<List<Book>>(){}.getType();
+    //private static Type bookListType = new TypeToken<List<Book>>(){}.getType();
 
     @Override
     public void handleJsonResponse(String jsonString) {
         JsonParser jsonParser = new JsonParser();
-        JsonElement jsonElement = jsonParser.parse(jsonString);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("books");
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray("books");
+
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.createAllFromJson(Book.class, jsonArray);
+            realm.commitTransaction();
+            realm.close();
+        } catch (JSONException e){
+            Log.d("NETDBTEST", "BookListHandler something wrong with JSON data");
+            e.printStackTrace();
+        }
 
         /*
-        // Method 1
-        BookHandler bookHandler = new BookHandler();
-        for (int i = 0; i < jsonArray.size(); i++) {
-            JsonElement e = jsonArray.get(i);
-            bookHandler.handleJsonResponse(e.toString());
-        }
-        */
-
-        //Method 2
         try {
             List<Book> books = gson.fromJson(jsonArray, bookListType);
             MainController.receiveBooks(books);
@@ -42,5 +46,6 @@ public class BookListHandler implements ResponseHandler {
             System.out.print("Received books was not in expected format\n");
             e.printStackTrace();
         }
+        */
     }
 }

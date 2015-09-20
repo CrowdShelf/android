@@ -1,6 +1,7 @@
 package com.crowdshelf.app.network;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.crowdshelf.app.network.responseHandlers.ResponseHandler;
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -19,7 +21,7 @@ import java.net.URL;
  * Created by Torstein on 01.09.2015.
  */
 public class NetworkHelper {
-    private static String host = "https://crowdshelf.herokuapp.com";
+    private static String host = "http://crowdshelf-dev.herokuapp.com";
     // For converting json into java objects using GSON and custom deserializers for each class
     private static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -31,29 +33,40 @@ public class NetworkHelper {
             protected InputStreamReader doInBackground(Void... params) {
                 try {
                     URL url = new URL(host + "/api" + route);
+                    Log.d("NETDBTEST", "NetworkHelper request: " + requestMethod.toString() + " URL: " + url.toString());
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoOutput(true);
+                    connection.setDoOutput(false); // must be false for GET. WHY?
+                    connection.setDoInput(true);
+                    if (jsonData != null) {
+                    }
+                    if (responseHandler != null) {
+                    }
                     connection.setRequestMethod(requestMethod.toString());
                     connection.setRequestProperty("Content-Type", "application/json");
+                    connection.setConnectTimeout(12000);
+                    connection.setReadTimeout(12000);
                     connection.connect();
-
+                    Log.d("NETDBTEST", "NetworkHelper DoOutput: " + connection.getDoOutput());
+                    Log.d("NETDBTEST", "NetworkHelper DoInput: " + connection.getDoInput());
                     if (jsonData != null) {
+                        Log.d("NETDBTEST", "NetworkHelper Sending JsonData");
                         OutputStreamWriter writer = new OutputStreamWriter(
                                 connection.getOutputStream());
                         writer.write(jsonData);
                         writer.close();
                     }
+                    Log.d("NETDBTEST", "NetworkHelper ResponseCode: " + String.valueOf(connection.getResponseCode()));
+                    Log.d("NETDBTEST", "NetworkHelper ResponseMessage: " + connection.getResponseMessage());
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         return new InputStreamReader(connection.getInputStream());
                     } else {
-                        // Server returned HTTP error code.
-                        handleHTTPError(connection.getResponseCode());
+
                     }
                 } catch (java.net.MalformedURLException e) {
-                    e.printStackTrace();
+                    Log.d("NETDBTEST", "NetworkHelper SendRequest MalformedURLException" + e.toString());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d("NETDBTEST", "NetworkHelper SendRequest IOException" + e.toString());
                 }
                 return null;
             }
@@ -79,30 +92,16 @@ public class NetworkHelper {
             JsonElement jsonElement = new JsonParser().parse(jsonString);
 
             //System.out.print("Received JSON-data in NetworkHelper: \n");
-            //System.out.print(gson.toJson(jsonElement));
+            Log.d("NETDBTEST", "Received JSON: " + gson.toJson(jsonElement));
             if (responseHandler != null) {
                 responseHandler.handleJsonResponse(jsonString);
             }
+            iReader.close();
+            bReader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d("NETDBTEST", "NetworkHelper HandleResponse IOException" + e.toString());;
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.d("NETDBTEST", "NetworkHelper HandleResponse NullPointerException" + e.toString());
         }
-    }
-
-    public static void handleHTTPError(int responseCode) {
-        String msg = String.valueOf(responseCode);
-        switch (responseCode) {
-            case HttpURLConnection.HTTP_CONFLICT:
-                msg = "409 Conflict. Already a renter OR Crowd name already in use OR Already a member of the crowd";
-                break;
-            case HttpURLConnection.HTTP_NOT_FOUND:
-                msg = "404 Not Found. The object you are looking for does not exist.";
-                break;
-            case 422:
-                msg = "422 Unprocessable entity. Something is wrong with the sent data, like a missing field";
-                break;
-        }
-        System.out.print(msg);
     }
 }

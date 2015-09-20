@@ -35,6 +35,9 @@
             android:name="com.crowdshelf.app.activities.ShelfActivity"
             android:label="@string/title_activity_shelf" >
         </activity>
+        <activity
+            android:name="com.crowdshelf.app.activities.RealmActivity" >
+        </activity>
     </application>
 
 </manifest>

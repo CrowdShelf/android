@@ -1,5 +1,8 @@
 package com.crowdshelf.app.network;
 
+import android.util.Log;
+
+import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.network.responseHandlers.BookListHandler;
 import com.crowdshelf.app.network.responseHandlers.CrowdListHandler;
 import com.crowdshelf.app.network.responseHandlers.BookHandler;
@@ -27,55 +30,43 @@ public class NetworkController {
 
     // Add book to database or update existing one
     public static void createBook(Book book) {
-        /*
-        PUT /book
-        data: book object
-        response: book object
-         */
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/book",
-                new Gson().toJson(book, Book.class), bookHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
+                "/books", new Gson().toJson(book, Book.class), bookHandler);
     }
 
-    public static void getBookByIsbnOwner(String isbn, String owner) {
-        /*
-        GET /book/:isbn/:owner
-        response: book object
-         */
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/book/" + isbn + "/" + owner,
-                null, bookHandler);
+    public static void getBooks() {
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/books", null, bookListHandler);
     }
 
     public static void getBooksByIsbn(String isbn) {
-        /*
-        GET /book/:isbn
-        response: list book objects
-         */
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/book/" + isbn + "/",
-                null, bookListHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/books?isbn=" + isbn, null, bookListHandler);
     }
 
-    public static void addRenter(String isbn, String owner, String renter) {
-        /*
-        PUT /book/:isbn/:owner/addrenter
-        data: username : String # username of renter
-        response: none
-         */
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("username", renter);
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/book/" + isbn + "/" + owner + "/addrenter",
-                jsonObj.getAsString(), null);
+    public static void getBooksByIsbnOwner(String isbn, String userId) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/books?isbn=" + isbn + "&?owner=" + userId, null, bookListHandler);
     }
 
-    public static void removeRenter(String isbn, String owner, String renter) {
-        /*
-        PUT /book/:isbn/:owner/removerenter
-        data: username : String # username of renter
-        response: none
-         */
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("username", renter);
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/book/" + isbn + "/" + owner + "/removerenter",
-                jsonObj.getAsString(), null);
+    public static void getBooksOwned(String userId) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/books?owner=" + userId, null, bookListHandler);
+    }
+
+    public static void getBooksRented(String userId) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/books?rentedTo=" + userId, null, bookListHandler);
+    }
+
+    public static void addRenter(String bookId, String userId) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
+                "/books/" + bookId +  "/renter/" + userId, null, null);
+    }
+
+    public static void removeRenter(String bookId, String userId) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.DELETE,
+                "/books/" + bookId + "/renter/" + userId, null, null);
     }
 
     /*
@@ -83,71 +74,42 @@ public class NetworkController {
      */
 
     public static void createCrowd(Crowd crowd) {
-        /*
-        POST /crowd
-        data: crowd object
-        response: crowd object (with correct _id)
-         */
-        NetworkHelper.sendRequest(HTTPRequestMethod.POST, "/crowd",
-                new Gson().toJson(crowd, Crowd.class), crowdHandler);
-    }
-
-    public static void getCrowd(String crowdID) {
-        /*
-        GET /crowd/:crowdId
-        response: crowd object
-        */
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/crowd/" + crowdID,
-                null, crowdHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.POST,
+                "/crowds", new Gson().toJson(crowd, Crowd.class), crowdHandler);
     }
 
     public static void getCrowds() {
-        /*
-         GET /crowd
-        response: list of crowds
-        */
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/crowd",
-                null, crowdListHandler);
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/crowds", null, crowdListHandler);
     }
 
-    public static void addCrowdMember(String crowdId, String username) {
-        /*
-        PUT /crowd/:crowdId/addmember
-        data: username : String
-        response: none
-         */
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("username", username);
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/" + crowdId + "/addmember",
-                jsonObj.getAsString(), null);
+    public static void getCrowd(String crowdId) {
+        Log.d("NETDBTEST", "NetworkController getCrowd");
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/crowds/" + crowdId, null, crowdHandler);
     }
 
-    public static void removeCrowdMember(String crowdId, String username) {
-        /*
-        PUT /crowd/:crowdId/removemember
-        data: String : username
-        response: none
-         */
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("username", username);
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT, "/crowd/" + crowdId + "/removemember",
-                jsonObj.getAsString(), null);
+    public static void addCrowdMember(String crowdId, String userId) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
+                "/crowds/" + crowdId + "/members/" + userId, null, null);
+    }
+
+    public static void removeCrowdMember(String crowdId, String userId) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.DELETE,
+                "/crowds/" + crowdId + "/members/" + userId, null, null);
     }
 
     /*
     Users
      */
 
-    public static void createUser(String username) {
-        // todo, also, add to api
+    public static void createUser(User user) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
+                "/users", new Gson().toJson(user, User.class), userHandler);
     }
 
-    public static void getUser(String username){
-        /*
-         GET /api/user/:username
-         response: user object
-          */
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET, "/user/" + username,
-                null, userHandler);
+    public static void getUser(String userId){
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/users/" + userId, null, userHandler);
     }
 }

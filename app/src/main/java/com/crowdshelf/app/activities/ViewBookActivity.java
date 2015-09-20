@@ -91,13 +91,13 @@ public class ViewBookActivity extends Activity {
          */
 
 
-        if (!mainUser.ownsBook(ISBN)) {
-            // If you don't own the book then you can't remove it
+        // If you don't own the book then you can't remove it
+        if (false) {
             ((Button) findViewById(R.id.removeButton)).setVisibility(View.INVISIBLE);
 
         }
         // If you don't borrow the book then you can't return it
-        if (!mainUser.rentsBook(ISBN)) {
+        if (false) {
             ((Button) findViewById(R.id.removeButton)).setVisibility(View.INVISIBLE);
         }
     }

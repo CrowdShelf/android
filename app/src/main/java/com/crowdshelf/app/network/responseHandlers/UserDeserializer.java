@@ -60,9 +60,6 @@ public class UserDeserializer implements JsonDeserializer<User> {
 
         User user = new User();
         user.setUsername(username);
-        user.setCrowds(crowds);
-        //user.setBooksOwned(booksOwned);
-        //user.setBooksRented(booksRented);
 
         user.toString();
 
