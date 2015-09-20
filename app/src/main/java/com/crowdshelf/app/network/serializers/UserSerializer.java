@@ -8,6 +8,8 @@ import com.google.gson.JsonObject;
 /**
  * Created by Torstein on 19.09.2015.
  */
+
+// Probably not needed
 @Deprecated
 public class UserSerializer {
         public JsonObject toJson(User user){

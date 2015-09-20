@@ -31,11 +31,10 @@ public class CrowdListHandler implements ResponseHandler {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("crowds");
-
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            realm.createOrUpdateAllFromJson(Crowd.class, jsonArray);
-            realm.commitTransaction();
+            CrowdHandler ch = new CrowdHandler();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ch.handleJsonResponse(jsonArray.getString(i));
+            }
         } catch (JSONException e){
             e.printStackTrace();
         }

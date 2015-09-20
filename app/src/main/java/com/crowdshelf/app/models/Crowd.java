@@ -21,7 +21,6 @@ public class Crowd extends RealmObject {
     @Index
     private String name;
     private String owner; // _id of member
-    @Index
     private RealmList<MemberId> members; // _id of member
 
     public String getRev() {

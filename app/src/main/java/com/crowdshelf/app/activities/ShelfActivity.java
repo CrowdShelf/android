@@ -19,6 +19,7 @@ import com.crowdshelf.app.models.Book;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class ShelfActivity extends AppCompatActivity {
@@ -32,12 +33,10 @@ public class ShelfActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initiate();
-        displayBooksInShelf(MainActivity.getMainUser()); // Todo: Move to another activity
+        //displayBooksInShelf(MainActivity.getMainUser()); // Todo: Move to another activity
     }
 
-    public static void displayBooksInShelf(BookOwner bookOwner) {
-        List<Book> books = bookOwner.getBooks();
-        addBookToShelf("9780670921607");    // Todo: Remove. For testing while user have no books
+    public static void displayBooksInShelf(RealmList<Book> books) {
         for (Book book : books) {
             addBookToShelf(book.getIsbn());
             //Toast.makeText(ShelfActivity.this, "You tried to add " + book.getIsbn(), Toast.LENGTH_SHORT).show();

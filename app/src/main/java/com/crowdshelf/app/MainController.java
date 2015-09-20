@@ -178,42 +178,4 @@ public class MainController {
 
         return null;
     }
-
-
-    public List<Book> getBooksByTitle(String title) {
-        // Assumes book already downloaded
-        List<Book> booksByTitle = new ArrayList<Book>();
-        String t = title.toLowerCase();
-        for (Book b : books.values()) {
-            if (b.getBookInfo().getTitle().toLowerCase().contains(t)) {
-                booksByTitle.add(b);
-            }
-        }
-        return booksByTitle;
-    }
-
-    public List<Book> getBooksByAuthor(String author) {
-        // Assumes book already downloaded
-        List<Book> booksByAuthor = new ArrayList<Book>();
-        String a = author.toLowerCase();
-        for (Book b : books.values()) {
-            if (b.getBookInfo().getAuthor().toLowerCase().contains(a)) {
-                booksByAuthor.add(b);
-            }
-        }
-        return booksByAuthor;
-    }
-
-    // If we implement a search field to search for books, call this
-    public List<Book> searchBook(String searchSting) {
-        if (searchSting.matches("[0-9]+")) {
-            // Just numbers, assume ISBN
-            return getBooksByIsbnOwnedByAll(searchSting);
-        } else {
-            List<Book> books = new ArrayList<Book>();
-            books.addAll(getBooksByAuthor(searchSting));
-            books.addAll(getBooksByTitle(searchSting));
-            return books;
-        }
-    }
 }

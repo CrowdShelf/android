@@ -22,7 +22,6 @@ public class UserListHandler implements ResponseHandler {
 
     @Override
     public void handleJsonResponse(String jsonString) {
-        JsonParser jsonParser = new JsonParser();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("users");

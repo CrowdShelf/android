@@ -78,12 +78,12 @@ public class NetworkController {
 
     public static void getCrowds() {
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
-                "/crowds", null, crowdListHandler);
+                "/crowd", null, crowdListHandler);
     }
 
     public static void getCrowd(String crowdId) {
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
-                "/crowds/" + crowdId, null, crowdHandler);
+                "/crowd/" + crowdId, null, crowdHandler);
     }
 
     public static void addCrowdMember(String crowdId, String userId) {

@@ -1,5 +1,8 @@
 # CrowdShelf for Android
 ### Unit testing
+Realm does not work with Robolectric.
+
+
 Unit testing is done with Robolectric.
 This lets us test classes and methods in the app without running the Android Emulator.
 
