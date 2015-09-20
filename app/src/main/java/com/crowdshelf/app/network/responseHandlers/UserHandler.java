@@ -16,5 +16,6 @@ public class UserHandler implements ResponseHandler {
         realm.beginTransaction();
         realm.createOrUpdateObjectFromJson(User.class, jsonString);
         realm.commitTransaction();
+        realm.close();
     }
 }

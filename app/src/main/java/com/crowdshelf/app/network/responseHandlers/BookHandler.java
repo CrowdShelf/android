@@ -16,6 +16,7 @@ public class BookHandler implements ResponseHandler {
         realm.beginTransaction();
         realm.createOrUpdateObjectFromJson(Book.class, jsonString);
         realm.commitTransaction();
+        realm.close();
         /*
         try {
             Book book = gson.fromJson(jsonString, Book.class);

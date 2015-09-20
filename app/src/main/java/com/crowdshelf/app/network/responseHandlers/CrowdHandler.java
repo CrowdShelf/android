@@ -1,5 +1,7 @@
 package com.crowdshelf.app.network.responseHandlers;
 
+import android.util.Log;
+
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
@@ -18,14 +20,17 @@ import io.realm.RealmList;
 public class CrowdHandler implements ResponseHandler {
     @Override
     public void handleJsonResponse(String jsonString) {
+
         try {
-            Crowd crowd = gson.fromJson(jsonString, Crowd.class);
+            Crowd c = gson.fromJson(jsonString, Crowd.class);
+            Log.d("NETDBTEST", "Crowd added _id " + c.getId() + " name " + c.getName() + " owner " + c.getOwner() + " members " + c.getMembers().toString());
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
-            realm.copyToRealmOrUpdate(crowd);
+            realm.copyToRealmOrUpdate(c);
             realm.commitTransaction();
+            realm.close();
         } catch (JsonSyntaxException e) {
-            System.out.print("Received book was not in expected format\n");
+            Log.d("NETDBTEST", "CrowdHandler something wrong with JSON data");
             e.printStackTrace();
         }
 

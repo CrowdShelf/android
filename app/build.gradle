@@ -10,6 +10,8 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        //testInstrumentationRunner "android.test.InstrumentationTestRunner"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,34 +42,21 @@ dependencies {
     //testCompile 'org.mockito:mockito-core:1.10.19'
     // Set this dependency if you want to use Hamcrest matching
     //androidTestCompile 'org.hamcrest:hamcrest-library:1.1'
-	androidTestCompile('com.android.support.test:runner:0.3') {
+    androidTestCompile ('com.android.support.test:rules:0.3') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.android.support.test:runner:0.3') {
 		// Necessary if your app targets Marshmallow (since the test runner
 		// hasn't moved to Marshmallow yet)
 		exclude group: 'com.android.support', module: 'support-annotations'
 	}
     androidTestCompile 'junit:junit:4.12'
-    //testCompile 'org.robolectric:robolectric:3.0'
-    //testCompile 'junit:junit:4.12'
+   // testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'junit:junit:4.12'
 
     //Picasso
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile files('src/main/java/com/crowdshelf/app/libs/activation.jar')
     compile files('src/main/java/com/crowdshelf/app/libs/additionnal.jar')
     compile files('src/main/java/com/crowdshelf/app/libs/mail.jar')
-
-}
-
-sourceSets {
-    testLocal {
-        java.srcDir file('src/androidTest/java')
-        resources.srcDir file('src/androidTest/resources')
-    }
-}
-
-
-
-android{
-    sourceSets {
-        instrumentTest.setRoot('src/androidTest/')
-    }
 }

@@ -7,6 +7,7 @@ import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.BookInfoGetter;
 import com.crowdshelf.app.network.NetworkController;
+import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
@@ -16,8 +17,10 @@ import io.realm.annotations.PrimaryKey;
  * Created by Torstein on 01.09.2015.
  */
 public class Book extends RealmObject{
+    @SerializedName("_rev")
     private String rev;
     @PrimaryKey
+    @SerializedName("_id") // Gson deserializing
     private String id;
     @Index
     private String isbn;

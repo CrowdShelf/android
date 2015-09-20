@@ -1,5 +1,7 @@
 package com.crowdshelf.app.network;
 
+import android.util.Log;
+
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.network.responseHandlers.BookListHandler;
 import com.crowdshelf.app.network.responseHandlers.CrowdListHandler;
@@ -78,12 +80,13 @@ public class NetworkController {
 
     public static void getCrowds() {
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
-                "/crowd", null, crowdListHandler);
+                "/crowds", null, crowdListHandler);
     }
 
     public static void getCrowd(String crowdId) {
+        Log.d("NETDBTEST", "NetworkController getCrowd");
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
-                "/crowd/" + crowdId, null, crowdHandler);
+                "/crowds/" + crowdId, null, crowdHandler);
     }
 
     public static void addCrowdMember(String crowdId, String userId) {

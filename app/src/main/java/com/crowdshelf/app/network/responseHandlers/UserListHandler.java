@@ -1,5 +1,7 @@
 package com.crowdshelf.app.network.responseHandlers;
 
+import android.util.Log;
+
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
 import com.google.gson.JsonParser;
@@ -30,7 +32,9 @@ public class UserListHandler implements ResponseHandler {
             realm.beginTransaction();
             realm.createOrUpdateAllFromJson(User.class, jsonArray);
             realm.commitTransaction();
+            realm.close();
         } catch (JSONException e){
+            Log.d("NETDBTEST", "UserList something wrong with JSON data");
             e.printStackTrace();
         }
         /*

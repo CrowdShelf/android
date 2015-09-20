@@ -1,44 +1,55 @@
 package com.crowdshelf.app;
 
-import android.app.Activity;
-import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ActivityInstrumentationTestCase2;
+import android.test.ApplicationTestCase;
+import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
 import com.crowdshelf.app.activities.MainActivity;
+import com.crowdshelf.app.activities.RealmActivity;
+import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.network.NetworkController;
+
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 @RunWith(AndroidJUnit4.class)
-public class NetworkAndDBInstrumentationTest extends ActivityInstrumentationTestCase2<MainActivity> {
-    Activity mActivity;
-    public NetworkAndDBInstrumentationTest() {
-        super(MainActivity.class);
-    }
+@LargeTest
+public class NetworkAndDBInstrumentationTest {
+    private Realm realm;
+    //use the following annotation and declare an ActivityTestRule for your activity under test
+    @Rule
+    public ActivityTestRule<RealmActivity> mActivityRule = new ActivityTestRule(RealmActivity.class);
 
+    //use @Before to setup your test fixture
     @Before
-    public void setUp() throws Exception {
-        super.setUp();
+    public void setUp() { realm = Realm.getDefaultInstance(); }
 
-        // Injecting the Instrumentation instance is required
-        // for your test to run with AndroidJUnitRunner.
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
-        mActivity = getActivity();
-    }
-
+    //annotate all test methods with
     @Test
-    public void typeOperandsAndPerformAddOperation() {
-        NetworkController.getCrowd("55f01f29f0a5fad2120bb1db");
-        System.out.print("ok");
-        Log.d("1TEST", "1TEST");
+    public void testGetCrowd() {
+        Log.d("NETDBTEST", "testGetCrowd");
+        NetworkController.getCrowds();
+
+        realm.beginTransaction();
+        RealmResults<Crowd> results = realm.allObjects(Crowd.class);
+        Log.d("NETDBTEST", "Number of results: " + String.valueOf(results.size()) );
+        for (Crowd c : results) {
+            Log.d("NETDBTEST", "Crowd name" + c.getName());
+        }
+        realm.commitTransaction();
+        Assert.assertEquals(1, 1);
     }
 
+    //release resources by using
     @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-    }
+    public void tearDown() { realm.close(); }
 }
