@@ -1,18 +1,11 @@
-package com.crowdshelf.app.network.responseHandlers;
+package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Crowd;
-import com.crowdshelf.app.models.MemberId;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 
 /**
  * Created by Torstein on 07.09.2015.

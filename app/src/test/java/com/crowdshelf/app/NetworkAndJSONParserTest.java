@@ -5,7 +5,7 @@ import android.os.Build;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.network.NetworkController;
+import com.crowdshelf.app.io.network.NetworkController;
 
 import junit.framework.Assert;
 

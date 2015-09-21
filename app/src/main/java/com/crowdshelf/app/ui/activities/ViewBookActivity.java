@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.network.GetBookPreviewInfoAsync;
+import com.crowdshelf.app.io.network.GetBookPreviewInfoAsync;
 
 import ntnu.stud.markul.crowdshelf.R;
 

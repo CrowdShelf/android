@@ -1,4 +1,4 @@
-package com.crowdshelf.app.network.responseHandlers;
+package com.crowdshelf.app.io.network.responseHandlers;
 
 import com.crowdshelf.app.models.MemberId;
 import com.google.gson.ExclusionStrategy;

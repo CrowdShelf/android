@@ -1,8 +1,6 @@
-package com.crowdshelf.app.network.responseHandlers;
+package com.crowdshelf.app.io.network.responseHandlers;
 
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.User;
-import com.google.gson.JsonSyntaxException;
 
 import io.realm.Realm;
 

@@ -1,9 +1,9 @@
-package com.crowdshelf.app.network;
+package com.crowdshelf.app.io.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crowdshelf.app.network.responseHandlers.ResponseHandler;
+import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;

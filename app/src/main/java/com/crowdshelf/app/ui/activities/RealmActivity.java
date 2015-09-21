@@ -1,4 +1,4 @@
-package com.crowdshelf.app.activities;
+package com.crowdshelf.app.ui.activities;
 
 import android.app.Activity;
 import android.os.Bundle;

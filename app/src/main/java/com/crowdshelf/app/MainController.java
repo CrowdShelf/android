@@ -1,28 +1,20 @@
 package com.crowdshelf.app;
 
-import android.util.Log;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.network.GetBookInfoAsyncTask;
-import com.crowdshelf.app.network.NetworkController;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.crowdshelf.app.io.network.GetBookInfoAsyncTask;
+import com.crowdshelf.app.io.network.NetworkController;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
 /**
  * Created by Torstein on 02.09.2015.

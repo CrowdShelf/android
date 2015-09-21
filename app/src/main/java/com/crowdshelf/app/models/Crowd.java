@@ -1,10 +1,5 @@
 package com.crowdshelf.app.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.network.NetworkController;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmList;

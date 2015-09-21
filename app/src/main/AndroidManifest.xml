@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.crowdshelf.app.activities.RealmActivity" >
+            android:name="com.crowdshelf.app.ui.activities.RealmActivity" >
         </activity>
     </application>
 

@@ -2,16 +2,14 @@ package com.crowdshelf.app;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ApplicationTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
 import com.crowdshelf.app.activities.MainActivity;
-import com.crowdshelf.app.activities.RealmActivity;
+import com.crowdshelf.app.ui.activities.RealmActivity;
 import com.crowdshelf.app.models.Crowd;
-import com.crowdshelf.app.network.NetworkController;
+import com.crowdshelf.app.io.network.NetworkController;
 import com.squareup.otto.Subscribe;
-import com.squareup.otto.Bus;
 
 import org.junit.After;
 import org.junit.Assert;

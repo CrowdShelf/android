@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.network.GetBookPreviewInfoAsync;
+import com.crowdshelf.app.io.network.GetBookPreviewInfoAsync;
 
 import java.util.List;
 

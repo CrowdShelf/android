@@ -1,4 +1,4 @@
-package com.crowdshelf.app.network;
+package com.crowdshelf.app.io.network;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

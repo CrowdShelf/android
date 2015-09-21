@@ -1,4 +1,4 @@
-package com.crowdshelf.app.emailService;
+package com.crowdshelf.app.io.emailService;
 
 /**
  * Created by markuslund92 on 06.09.15.

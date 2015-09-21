@@ -1,4 +1,4 @@
-package com.crowdshelf.app.network;
+package com.crowdshelf.app.io.network;
 
 /**
  * Created by Torstein on 08.09.2015.

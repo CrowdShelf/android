@@ -1,27 +1,27 @@
-package com.crowdshelf.app.network.responseHandlers;
+package com.crowdshelf.app.io.network.responseHandlers;
 
 import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.Crowd;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import com.crowdshelf.app.models.User;
+import com.google.gson.reflect.TypeToken;
 
 
 /**
  * Created by Torstein on 02.09.2015.
  */
-
 @Deprecated
-public class CrowdDeserializer implements JsonDeserializer<Crowd> {
+public class UserDeserializer implements JsonDeserializer<User> {
     @Override
-    public Crowd deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException
     {
         /*
@@ -33,9 +33,8 @@ public class CrowdDeserializer implements JsonDeserializer<Crowd> {
         }
          */
         JsonObject jsonObject = json.getAsJsonObject();
-        String _id = jsonObject.get("_id").getAsString();
-        String name = jsonObject.get("name").getAsString();
-        String owner = jsonObject.get("owner").getAsString();
+        String username = jsonObject.get("username").getAsString();
+
         Type arrayListStringType = new TypeToken<ArrayList<String>>(){}.getType();
         Type arrayListBookType = new TypeToken<ArrayList<Book>>(){}.getType();
 
@@ -59,14 +58,11 @@ public class CrowdDeserializer implements JsonDeserializer<Crowd> {
             booksRented.add(b.getId());
         }
 
-        Crowd crowd = new Crowd();
-        //user.setUsername(username);
-        //user.setCrowds(crowds);
-        //user.setBooksOwned(booksOwned);
-        //user.setBooksRented(booksRented);
+        User user = new User();
+        user.setUsername(username);
 
-        //user.toString();
+        user.toString();
 
-        return crowd;
+        return user;
     }
 }

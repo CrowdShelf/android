@@ -1,4 +1,4 @@
-package com.crowdshelf.app.network.serializers;
+package com.crowdshelf.app.io.network.serializers;
 
 import com.crowdshelf.app.models.User;
 import com.google.gson.Gson;

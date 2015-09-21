@@ -1,17 +1,13 @@
-package com.crowdshelf.app.network.responseHandlers;
+package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Book;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.List;
 
 import io.realm.Realm;
 

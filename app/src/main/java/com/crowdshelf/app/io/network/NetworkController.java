@@ -1,15 +1,14 @@
-package com.crowdshelf.app.network;
+package com.crowdshelf.app.io.network;
 
 import android.util.Log;
 
 import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.network.responseHandlers.BookListHandler;
-import com.crowdshelf.app.network.responseHandlers.CrowdListHandler;
-import com.crowdshelf.app.network.responseHandlers.BookHandler;
-import com.crowdshelf.app.network.responseHandlers.CrowdHandler;
-import com.crowdshelf.app.network.responseHandlers.UserHandler;
+import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
+import com.crowdshelf.app.io.network.responseHandlers.CrowdListHandler;
+import com.crowdshelf.app.io.network.responseHandlers.BookHandler;
+import com.crowdshelf.app.io.network.responseHandlers.CrowdHandler;
+import com.crowdshelf.app.io.network.responseHandlers.UserHandler;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
