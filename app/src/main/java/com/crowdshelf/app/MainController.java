@@ -17,6 +17,8 @@ import com.crowdshelf.app.network.GetBookInfoAsyncTask;
 import com.crowdshelf.app.network.NetworkController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -27,7 +29,17 @@ import io.realm.RealmResults;
  */
 public class MainController {
     static Realm realm = Realm.getDefaultInstance();
+    Bus bus = new Bus();
 
+    public void test() {
+        bus.register(this);
+        bus.post(new DBEvent(DBEventType.BOOK, "132"));
+    }
+
+    @Subscribe
+    public void answerAvailable(DBEvent event) {
+        // TODO: React to the event somehow!
+    }
 
     // TODO: Handle revisions
 

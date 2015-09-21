@@ -18,14 +18,14 @@ public class BookInfo extends RealmObject{
     private String pubDate;
     private byte[] artworkByteArray; // Maybe we need multiple sizes?
 
-    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, byte[] artwork) {
+    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, byte[] artworkByteArray) {
         this.isbn = isbn;
         this.title = title;
         this.subtitle = subtitle;
         this.author = author;
         this.publisher = publisher;
         this.pubDate = pubDate;
-        this.artworkByteArray = artwork;
+        this.artworkByteArray = artworkByteArray;
     }
 
     public String getIsbn() {
