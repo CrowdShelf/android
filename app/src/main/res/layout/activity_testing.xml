@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.crowdshelf.app.ui.activities.TestingActivity"
+    android:id="@+id/CrowdTestingActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GetCrowd"
+        android:id="@+id/getcrowd"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:onClick="crowdOnClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GetUSer"
+        android:id="@+id/getuser"
+        android:layout_below="@+id/getcrowd"
+        android:layout_alignParentStart="true"
+        android:onClick="userOnClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Getbook"
+        android:id="@+id/getbook"
+        android:layout_below="@+id/getuser"
+        android:layout_alignParentStart="true"
+        android:onClick="bookOnClick"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/resultTextView"
+        android:layout_below="@+id/getbook"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Input"
+        android:id="@+id/inputTextView"
+        android:layout_above="@+id/getbook"
+        android:layout_below="@+id/getcrowd"
+        android:layout_toEndOf="@+id/getcrowd"
+        />
+</RelativeLayout>

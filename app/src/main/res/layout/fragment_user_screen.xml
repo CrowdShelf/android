@@ -23,11 +23,22 @@
 
         <fragment
             android:layout_width="350dp"
-            android:layout_height="431dp"
+            android:layout_height="401dp"
             android:name="com.crowdshelf.app.ui.fragments.BookGridViewFragment"
             android:id="@+id/fragment2"
             android:layout_row="1"
-            android:layout_column="0" />
+            android:layout_column="0"
+            android:layout_columnSpan="2" />
+
+        <Button
+            android:layout_width="128dp"
+            android:layout_height="100dp"
+            android:text="TESTING"
+            android:id="@+id/testButton"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:singleLine="true"
+            android:onClick="testingButtonClicked" />
 
     </GridLayout>
 

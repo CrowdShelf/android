@@ -10,13 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
@@ -34,7 +35,7 @@ import ntnu.stud.markul.crowdshelf.R;
 public class MainTabbedActivity extends AppCompatActivity implements
         ScannerScreenFragment.OnScannerScreenInteractionListener,
         UserScreenFragment.OnUserScreenFragmentInteractionListener,
-        ViewPager.OnPageChangeListener{
+        ViewPager.OnPageChangeListener, BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
     public static final String TAG = "com.crowdshelf.app";
     public final int GET_SCANNED_BOOK_ACTION = 1;
@@ -86,8 +87,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Subscribe
     public void handleViewBook(DBEvent event) {
         realm.refresh();
+        Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
         switch (event.getDbEventType()) {
             case BOOKINFO_READY:
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
                 String bookInfoISBN = event.getDbObjectId();
                 // Determine if you own the book you just scanned:
                 Book book = realm.where(Book.class)
@@ -95,6 +98,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .equalTo("owner", mainUserId)
                         .findFirst();
                 if (book != null) {
+                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - case 1: BOOK not null");
                     startViewBook(ScannedBookActions.ADD, bookInfoISBN, book.getId());
                     return;
                 }
@@ -105,9 +109,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .equalTo("rentedTo", mainUserId)
                         .findFirst();
                 if (book != null) {
+                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - case 2: BOOK not null");
+
                     startViewBook(ScannedBookActions.RETURN, bookInfoISBN, book.getId());
                     return;
                 }
+
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - lastCase");
 
                 // Case: you don't own or rent the book you just scanned:
                 book = new Book();
@@ -205,11 +213,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void removeBookFromShelf(String isbn) {
-
-    }
-
-    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
@@ -235,6 +238,16 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void itemInUserShelfClicked(Book book) {
+
+    }
+
+    @Override
+    public void itemInBookGridViewClicked(Book book) {
 
     }
 
@@ -284,6 +297,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
             }
             return null;
         }
+    }
+
+    public void testingButtonClicked(View view){
+        Log.i(MainTabbedActivity.TAG, "UserScreenFragment - testingButtonClicked");
+        Intent intent = new Intent(this, TestingActivity.class);
+        startActivity(intent);
     }
 
 }

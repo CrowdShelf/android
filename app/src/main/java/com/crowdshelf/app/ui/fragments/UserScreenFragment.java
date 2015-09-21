@@ -16,7 +16,7 @@ import java.util.List;
 import ntnu.stud.markul.crowdshelf.R;
 
 
-public class UserScreenFragment extends Fragment {
+public class UserScreenFragment extends Fragment implements BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
     private OnUserScreenFragmentInteractionListener mListener;
 
@@ -53,12 +53,6 @@ public class UserScreenFragment extends Fragment {
         return view;
     }
 
-    public void removeBookFromShelf(String ISBN) {
-        if (mListener != null) {
-            mListener.removeBookFromShelf(ISBN);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -81,9 +75,17 @@ public class UserScreenFragment extends Fragment {
         bookGridViewFragment.setmItems(userBooks);
     }
 
+
+    @Override
+    public void itemInBookGridViewClicked(Book book) {
+        mListener.itemInUserShelfClicked(book);
+    }
+
     public interface OnUserScreenFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void removeBookFromShelf(String isbn);
+        public void itemInUserShelfClicked(Book book);
     }
+
+
 
 }

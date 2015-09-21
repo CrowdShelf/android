@@ -23,6 +23,8 @@ import ntnu.stud.markul.crowdshelf.R;
  */
 public class BookGridViewFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private OnBookGridViewFragmentInteractionListener mListener;
+
     public List<Book> getmItems() {
         return mItems;
     }
@@ -43,6 +45,18 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        try {
+            mListener = (OnBookGridViewFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnBookGridViewFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -71,12 +85,16 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // retrieve the GridView item
         Book item = mItems.get(position);
 
         // do something
         Toast.makeText(getActivity(), item.getIsbn(), Toast.LENGTH_SHORT).show();
+    }
+
+
+    public interface OnBookGridViewFragmentInteractionListener {
+        public void itemInBookGridViewClicked(Book book);
     }
 }

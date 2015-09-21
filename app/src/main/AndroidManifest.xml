@@ -25,6 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.crowdshelf.app.ui.activities.TestingActivity"
+            android:label="@string/title_activity_crowd_testing" >
+        </activity>
     </application>
 
 </manifest>

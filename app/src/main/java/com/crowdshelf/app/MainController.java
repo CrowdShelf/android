@@ -118,7 +118,7 @@ public class MainController {
 
     public static void getBookInfo(String isbn) {
         BookInfo bookInfo = realm.where(BookInfo.class)
-                .equalTo("id", isbn)
+                .equalTo("isbn", isbn)
                 .findFirst();
         if (bookInfo == null) {
             GetBookInfoAsyncTask.getBookInfo(isbn);
