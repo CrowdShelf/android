@@ -12,4 +12,14 @@
     <string name="addButton">Add</string>
     <string name="removeButton">Remove</string>
     <string name="title_activity_shelf">ShelfActivity</string>
+    <string name="title_activity_main_tabbed">MainTabbedActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="flash_on">Flash on</string>
+    <string name="flash_off">Flash off</string>
 </resources>
