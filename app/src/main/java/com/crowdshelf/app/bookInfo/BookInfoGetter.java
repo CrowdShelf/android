@@ -2,6 +2,7 @@ package com.crowdshelf.app.bookInfo;
 
 import android.util.Log;
 
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.network.GetBookInfoAsyncTask;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 

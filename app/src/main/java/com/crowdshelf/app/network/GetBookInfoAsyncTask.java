@@ -4,13 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
-import com.crowdshelf.app.bookInfo.BookInfo;
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
-import com.crowdshelf.app.models.Book;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -22,13 +22,14 @@ import io.realm.Realm;
  * Created by markuslund92 on 07.09.15.
  */
 public class GetBookInfoAsyncTask {
+    private static String googleBooksAPIUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
-    public static void getBookInfo(final String isbn, final String bookId) {
+    public static void getBookInfo(final String isbn) {
         new AsyncTask<Void, Void, BookInfo>() {
             @Override
             protected BookInfo doInBackground(Void... params) {
                 try {
-                    URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn);
+                    URL url = new URL(googleBooksAPIUrl + isbn);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
 
@@ -57,7 +58,11 @@ public class GetBookInfoAsyncTask {
                         InputStream input = connection.getInputStream();
                         Bitmap artwork = BitmapFactory.decodeStream(input);
 
-                        return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artwork, description);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        artwork.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] artworkByteArray = stream.toByteArray();
+
+                        return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray, description);
                     } else {
                         //TODO: Do something if books does not exist in google books
                     }
@@ -69,18 +74,15 @@ public class GetBookInfoAsyncTask {
 
             @Override
             protected void onPostExecute(BookInfo result) {
-                putBookInfoInDatabase(result, bookId);
+                putBookInfoInDatabase(result);
             }
         }.execute();
     }
 
-    private static void putBookInfoInDatabase(BookInfo bookInfo, String bookId) {
+    private static void putBookInfoInDatabase(BookInfo bookInfo) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        Book book = realm.where(Book.class)
-                .equalTo("id", bookId)
-                .findFirst();
-        book.setBookInfo(bookInfo);
+        realm.copyToRealmOrUpdate(bookInfo);
         realm.commitTransaction();
         realm.close();
 

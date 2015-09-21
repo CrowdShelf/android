@@ -1,12 +1,5 @@
 package com.crowdshelf.app.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.bookInfo.BookInfo;
-import com.crowdshelf.app.bookInfo.BookInfoGetter;
-import com.crowdshelf.app.network.NetworkController;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
@@ -28,7 +21,6 @@ public class Book extends RealmObject{
     private String owner; // user _id
     @Index
     private String rentedTo; // user _id
-    private BookInfo bookInfo;
 
     public String getRev() {
         return rev;
@@ -68,14 +60,6 @@ public class Book extends RealmObject{
 
     public void setRentedTo(String userId) {
         this.rentedTo = userId;
-    }
-
-    public BookInfo getBookInfo() {
-        return bookInfo;
-    }
-
-    public void setBookInfo(BookInfo bookInfo) {
-        this.bookInfo = bookInfo;
     }
 
     /* Does not work with realm:

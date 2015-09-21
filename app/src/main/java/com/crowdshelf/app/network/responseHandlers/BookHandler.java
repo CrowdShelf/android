@@ -2,10 +2,7 @@ package com.crowdshelf.app.network.responseHandlers;
 
 import android.util.Log;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.bookInfo.BookInfoGetter;
 import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.Crowd;
 import com.google.gson.JsonSyntaxException;
 
 import io.realm.Realm;
