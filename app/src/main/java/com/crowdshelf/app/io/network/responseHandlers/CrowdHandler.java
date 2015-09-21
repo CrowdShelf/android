@@ -2,10 +2,19 @@ package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.MemberId;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.JsonSyntaxException;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by Torstein on 07.09.2015.
@@ -21,6 +30,7 @@ public class CrowdHandler implements ResponseHandler {
             realm.copyToRealmOrUpdate(c);
             realm.commitTransaction();
             realm.close();
+            MainTabbedActivity.getBus().post(new DBEvent(DBEventType.CROWD_READY, c.getId()));
         } catch (JsonSyntaxException e) {
             Log.d("NETDBTEST", "CrowdHandler something wrong with JSON data");
             e.printStackTrace();

@@ -2,12 +2,17 @@ package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -29,6 +34,7 @@ public class BookListHandler implements ResponseHandler {
             realm.createAllFromJson(Book.class, jsonArray);
             realm.commitTransaction();
             realm.close();
+            // MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOK_READY, isbn));
         } catch (JSONException e){
             Log.d("NETDBTEST", "BookListHandler something wrong with JSON data");
             e.printStackTrace();

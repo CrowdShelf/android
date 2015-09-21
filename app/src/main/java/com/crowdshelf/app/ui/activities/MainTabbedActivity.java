@@ -12,16 +12,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
+import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class MainTabbedActivity extends AppCompatActivity implements
@@ -31,6 +38,18 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     public static final String TAG = "com.crowdshelf.app";
     public final int GET_SCANNED_BOOK_ACTION = 1;
+
+    private Realm realm;
+    private static Bus bus = new Bus();
+    private static String mainUserId = "";
+
+    public static Bus getBus() {
+        return bus;
+    }
+
+    public static String getMainUserId() {
+        return mainUserId;
+    }
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -43,6 +62,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbed);
 
+        // Set up database
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
+        Realm.deleteRealm(realmConfiguration); // Clean slate
+        Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
+
+        MainTabbedActivity.getBus().register(this);
+        realm = Realm.getDefaultInstance();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -57,12 +83,61 @@ public class MainTabbedActivity extends AppCompatActivity implements
         userBooks = new ArrayList<>();
     }
 
+    @Subscribe
+    public void handleViewBook(DBEvent event) {
+        realm.refresh();
+        switch (event.getDbEventType()) {
+            case BOOKINFO_READY:
+                String bookInfoISBN = event.getDbObjectId();
+                // Determine if you own the book you just scanned:
+                Book book = realm.where(Book.class)
+                        .equalTo("isbn", bookInfoISBN)
+                        .equalTo("owner", mainUserId)
+                        .findFirst();
+                if (book != null) {
+                    startViewBook(ScannedBookActions.ADD, bookInfoISBN, book.getId());
+                    return;
+                }
+
+                // Determine if you rent the book you just scanned:
+                book = realm.where(Book.class)
+                        .equalTo("isbn", bookInfoISBN)
+                        .equalTo("rentedTo", mainUserId)
+                        .findFirst();
+                if (book != null) {
+                    startViewBook(ScannedBookActions.RETURN, bookInfoISBN, book.getId());
+                    return;
+                }
+
+                // Case: you don't own or rent the book you just scanned:
+                book = new Book();
+                book.setIsbn(bookInfoISBN);
+                book.setOwner(getMainUserId());
+                startViewBook(ScannedBookActions.ADD, bookInfoISBN, "");
+                break;
+        }
+    }
+
     private void loginUser(String username) {
         //TODO: Login user
         Toast.makeText(MainTabbedActivity.this, "User: " + username + " logged in.", Toast.LENGTH_SHORT).show();
         //TODO: populate userShelfISBNs with users books.
     }
 
+    public void viewBookByISBN(String ISBN) {
+        MainController.getBookInfo(ISBN);
+    }
+
+    public void viewBookID(String id) {
+        MainController.getBook(id);
+    }
+
+    @Override
+    public void onDestroy() {
+        realm.close();
+        MainTabbedActivity.getBus().unregister(this);
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,13 +189,19 @@ public class MainTabbedActivity extends AppCompatActivity implements
         }
     }//onActivityResult
 
-    @Override
-    public void isbnReceived(String ISBN) {
+    public void startViewBook(ScannedBookActions scannedBookAction,String ISBN, String bookId) {
         Toast.makeText(getBaseContext(), "ISBN: " + ISBN, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, ViewBookActivity.class);
+        intent.putExtra("SCANNEDBOOKACTION", scannedBookAction.value);
         intent.putExtra("ISBN", ISBN);
+        intent.putExtra("BOOKID", bookId);
         lastScannedBookIsbn = ISBN;
         startActivityForResult(intent, GET_SCANNED_BOOK_ACTION);
+    }
+
+    @Override
+    public void isbnReceived(String ISBN) {
+        viewBookByISBN(ISBN);
     }
 
     @Override
@@ -204,4 +285,5 @@ public class MainTabbedActivity extends AppCompatActivity implements
             return null;
         }
     }
+
 }

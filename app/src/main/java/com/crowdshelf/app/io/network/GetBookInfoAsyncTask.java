@@ -4,9 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -85,8 +88,7 @@ public class GetBookInfoAsyncTask {
         realm.copyToRealmOrUpdate(bookInfo);
         realm.commitTransaction();
         realm.close();
-
-        // public static Bus bus = new Bus(ThreadEnforcer.MAIN);
+        MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOKINFO_READY, bookInfo.getIsbn()));
     }
 
     public static String getAuthorsAsString(String[] authors) {
