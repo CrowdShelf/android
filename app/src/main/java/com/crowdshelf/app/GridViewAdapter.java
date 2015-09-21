@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
-import com.crowdshelf.app.network.PopulateImageViewWithUrlTask;
 
 import java.util.List;
 

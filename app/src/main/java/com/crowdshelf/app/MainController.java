@@ -9,9 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.network.GetBookInfoAsyncTask;
 import com.crowdshelf.app.network.NetworkController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -132,6 +134,19 @@ public class MainController {
             return book;
         }
         return null;
+    }
+
+    public static BookInfo getBookInfo(String isbn) {
+        BookInfo bookInfo = realm.where(BookInfo.class)
+                .equalTo("id", isbn)
+                .findFirst();
+        if (bookInfo == null) {
+            GetBookInfoAsyncTask.getBookInfo(isbn);
+        } else {
+            return bookInfo;
+        }
+        return null;
+
     }
 
     public static List<Book> getBooksOwned(String userId) {
