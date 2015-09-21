@@ -1,7 +1,5 @@
 package com.crowdshelf.app.models;
 
-import android.graphics.Bitmap;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -19,23 +17,19 @@ public class BookInfo extends RealmObject{
     private String description;
     private byte[] artworkByteArray; // Maybe we need multiple sizes?
 
-<<<<<<< HEAD
-    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, byte[] artworkByteArray) {
-=======
-    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, byte[] artwork, String description) {
->>>>>>> origin/master
+    public BookInfo(){
+        //Realm demands empty constructor
+    }
+
+    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, byte[] artworkByteArray, String description) {
         this.isbn = isbn;
         this.title = title;
         this.subtitle = subtitle;
         this.author = author;
         this.publisher = publisher;
         this.pubDate = pubDate;
-<<<<<<< HEAD
         this.artworkByteArray = artworkByteArray;
-=======
-        this.artworkByteArray = artwork;
         this.description = description;
->>>>>>> origin/master
     }
 
     public String getIsbn() {
@@ -62,7 +56,7 @@ public class BookInfo extends RealmObject{
         return pubDate;
     }
 
-    public byte[] getArtwork() {
+    public byte[] getArtworkByteArray() {
         return artworkByteArray;
     }
 
@@ -93,7 +87,7 @@ public class BookInfo extends RealmObject{
         this.pubDate = pubDate;
     }
 
-    public void setArtwork(byte[] artwork) {
+    public void setArtworkByteArray(byte[] artwork) {
         this.artworkByteArray = artwork;
     }
     

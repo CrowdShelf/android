@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.network.GetBookPreviewInfoAsync;
 
 import java.util.List;
@@ -64,15 +64,16 @@ public class BookGridViewAdapter extends BaseAdapter {
 
         // update the item view
         Book item = mItems.get(position);
-        BookInfo bookInfo = item.getBookInfo();
+        BookInfo bookInfo = null;
+//        BookInfo bookInfo = item.getBookInfo();
         //TODO: Wait until bookInfo is initialized async
         if (bookInfo == null){
             //This is only a backup solution that works...
             new GetBookPreviewInfoAsync(item.getIsbn(), viewHolder.bookTitleTextView, viewHolder.bookCoverImageView, null).execute();
         }
         else {
-            viewHolder.bookCoverImageView.setImageBitmap(item.getBookInfo().getArtwork());
-            viewHolder.bookTitleTextView.setText(item.getBookInfo().getTitle());
+//            viewHolder.bookCoverImageView.setImageBitmap(item.getBookInfo().getArtwork());
+//            viewHolder.bookTitleTextView.setText(item.getBookInfo().getTitle());
         }
         return convertView;
     }

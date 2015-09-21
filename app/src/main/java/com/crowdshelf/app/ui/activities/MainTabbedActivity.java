@@ -1,27 +1,26 @@
 package com.crowdshelf.app.ui.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import ntnu.stud.markul.crowdshelf.R;
 

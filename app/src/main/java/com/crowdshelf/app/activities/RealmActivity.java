@@ -19,7 +19,7 @@ public class RealmActivity extends Activity {
      protected void onCreate(Bundle savedInstanceState) {
         Log.d("NETDBTEST", "Create default Realm Configuration");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_tabbed);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
         Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default

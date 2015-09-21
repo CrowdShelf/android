@@ -10,11 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.bookInfo.GoogleBooksMain;
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.network.GetBookPreviewInfoAsync;
 

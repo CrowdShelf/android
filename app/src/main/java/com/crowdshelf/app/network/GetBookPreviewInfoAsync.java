@@ -7,10 +7,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
-import com.crowdshelf.app.bookInfo.BookInfo;
-import com.crowdshelf.app.bookInfo.GoogleBooksMain;
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -66,7 +64,8 @@ public class GetBookPreviewInfoAsync extends AsyncTask<Void, Void, BookInfo> {
     protected void onPostExecute(BookInfo result) {
         super.onPostExecute(result);
         Log.i(MainTabbedActivity.TAG, "GetBookPreviewInfoAsync-onPostExecute result title:" + result.getTitle());
-        this.imageView.setImageBitmap(result.getArtwork());
+        Bitmap bitmap = BitmapFactory.decodeByteArray(result.getArtworkByteArray() , 0, result.getArtworkByteArray().length);
+        this.imageView.setImageBitmap(bitmap);
         this.titleTextView.setText(result.getTitle());
         if (this.infoTextView != null){
             this.infoTextView.setText(result.getDescription());

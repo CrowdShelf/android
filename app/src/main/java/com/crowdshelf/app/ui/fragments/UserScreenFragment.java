@@ -7,15 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.TextView;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ntnu.stud.markul.crowdshelf.R;

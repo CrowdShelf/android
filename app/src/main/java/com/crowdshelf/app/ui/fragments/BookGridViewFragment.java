@@ -1,11 +1,8 @@
 package com.crowdshelf.app.ui.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +10,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.crowdshelf.app.ui.adapter.BookGridViewAdapter;
 
 import java.util.ArrayList;
