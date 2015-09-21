@@ -10,15 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
-import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.User;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import ntnu.stud.markul.crowdshelf.R;
 
@@ -105,7 +101,7 @@ public class ViewBookActivity extends Activity {
     public void addButtonClick(View view) {
         // Add book to my shelf
         Toast.makeText(ViewBookActivity.this, "Add a book: " + ISBN, Toast.LENGTH_SHORT).show();
-        MainController.createBook(ISBN, 1, 1);
+        MainController.createBook(ISBN, "421");
         Intent intent = new Intent(this, ShelfActivity.class);
         intent.putExtra("ISBN", ISBN);
         startActivity(intent);

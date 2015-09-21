@@ -34,6 +34,11 @@ public class NetworkController {
                 "/books", new Gson().toJson(book, Book.class), bookHandler);
     }
 
+    public static void getBook(String id) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/books/" + id, null, bookHandler);
+    }
+
     public static void getBooks() {
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
                 "/books", null, bookListHandler);

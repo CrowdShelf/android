@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.emailService.GMailSender;
 import com.crowdshelf.app.GridViewAdapter;
-import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.models.User;
 

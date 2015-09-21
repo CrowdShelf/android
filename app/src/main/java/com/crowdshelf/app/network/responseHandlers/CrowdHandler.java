@@ -20,7 +20,6 @@ import io.realm.RealmList;
 public class CrowdHandler implements ResponseHandler {
     @Override
     public void handleJsonResponse(String jsonString) {
-
         try {
             Crowd c = gson.fromJson(jsonString, Crowd.class);
             Log.d("NETDBTEST", "Crowd added _id " + c.getId() + " name " + c.getName() + " owner " + c.getOwner() + " members " + c.getMembers().toString());
@@ -33,7 +32,6 @@ public class CrowdHandler implements ResponseHandler {
             Log.d("NETDBTEST", "CrowdHandler something wrong with JSON data");
             e.printStackTrace();
         }
-
     }
 
     /*

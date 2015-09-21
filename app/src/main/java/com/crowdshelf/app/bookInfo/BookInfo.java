@@ -2,10 +2,12 @@ package com.crowdshelf.app.bookInfo;
 
 import android.graphics.Bitmap;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Torstein on 01.09.2015.
  */
-public class BookInfo {
+public class BookInfo extends RealmObject{
     private String isbn;
     private String title;
     private String subtitle;
@@ -52,4 +54,31 @@ public class BookInfo {
         return artwork;
     }
 
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setPubDate(String pubDate) {
+        this.pubDate = pubDate;
+    }
+
+    public void setArtwork(Bitmap artwork) {
+        this.artwork = artwork;
+    }
 }

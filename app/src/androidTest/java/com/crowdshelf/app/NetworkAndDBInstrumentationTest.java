@@ -10,6 +10,8 @@ import com.crowdshelf.app.activities.MainActivity;
 import com.crowdshelf.app.activities.RealmActivity;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.network.NetworkController;
+import com.squareup.otto.Subscribe;
+import com.squareup.otto.Bus;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -47,6 +49,12 @@ public class NetworkAndDBInstrumentationTest {
         }
         realm.commitTransaction();
         Assert.assertEquals(1, 1);
+    }
+
+    @Subscribe
+    public void handleGetCrowd(Answ event) {
+        realm.refresh();
+
     }
 
     //release resources by using

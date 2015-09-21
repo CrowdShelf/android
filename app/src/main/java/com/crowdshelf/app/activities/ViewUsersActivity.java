@@ -3,22 +3,6 @@ package com.crowdshelf.app.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.crowdshelf.app.HelperMethods;
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.bookInfo.GoogleBooksMain;
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
-import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.User;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import ntnu.stud.markul.crowdshelf.R;
 

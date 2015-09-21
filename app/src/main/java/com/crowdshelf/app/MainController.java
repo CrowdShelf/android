@@ -1,5 +1,7 @@
 package com.crowdshelf.app;
 
+import android.util.Log;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,19 +10,24 @@ import java.util.List;
 
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.network.NetworkController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
+
 /**
  * Created by Torstein on 02.09.2015.
  */
 public class MainController {
-    private static HashMap<String, Crowd> crowds = new HashMap<String, Crowd>(); // KEY = crowd _id
-    private static HashMap<String, Book> books = new HashMap<String, Book>(); // KEY = book _id (NOT isbn!)
-    private static HashMap<String, HashSet<String>> isbnToId = new HashMap<String, HashSet<String>>(); // KEY = isbn, Value = Hashset[Book _id]
-    private static HashMap<String, User> users = new HashMap<String, User>(); // KEY = username
+    static Realm realm = Realm.getDefaultInstance();
+
+
+    // TODO: Handle revisions
 
     //todo  get the user of this app
     private static User mainUser = new User();
@@ -44,40 +51,25 @@ public class MainController {
         NetworkController.createUser(user);
     }
 
-    public static User getUser(String username) {
-        if (!users.containsKey(username)) {
-            retrieveUser(username);
+    public static User getUser(String userId) {
+        User user = realm.where(User.class)
+                .equalTo("id", userId)
+                .findFirst();
+        if (user == null) {
+            NetworkController.getUser(userId);
+        } else {
+            return user;
         }
-        return users.get(username);
-    }
-
-    public static List<User> getUsers(List<String> usernames) {
-        List<User> usersObjs = new ArrayList<User>();
-        for (String username : usernames) {
-            usersObjs.add(getUser(username));
-        }
-        return usersObjs;
+        return null;
     }
 
     public static void retrieveUser(String username) {
         NetworkController.getUser(username);
     }
 
-    public static void retrieveUsers(List<String> usernames) {
-        for (String username : usernames) {
-            retrieveUser(username);
-        }
-    }
-
-    public static void receiveUser(User user) {
-        // Called ONLY when a user is sent from server
-        users.put(user.getUsername(), user);
-    }
-
-    public static void receiveUsers(List<User> users) {
-        // Called ONLY when a user is sent from server
-        for (User u : users) {
-            receiveUser(u);
+    public static void retrieveUsers(List<String> userIds) {
+        for (String id : userIds) {
+            retrieveUser(id);
         }
     }
 
@@ -85,27 +77,25 @@ public class MainController {
     Crowds
      */
 
-    public static void createCrowd(String name, String owner, List<User> members){
+    public static void createCrowd(String name, String ownerId, List<MemberId> members){
         // Create new crowd
         Crowd crowd = new Crowd();
         crowd.setName(name);
-        crowd.setOwner(owner);
+        crowd.setOwner(ownerId);
+        // todo handle members
         NetworkController.createCrowd(crowd);
     }
 
     public static Crowd getCrowd(String crowdId) {
-        if (!crowds.containsKey(crowdId)) {
-            retrieveCrowd(crowdId);
+        Crowd crowd = realm.where(Crowd.class)
+                .equalTo("id", crowdId)
+                .findFirst();
+        if (crowd == null) {
+            NetworkController.getCrowd(crowdId);
+        } else {
+            return crowd;
         }
-        return crowds.get(crowdId);
-    }
-
-    public static List<Crowd> getCrowds(List<String> crowdIds) {
-        ArrayList<Crowd> crowdObjs= new ArrayList<Crowd>();
-        for (String crowdId : crowdIds) {
-            crowdObjs.add(getCrowd(crowdId));
-        }
-        return crowdObjs;
+        return null;
     }
 
     public static void retrieveCrowd(String crowdId) {
@@ -118,64 +108,65 @@ public class MainController {
         }
     }
 
-    public static void receiveCrowd(Crowd crowd) {
-        // Called ONLY when a crowd is sent from server
-        crowds.put(crowd.getId(), crowd);
-    }
-
-    public static void receiveCrowds(List<Crowd> crowds) {
-        for (Crowd c : crowds) {
-            receiveCrowd(c);
-        }
-    }
-
     /*
     Books
      */
 
-    public static void createBook(String isbn, int numberOfCopies, int numAvailableForRent) {
+    public static void createBook(String isbn, String rentedTo) {
         // This book is never stored in the books hash map. It is sent to the server,
         // then retrieved to be stored with the correct _id
         Book book = new Book();
         book.setIsbn(isbn);
+        book.setRentedTo(rentedTo);
         book.setOwner(mainUser.getUsername());
         NetworkController.createBook(book);
 }
 
-    public static void receiveBook(Book book) {
-        // Called ONLY when a book is sent from server
-        if (book != null) {
-            // book.getOwner().addOwnedBook(book);
-            /*
-            for (User u : book.getRentedTo()) {
-                u.addRentedBook(book);
-            }
-            */
-            books.put(book.getId(), book);
-            coupleIsbnToId(book.getIsbn(), book.getId());
+    public static Book getBook(String bookId) {
+        Book book = realm.where(Book.class)
+                .equalTo("id", bookId)
+                .findFirst();
+        if (book == null) {
+            NetworkController.getBook(bookId);
+        } else {
+            return book;
         }
+        return null;
     }
 
-    public static void receiveBooks(List<Book> books) {
-        for (Book b : books) {
-            receiveBook(b);
+    public static List<Book> getBooksOwned(String userId) {
+        List<Book> books = realm.where(Book.class)
+            .equalTo("owner", userId)
+            .findAll();
+        if (books.size() == 0) {
+            NetworkController.getBooksOwned(userId);
+        } else {
+            return books;
         }
+        return null;
     }
 
-    public static void coupleIsbnToId(String isbn, String _id) {
-        if (!isbnToId.containsKey(isbn)) {
-            isbnToId.put(isbn, new HashSet<String>());
+    public static List<Book> getBooksRented(String userId) {
+        List<Book> books = realm.where(Book.class)
+                .equalTo("rentedTo", userId)
+                .findAll();
+        if (books.size() == 0) {
+            NetworkController.getBooksRented(userId);
+        } else {
+            return books;
         }
-        isbnToId.get(isbn).add(_id);
+        return null;
     }
 
-
-    public static List<Book> getBooksByIsbnOwnedByAll (String isbn) {
-        // Look up all stored books with the given isbn, e.g. the same book owned by different users
-        // Todo needs rework.
-
-        NetworkController.getBooksByIsbn(isbn);
-
+    public static List<Book> getBooksByISBN(String isbn) {
+        List<Book> books = realm.where(Book.class)
+                .equalTo("isbn", isbn)
+                .findAll();
+        if (books.size() == 0) {
+            NetworkController.getBooksByIsbn(isbn);
+        } else {
+            return books;
+        }
         return null;
     }
 }
