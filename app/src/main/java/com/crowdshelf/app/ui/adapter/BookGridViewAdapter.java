@@ -1,7 +1,6 @@
 package com.crowdshelf.app.ui.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.network.GetBookPreviewInfoAsync;
-import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 
 import java.util.List;
 
@@ -76,8 +74,6 @@ public class BookGridViewAdapter extends BaseAdapter {
             viewHolder.bookCoverImageView.setImageBitmap(item.getBookInfo().getArtwork());
             viewHolder.bookTitleTextView.setText(item.getBookInfo().getTitle());
         }
-
-
         return convertView;
     }
 

@@ -16,7 +16,8 @@ public class BookInfoGetter {
 
     private static void downloadBookInfo(String isbn) {
         BookInfo bookInfo = null;
-        new GetBookInfoAsyncTask(isbn, bookInfo).execute();
+        String id = "";
+        GetBookInfoAsyncTask.getBookInfo(isbn, id);
         bookInfoMap.put(isbn, bookInfo);
     }
 

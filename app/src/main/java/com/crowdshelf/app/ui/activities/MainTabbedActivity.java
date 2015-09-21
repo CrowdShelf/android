@@ -107,7 +107,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         //TODO: Return book to owner
                     case BORROW:
                         //TODO Borrow book from owner
-
                 }
             }
             if (resultCode == RESULT_CANCELED) {

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crowdshelf.app.HelperMethods;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
@@ -37,29 +36,29 @@ public class GetBookPreviewInfoAsync extends AsyncTask<Void, Void, BookInfo> {
 
     @Override
     protected BookInfo doInBackground(Void... params) {
-        try {
-            String json = HelperMethods.getJsonFromGoogleBooksApiUsingISBN(isbn);
-            GoogleBooksMain main = HelperMethods.convertGoogleBooksJsonStringToObject(json);
-
-            assert main != null;
-            if (main.getTotalItems() > 0){
-
-                GoogleBooksVolumeInfo info = main.getItems().get(0).getVolumeInfo();
-                String title = info.getTitle();
-                String subtitle = info.getSubTitle();
-                String author = HelperMethods.getAuthorsAsString(info.getAuthors());
-                String publisher = info.getPublisher();
-                String pubDate = info.getPublishedDate();
-                Bitmap artwork = downloadArtworkFromUrl(info.getImageLinks().getThumbnail());
-                String description = info.getDescription();
-
-                return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artwork, description);
-            }else{
-                //TODO: Do something if books does not exist in google books
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String json = HelperMethods.getJsonFromGoogleBooksApiUsingISBN(isbn);
+//            GoogleBooksMain main = HelperMethods.convertGoogleBooksJsonStringToObject(json);
+//
+//            assert main != null;
+//            if (main.getTotalItems() > 0){
+//
+//                GoogleBooksVolumeInfo info = main.getItems().get(0).getVolumeInfo();
+//                String title = info.getTitle();
+//                String subtitle = info.getSubTitle();
+//                String author = HelperMethods.getAuthorsAsString(info.getAuthors());
+//                String publisher = info.getPublisher();
+//                String pubDate = info.getPublishedDate();
+//                Bitmap artwork = downloadArtworkFromUrl(info.getImageLinks().getThumbnail());
+//                String description = info.getDescription();
+//
+//                return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artwork, description);
+//            }else{
+//                //TODO: Do something if books does not exist in google books
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 

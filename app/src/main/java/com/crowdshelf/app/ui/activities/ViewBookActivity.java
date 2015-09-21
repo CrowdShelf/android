@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.bookInfo.GoogleBooksMain;
+import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.bookInfo.BookInfo;
 import com.crowdshelf.app.models.User;
@@ -24,7 +26,6 @@ import ntnu.stud.markul.crowdshelf.R;
 public class ViewBookActivity extends Activity {
 
     private String ISBN = "";
-    private BookInfo scannedBookInfo;
     //private User mainUser = new User("Morten"); // TODO: Only for testing
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +73,13 @@ public class ViewBookActivity extends Activity {
          */
 
 
-        if (!mainUser.ownsBook(ISBN)) {
-            // If you don't own the book then you can't remove it
+        // If you don't own the book then you can't remove it
+        if (false) {
             ((Button) findViewById(R.id.removeButton)).setVisibility(View.INVISIBLE);
 
         }
         // If you don't borrow the book then you can't return it
-        if (!mainUser.rentsBook(ISBN)) {
+        if (false) {
             ((Button) findViewById(R.id.removeButton)).setVisibility(View.INVISIBLE);
         }
     }
@@ -86,7 +87,6 @@ public class ViewBookActivity extends Activity {
     public void addButtonClick(View view) {
         // Add book to my shelf
         Toast.makeText(ViewBookActivity.this, "Add a book: " + ISBN, Toast.LENGTH_SHORT).show();
-        MainController.createBook(ISBN, 1, 1);
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", ScannedBookActions.ADD.value);
