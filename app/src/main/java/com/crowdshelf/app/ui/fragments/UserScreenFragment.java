@@ -85,7 +85,4 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         // TODO: Update argument type and name
         public void itemInUserShelfClicked(Book book);
     }
-
-
-
 }

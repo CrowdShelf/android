@@ -2,6 +2,8 @@ package com.crowdshelf.app.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,11 +40,14 @@ public class ViewBookActivity extends Activity {
         ScannedBookActions scannedBookAction = ScannedBookActions.ADD; // ScannedBookActions.fromValue(intent.getIntExtra("SCANNEDBOOKACTION"));
 
         String bookId = intent.getStringExtra("BOOKID");
-        setBook(ISBN);
+//        setBook(ISBN);
 
         bookInfo = realm.where(BookInfo.class)
                 .equalTo("isbn", ISBN)
                 .findFirst();
+
+        updateUI(bookInfo);
+
         if (!bookId.equals("")) {
             Book b = realm.where(Book.class)
                     .equalTo("id", bookId)
@@ -58,15 +63,24 @@ public class ViewBookActivity extends Activity {
         }
     }
 
-    public void setBook(String ISBN) {
-
-        Log.i("ScanResult", ISBN);
-
+    private void updateUI(BookInfo bookInfo) {
         TextView titleTextView = (TextView)findViewById(R.id.titleView);
 
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
 
         TextView infoTextView = (TextView)findViewById(R.id.infoView);
+
+        titleTextView.setText(bookInfo.getTitle());
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
+        imageView.setImageBitmap(bitmap);
+        infoTextView.setText(bookInfo.getDescription());
+    }
+
+    public void setBook(String ISBN) {
+
+        Log.i("ScanResult", ISBN);
+
+
         //new GetBookPreviewInfoAsync(ISBN, titleTextView, imageView, infoTextView).execute();
 
         /*        // todo: Display a list of people who you can rent this book from
