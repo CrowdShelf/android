@@ -16,16 +16,26 @@ public class BookInfo extends RealmObject{
     private String author;
     private String publisher;
     private String pubDate;
+    private String description;
     private byte[] artworkByteArray; // Maybe we need multiple sizes?
 
+<<<<<<< HEAD
     public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, byte[] artworkByteArray) {
+=======
+    public BookInfo(String isbn, String title, String subtitle, String author, String publisher, String pubDate, byte[] artwork, String description) {
+>>>>>>> origin/master
         this.isbn = isbn;
         this.title = title;
         this.subtitle = subtitle;
         this.author = author;
         this.publisher = publisher;
         this.pubDate = pubDate;
+<<<<<<< HEAD
         this.artworkByteArray = artworkByteArray;
+=======
+        this.artworkByteArray = artwork;
+        this.description = description;
+>>>>>>> origin/master
     }
 
     public String getIsbn() {
@@ -56,6 +66,9 @@ public class BookInfo extends RealmObject{
         return artworkByteArray;
     }
 
+    public String getDescription() {
+        return description;
+    }
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
@@ -82,5 +95,9 @@ public class BookInfo extends RealmObject{
 
     public void setArtwork(byte[] artwork) {
         this.artworkByteArray = artwork;
+    }
+    
+    public void setDescription(String description){
+        this.description = description;
     }
 }

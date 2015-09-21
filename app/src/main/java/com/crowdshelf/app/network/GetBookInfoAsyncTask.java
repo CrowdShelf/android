@@ -50,6 +50,7 @@ public class GetBookInfoAsyncTask {
                         String author = getAuthorsAsString(info.getAuthors());
                         String publisher = info.getPublisher();
                         String pubDate = info.getPublishedDate();
+                        String description = info.getDescription();
                         URL imgUrl = new URL(info.getImageLinks().getThumbnail());
                         HttpURLConnection connection = (HttpURLConnection) imgUrl.openConnection();
                         connection.setDoInput(true);
@@ -61,7 +62,7 @@ public class GetBookInfoAsyncTask {
                         artwork.compress(Bitmap.CompressFormat.PNG, 100, stream);
                         byte[] artworkByteArray = stream.toByteArray();
 
-                        return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray);
+                        return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray, description);
                     } else {
                         //TODO: Do something if books does not exist in google books
                     }

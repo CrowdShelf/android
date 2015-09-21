@@ -1,0 +1,34 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="com.crowdshelf.app.ui.fragments.UserScreenFragment">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/gridLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="User screen"
+            android:id="@+id/numberOfBooksTextView"
+            android:layout_row="0"
+            android:layout_column="0" />
+
+        <fragment
+            android:layout_width="350dp"
+            android:layout_height="431dp"
+            android:name="com.crowdshelf.app.ui.fragments.BookGridViewFragment"
+            android:id="@+id/fragment2"
+            android:layout_row="1"
+            android:layout_column="0" />
+
+    </GridLayout>
+
+</LinearLayout>
