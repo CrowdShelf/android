@@ -7,17 +7,13 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.models.User;
-import com.squareup.otto.Subscribe;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -28,42 +24,42 @@ import ntnu.stud.markul.crowdshelf.R;
 public class ViewBookActivity extends Activity {
     private Realm realm;
     private BookInfo bookInfo;
-    //private User mainUser = new User("Morten"); // TODO: Only for testing
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_result);
+
         realm = Realm.getDefaultInstance();
 
         Intent intent = getIntent();
         String ISBN = intent.getStringExtra("ISBN");
-        ScannedBookActions scannedBookAction = ScannedBookActions.ADD; // ScannedBookActions.fromValue(intent.getIntExtra("SCANNEDBOOKACTION"));
-
+        ScannedBookActions scannedBookAction = ScannedBookActions.fromValue(intent.getIntExtra("SCANNEDBOOKACTION", ScannedBookActions.UNKNOWN.value));
         String bookId = intent.getStringExtra("BOOKID");
-//        setBook(ISBN);
 
         bookInfo = realm.where(BookInfo.class)
                 .equalTo("isbn", ISBN)
                 .findFirst();
 
-        updateUI(bookInfo);
+        drawBookInfoUI(bookInfo);
 
         if (!bookId.equals("")) {
             Book b = realm.where(Book.class)
                     .equalTo("id", bookId)
                     .findFirst();
         }
+
+        //TODO: Hide useless buttons
         switch (scannedBookAction) {
-            case ADD:
+            case IS_OWNER:
                 break;
-            case BORROW:
+            case IS_RENTING_BOOK:
                 break;
-            case RETURN:
+            case NOT_OWNING_OR_RENTING:
                 break;
         }
     }
 
-    private void updateUI(BookInfo bookInfo) {
+    private void drawBookInfoUI(BookInfo bookInfo) {
         TextView titleTextView = (TextView)findViewById(R.id.titleView);
 
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
@@ -81,7 +77,6 @@ public class ViewBookActivity extends Activity {
         Log.i("ScanResult", ISBN);
 
 
-        //new GetBookPreviewInfoAsync(ISBN, titleTextView, imageView, infoTextView).execute();
 
         /*        // todo: Display a list of people who you can rent this book from
         List<Book> books = MainController.getBooksByIsbnOwnedByYourCrowds(ISBN);
@@ -100,24 +95,6 @@ public class ViewBookActivity extends Activity {
         -Remove book (from your own shelf - how do we select specific copy if the owner has many?) - WAIT WITH IMPLEMENTATION
          */
 
-        // For testing, todo replace
-        User mainUser = new User();
-
-        /*
-        Hide buttons that are not applicable based on whether the main user owns this book,
-        rents it out, or borrows it from another user.
-         */
-
-
-        // If you don't own the book then you can't remove it
-        if (false) {
-            ((Button) findViewById(R.id.removeButton)).setVisibility(View.INVISIBLE);
-
-        }
-        // If you don't borrow the book then you can't return it
-        if (false) {
-            ((Button) findViewById(R.id.removeButton)).setVisibility(View.INVISIBLE);
-        }
     }
 
     public void addButtonClick(View view) {
@@ -127,13 +104,9 @@ public class ViewBookActivity extends Activity {
         Toast.makeText(ViewBookActivity.this, "Add a book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
 
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", ScannedBookActions.ADD.value);
+        returnIntent.putExtra("result", ScannedBookActions.ADD_BUTTON_CLICKED.value);
         setResult(RESULT_OK, returnIntent);
         finish();
-
-//        Intent intent = new Intent(this, ShelfActivity.class);
-//        intent.putExtra("ISBN", ISBN);
-//        startActivity(intent);
     }
 
     public void borrowButtonClick(View view) {
@@ -142,7 +115,7 @@ public class ViewBookActivity extends Activity {
 
         Toast.makeText(ViewBookActivity.this, "Borrow book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", ScannedBookActions.BORROW.value);
+        returnIntent.putExtra("result", ScannedBookActions.BORROW_BUTTON_CLICKED.value);
         setResult(RESULT_OK, returnIntent);
         finish();
 
@@ -154,7 +127,7 @@ public class ViewBookActivity extends Activity {
         // Get the book object WHERE rentedTo = mainUser AND isbn = ISBN
         Toast.makeText(ViewBookActivity.this, "Return book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", ScannedBookActions.RETURN.value);
+        returnIntent.putExtra("result", ScannedBookActions.RETURN_BUTTON_CLICKED.value);
         setResult(RESULT_OK, returnIntent);
         finish();
         // todo switch to ViewUsersActivity
