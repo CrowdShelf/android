@@ -19,16 +19,21 @@ public class UserHandler implements ResponseHandler {
     public void handleJsonResponse(String jsonString) {
         try {
             User u = gson.fromJson(jsonString, User.class);
-            Log.d("NETDBTEST", "User added _id " + u.getId() + " username" + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
+            Log.i("UserHandler", "User added _id " + u.getId() + " username" + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(u);
             realm.commitTransaction();
             realm.close();
+            if (u.getId().equals("")) {
+                Log.w("UserHandler", "Received user does not have an id!");
+            }
             MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_READY, u.getId()));
         } catch (JsonSyntaxException e) {
-            Log.d("NETDBTEST", "CrowdHandler something wrong with JSON data");
-            e.printStackTrace();
+            Log.w("UserHandler", "CrowdHandler something wrong with JSON data");
+            Log.w("UserHandler", e.getMessage());;
+        } catch (RuntimeException e) {
+            Log.w("UserHandler", e.getMessage());
         }
     }
 }

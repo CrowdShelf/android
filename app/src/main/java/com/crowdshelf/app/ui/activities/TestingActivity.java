@@ -13,7 +13,9 @@ import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.User;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
@@ -73,7 +75,6 @@ public class TestingActivity extends AppCompatActivity {
         Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
         switch (event.getDbEventType()) {
             case CROWD_READY:
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
                 String crowdId = event.getDbObjectId();
                 // Determine if you own the book you just scanned:
                 Crowd crowd = realm.where(Crowd.class)
@@ -82,6 +83,25 @@ public class TestingActivity extends AppCompatActivity {
 
                 outputTextView.setText(crowd.getName());
                 outputTextView.setText(crowd.getMembers().get(0).getId());
+                break;
+            case BOOK_READY:
+                String bookId = event.getDbObjectId();
+                // Determine if you own the book you just scanned:
+                Book book = realm.where(Book.class)
+                        .equalTo("id", bookId)
+                        .findFirst();
+                BookInfo bookInfo = realm.where(BookInfo.class)
+                        .equalTo("id", book.getIsbn())
+                        .findFirst();
+                outputTextView.setText(bookInfo.getDescription());
+                break;
+            case USER_READY:
+                String userId = event.getDbObjectId();
+                // Determine if you own the book you just scanned:
+                User user = realm.where(User.class)
+                        .equalTo("id", userId)
+                        .findFirst();
+                outputTextView.setText(user.getName());
         }
     }
 
@@ -110,9 +130,9 @@ public class TestingActivity extends AppCompatActivity {
 
         String input = String.valueOf(inputEditText.getText());
 
-        String result = "book" + input;
+        NetworkController.getBooks();
 
-        outputTextView.setText(result);
+        //outputTextView.setText(result);
 
     }
 }

@@ -82,15 +82,15 @@ public class NetworkController {
                 "/crowds", new Gson().toJson(crowd, Crowd.class), crowdHandler);
     }
 
-    public static void getCrowds() {
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
-                "/crowds", null, crowdListHandler);
-    }
-
     public static void getCrowd(String crowdId) {
         Log.d("NETDBTEST", "NetworkController getCrowd");
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
                 "/crowds/" + crowdId, null, crowdHandler);
+    }
+
+    public static void getCrowds() {
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/crowds", null, crowdListHandler);
     }
 
     public static void addCrowdMember(String crowdId, String userId) {

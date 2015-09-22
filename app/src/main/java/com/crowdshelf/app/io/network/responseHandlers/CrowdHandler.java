@@ -24,16 +24,21 @@ public class CrowdHandler implements ResponseHandler {
     public void handleJsonResponse(String jsonString) {
         try {
             Crowd c = gson.fromJson(jsonString, Crowd.class);
-            Log.d("NETDBTEST", "Crowd added _id " + c.getId() + " name " + c.getName() + " owner " + c.getOwner() + " members " + c.getMembers().toString());
+            Log.i("CrowdHandler", "added _id " + c.getId() + " name " + c.getName() + " owner " + c.getOwner() + " members " + c.getMembers().toString());
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(c);
             realm.commitTransaction();
             realm.close();
+            if (c.getId().equals("")) {
+                Log.w("CrowdHandler", "Received crowd does not have an id!");
+            }
             MainTabbedActivity.getBus().post(new DBEvent(DBEventType.CROWD_READY, c.getId()));
         } catch (JsonSyntaxException e) {
-            Log.d("NETDBTEST", "CrowdHandler something wrong with JSON data");
-            e.printStackTrace();
+            Log.w("CrowdHandler", "something wrong with JSON data");
+            Log.w("CrowdHandler", e.getMessage());
+        } catch (RuntimeException e) {
+            Log.w("CrowdHandler", e.getMessage());
         }
     }
 

@@ -23,6 +23,7 @@ import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public final int GET_SCANNED_BOOK_ACTION = 1;
 
     private Realm realm;
-    private static Bus bus = new Bus();
+    private static Bus bus = new Bus(ThreadEnforcer.ANY);
     private static String mainUserId = "";
 
     public static Bus getBus() {

@@ -18,16 +18,21 @@ public class BookHandler implements ResponseHandler {
     public void handleJsonResponse(String jsonString) {
         try {
             Book b = gson.fromJson(jsonString, Book.class);
-            Log.d("NETDBTEST", "Book added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo());
+            Log.i("BookHandler", "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo());
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(b);
             realm.commitTransaction();
             realm.close();
+            if (b.getId().equals("")) {
+                Log.i("BookHandler", "Received book does not have an id");
+            }
             MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOK_READY, b.getId()));
         } catch (JsonSyntaxException e) {
-            Log.d("NETDBTEST", "CrowdHandler something wrong with JSON data");
-            e.printStackTrace();
+            Log.w("BookHandler", "something wrong with JSON data");
+            Log.w("BookHandler", e.getMessage());
+        } catch (RuntimeException e) {
+            Log.w("BookHandler", e.getMessage());
         }
     }
 }

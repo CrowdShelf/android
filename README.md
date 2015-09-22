@@ -1,7 +1,7 @@
 # CrowdShelf for Android
 ### Unit testing
 ####Robolectric
-Robolectric lets us test classes and methods in the app without running the Android Emulator.
+Robolectric lets us test some classes and methods in the app without running the Android Emulator.
 
 To enable Robolectric, go to "Build variables" in the pane to the left in Android Studio / IntelliJ, and under "Test Artifact" choose "Unit Test".
 
@@ -66,3 +66,9 @@ class BookId{
 }
 ```
 Then we can make a list which is compatible with the database: RealmList<BookId>.
+## Otto
+The Otto Event Bus is used to notify UI classes that data is downloaded from the server and put into the database.
+The main bus instance is in the MainTabbedActivity class and can be retrieved with MainTabbedActivity.getBus(). 
+DBEvents such as BOOK_READY are put onto the bus, and classes on the same thrad as MainTabbedActivity can implement
+listeners with the @Subscribe annotation.
+Any thread can post to this bus using bus.post().

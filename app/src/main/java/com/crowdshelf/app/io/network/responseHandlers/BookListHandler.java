@@ -15,12 +15,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by Torstein on 07.09.2015.
  */
 public class BookListHandler implements ResponseHandler {
-    //private static Type bookListType = new TypeToken<List<Book>>(){}.getType();
 
     @Override
     public void handleJsonResponse(String jsonString) {
@@ -28,26 +28,22 @@ public class BookListHandler implements ResponseHandler {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("books");
-
+            BookHandler bh = new BookHandler();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                bh.handleJsonResponse(jsonArray.getString(i));
+            }
+            /*
+            Just for verification:
+             */
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
-            realm.createAllFromJson(Book.class, jsonArray);
+            RealmResults<Book> results = realm.allObjects(Book.class);
+            Log.i("BookListHandler", "added " + String.valueOf(results.size()) + " books to the database");
             realm.commitTransaction();
             realm.close();
-            // MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOK_READY, isbn));
         } catch (JSONException e){
-            Log.d("NETDBTEST", "BookListHandler something wrong with JSON data");
-            e.printStackTrace();
+            Log.w("BookListHandler", "something wrong with JSON data");
+            Log.w("BookListHandler", e.getMessage());
         }
-
-        /*
-        try {
-            List<Book> books = gson.fromJson(jsonArray, bookListType);
-            MainController.receiveBooks(books);
-        } catch (JsonSyntaxException e) {
-            System.out.print("Received books was not in expected format\n");
-            e.printStackTrace();
-        }
-        */
     }
 }

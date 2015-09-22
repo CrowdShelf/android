@@ -48,6 +48,8 @@ public class NetworkAndDBInstrumentationTest {
 
     @Subscribe
     public void handleGetCrowd(DBEvent e) {
+        Log.d("NETDBTEST", "handleGetCrowd");
+        realm = Realm.getDefaultInstance();
         realm.refresh();
         RealmResults<Crowd> results = realm.allObjects(Crowd.class);
         Log.d("NETDBTEST", "Number of results: " + String.valueOf(results.size()) );

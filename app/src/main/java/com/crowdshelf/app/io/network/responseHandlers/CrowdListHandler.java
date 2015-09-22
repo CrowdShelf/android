@@ -20,7 +20,6 @@ import io.realm.RealmResults;
  * Created by Torstein on 07.09.2015.
  */
 public class CrowdListHandler implements ResponseHandler {
-    private static Type crowdListType = new TypeToken<List<Crowd>>(){}.getType();
 
     @Override
     public void handleJsonResponse(String jsonString) {
@@ -32,14 +31,18 @@ public class CrowdListHandler implements ResponseHandler {
             for (int i = 0; i < jsonArray.length(); i++) {
                 ch.handleJsonResponse(jsonArray.getString(i));
             }
+            /*
+            Just for verification:
+             */
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             RealmResults<Crowd> results = realm.allObjects(Crowd.class);
-            Log.d("NETDBTEST", "CrowdListHandler added " + String.valueOf(results.size()) + " crowds to database");
+            Log.i("UserHandler", "added " + String.valueOf(results.size()) + " crowds to the database");
             realm.commitTransaction();
             realm.close();
         } catch (JSONException e){
-            Log.d("NETDBTEST", "CrowdListHandler something wrong with JSON data");
+            Log.w("UserHandler", "something wrong with JSON data");
+            Log.w("UserHandler", e.getMessage());
         }
 
         /*
