@@ -4,7 +4,13 @@ package com.crowdshelf.app;
  * Created by markuslund92 on 14.09.15.
  */
 public enum ScannedBookActions {
-    ADD(0) , BORROW(1), RETURN(2), UNKNOWN(3);
+    ADD_BUTTON_CLICKED(0),
+    BORROW_BUTTON_CLICKED(1),
+    RETURN_BUTTON_CLICKED(2),
+    IS_OWNER(3),
+    IS_RENTING_BOOK(4),
+    NOT_OWNING_OR_RENTING(5),
+    UNKNOWN(10);
 
     public final int value;
 

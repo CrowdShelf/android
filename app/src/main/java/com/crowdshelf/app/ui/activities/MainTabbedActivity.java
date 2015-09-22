@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -38,11 +37,15 @@ public class MainTabbedActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener, BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
     public static final String TAG = "com.crowdshelf.app";
-    public final int GET_SCANNED_BOOK_ACTION = 1;
-
-    private Realm realm;
     private static Bus bus = new Bus();
     private static String mainUserId = "";
+    public final int GET_SCANNED_BOOK_ACTION = 1;
+    SectionsPagerAdapter mSectionsPagerAdapter;
+    ViewPager mViewPager;
+    private Realm realm;
+    private UserScreenFragment userScreenFragment;
+    private List<Book> userBooks;
+    private String lastScannedBookIsbn;
 
     public static Bus getBus() {
         return bus;
@@ -51,12 +54,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public static String getMainUserId() {
         return mainUserId;
     }
-
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
-    private UserScreenFragment userScreenFragment;
-    private List<Book> userBooks;
-    private String lastScannedBookIsbn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +96,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .findFirst();
                 if (book != null) {
                     Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - case 1: BOOK not null");
-                    startViewBook(ScannedBookActions.ADD, bookInfoISBN, book.getId());
+                    startViewBook(ScannedBookActions.IS_OWNER, bookInfoISBN, book.getId());
                     return;
                 }
 
@@ -111,7 +108,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 if (book != null) {
                     Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - case 2: BOOK not null");
 
-                    startViewBook(ScannedBookActions.RETURN, bookInfoISBN, book.getId());
+                    startViewBook(ScannedBookActions.IS_RENTING_BOOK, bookInfoISBN, book.getId());
                     return;
                 }
 
@@ -121,7 +118,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 book = new Book();
                 book.setIsbn(bookInfoISBN);
                 book.setOwner(getMainUserId());
-                startViewBook(ScannedBookActions.ADD, bookInfoISBN, "");
+                startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, bookInfoISBN, "");
                 break;
         }
     }
@@ -162,8 +159,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            loginUser("markus");
+        if (id == R.id.action_testing) {
+            Intent intent = new Intent(this, TestingActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -173,21 +171,21 @@ public class MainTabbedActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "onActivityResult");
         if (requestCode == GET_SCANNED_BOOK_ACTION) {
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 int enumInt = data.getIntExtra("result", 0);
                 ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
 
                 Log.i(TAG, "onActivityResult action: " + action);
-                switch (action){
-                    case ADD:
+                switch (action) {
+                    case ADD_BUTTON_CLICKED:
                         //TODO: Add book to user shelf
                         Book book = new Book();
                         book.setIsbn(lastScannedBookIsbn);
                         userBooks.add(book);
                         userScreenFragment.updateBookShelf(userBooks);
-                    case RETURN:
+                    case RETURN_BUTTON_CLICKED:
                         //TODO: Return book to owner
-                    case BORROW:
+                    case BORROW_BUTTON_CLICKED:
                         //TODO Borrow book from owner
                 }
             }
@@ -197,7 +195,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         }
     }//onActivityResult
 
-    public void startViewBook(ScannedBookActions scannedBookAction,String ISBN, String bookId) {
+    public void startViewBook(ScannedBookActions scannedBookAction, String ISBN, String bookId) {
         Toast.makeText(getBaseContext(), "ISBN: " + ISBN, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("SCANNEDBOOKACTION", scannedBookAction.value);
@@ -219,7 +217,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void onPageSelected(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 Log.i(TAG, "onPageSelected position: " + position);
                 break;
@@ -265,22 +263,20 @@ public class MainTabbedActivity extends AppCompatActivity implements
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            switch (position){
+            switch (position) {
                 case 0:
                     return userScreenFragment;
                 case 1:
-                    return ScannerScreenFragment.newInstance(null, null);
+                    return ScannerScreenFragment.newInstance();
                 case 2:
                     return CrowdsScreenFragment.newInstance(null, null);
                 default:
-                    return CrowdsScreenFragment.newInstance(null, null);
+                    return null;
             }
-
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 3;
         }
 
@@ -297,12 +293,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
             }
             return null;
         }
-    }
-
-    public void testingButtonClicked(View view){
-        Log.i(MainTabbedActivity.TAG, "UserScreenFragment - testingButtonClicked");
-        Intent intent = new Intent(this, TestingActivity.class);
-        startActivity(intent);
     }
 
 }

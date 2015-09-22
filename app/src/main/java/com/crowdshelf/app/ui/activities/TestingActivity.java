@@ -9,10 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.network.NetworkController;
-import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -24,11 +22,10 @@ import ntnu.stud.markul.crowdshelf.R;
 
 public class TestingActivity extends AppCompatActivity {
 
+    private static Bus bus = new Bus(ThreadEnforcer.ANY);
     public TextView outputTextView;
     public EditText inputEditText;
-
     private Realm realm;
-    private static Bus bus = new Bus(ThreadEnforcer.ANY);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,7 @@ public class TestingActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_testing) {
             return true;
         }
 
