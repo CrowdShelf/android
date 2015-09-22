@@ -38,9 +38,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener, BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
     public static final String TAG = "com.crowdshelf.app";
-    public final int GET_SCANNED_BOOK_ACTION = 1;
 
-    private Realm realm;
     private static Bus bus = new Bus(ThreadEnforcer.ANY);
     private static String mainUserId = "";
     public final int GET_SCANNED_BOOK_ACTION = 1;
@@ -59,11 +57,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         return mainUserId;
     }
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
-    private UserScreenFragment userScreenFragment;
-    private List<Book> userBooks;
-    private String lastScannedBookIsbn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

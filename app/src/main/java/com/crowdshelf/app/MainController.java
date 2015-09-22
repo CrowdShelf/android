@@ -134,31 +134,19 @@ public class MainController {
         if (books.size() == 0) {
             NetworkController.getBooksOwned(userId);
         } else {
-            // MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOK_EADY, isbn));
+            MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOKS_OWNED_READY, userId));
         }
     }
 
-    public static List<Book> getBooksRented(String userId) {
+    public static void getBooksRented(String userId) {
         List<Book> books = realm.where(Book.class)
                 .equalTo("rentedTo", userId)
                 .findAll();
         if (books.size() == 0) {
             NetworkController.getBooksRented(userId);
         } else {
-            return books;
+            MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOKS_RENTED_READY, userId));
         }
-        return null;
     }
 
-    public static List<Book> getBooksByISBN(String isbn) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("isbn", isbn)
-                .findAll();
-        if (books.size() == 0) {
-            NetworkController.getBooksByIsbn(isbn);
-        } else {
-            return books;
-        }
-        return null;
-    }
 }
