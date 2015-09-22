@@ -3,6 +3,8 @@ package com.crowdshelf.app.io.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,7 +28,9 @@ public class NetworkHelper {
             .setPrettyPrinting()
             .create();
 
-    public static void sendRequest(final HTTPRequestMethod requestMethod, final String route, final String jsonData, final ResponseHandler responseHandler) {
+    public static void sendRequest(final HTTPRequestMethod requestMethod, final String route, final String jsonData,
+                                   final ResponseHandler responseHandler, final DBEventType dbEventType)
+    {
         new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
             protected InputStreamReader doInBackground(Void... params) {
@@ -72,13 +76,13 @@ public class NetworkHelper {
 
             protected void onPostExecute(InputStreamReader reader) {
                 if (reader != null) {
-                    handleResponse(reader, responseHandler);
+                    handleResponse(reader, responseHandler, dbEventType);
                 }
             }
         }.execute();
     }
 
-    public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler) {
+    public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DBEventType dbEventType) {
         try {
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();
@@ -93,7 +97,7 @@ public class NetworkHelper {
             //System.out.print("Received JSON-data in NetworkHelper: \n");
             Log.d("NETDBTEST", "Received JSON: " + gson.toJson(jsonElement));
             if (responseHandler != null) {
-                responseHandler.handleJsonResponse(jsonString);
+                responseHandler.handleJsonResponse(jsonString, dbEventType);
             }
             iReader.close();
             bReader.close();

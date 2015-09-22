@@ -4,10 +4,22 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.MemberId;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
 /**
@@ -27,6 +39,9 @@ public class CrowdsScreenFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Realm realm;
+    private String crowdToShowId;
 
     private OnFragmentInteractionListener mListener;
 
@@ -48,6 +63,32 @@ public class CrowdsScreenFragment extends Fragment {
         return fragment;
     }
 
+    @Subscribe
+    public void handleViewBook(DBEvent event) {
+        realm.refresh();
+        Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
+        switch (event.getDbEventType()) {
+            case CROWD_BOOKS_CHANGED:
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
+                String crowdId = event.getDbObjectId();
+
+                if (crowdId.equals(crowdToShowId)) {
+                    Crowd c = realm.where(Crowd.class)
+                            .equalTo("id", crowdId)
+                            .findFirst();
+                    List<Book> books = new ArrayList<Book>();
+                    for (MemberId memberId: c.getMembers()) {
+                        // todo: we might want to get another subset of books, but this will work for now
+                        books.addAll(realm.where(Book.class)
+                            .equalTo("owner", memberId.getId())
+                            .findAll());
+                    }
+                    // todo: show these books
+                }
+                break;
+        }
+    }
+
     public CrowdsScreenFragment() {
         // Required empty public constructor
     }
@@ -64,8 +105,18 @@ public class CrowdsScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MainTabbedActivity.getBus().register(this);
+        realm = Realm.getDefaultInstance();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_crowds_screen, container, false);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        realm.close();
+        MainTabbedActivity.getBus().unregister(this);
+        super.onDestroy();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

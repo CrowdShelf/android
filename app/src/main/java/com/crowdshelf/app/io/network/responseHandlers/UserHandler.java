@@ -16,7 +16,7 @@ import io.realm.Realm;
  */
 public class UserHandler implements ResponseHandler {
     @Override
-    public void handleJsonResponse(String jsonString) {
+    public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
             User u = gson.fromJson(jsonString, User.class);
             Log.i("UserHandler", "User added _id " + u.getId() + " username" + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
@@ -28,7 +28,7 @@ public class UserHandler implements ResponseHandler {
             if (u.getId().equals("")) {
                 Log.w("UserHandler", "Received user does not have an id!");
             }
-            MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_READY, u.getId()));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, u.getId()));
         } catch (JsonSyntaxException e) {
             Log.w("UserHandler", "CrowdHandler something wrong with JSON data");
             Log.w("UserHandler", e.getMessage());;

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
@@ -89,7 +90,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         realm.refresh();
         Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
         switch (event.getDbEventType()) {
-            case BOOKINFO_READY:
+            case VIEW_BOOK_CHANGED:
                 Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
                 String bookInfoISBN = event.getDbObjectId();
                 // Determine if you own the book you just scanned:
@@ -130,14 +131,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         //TODO: Login user
         Toast.makeText(MainTabbedActivity.this, "User: " + username + " logged in.", Toast.LENGTH_SHORT).show();
         //TODO: populate userShelfISBNs with users books.
-    }
-
-    public void viewBookByISBN(String ISBN) {
-        MainController.getBookInfo(ISBN);
-    }
-
-    public void viewBookID(String id) {
-        MainController.getBook(id);
     }
 
     @Override
@@ -185,6 +178,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         Book book = new Book();
                         book.setIsbn(lastScannedBookIsbn);
                         userBooks.add(book);
+
+                        MainController.getBooksOwned(mainUserId, DBEventType.VIEW_BOOK_CHANGED);
+
                         userScreenFragment.updateBookShelf(userBooks);
                     case RETURN_BUTTON_CLICKED:
                         //TODO: Return book to owner
@@ -209,8 +205,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void isbnReceived(String ISBN) {
-        viewBookByISBN(ISBN);
+    public void isbnReceived(String isbn) {
+        MainController.getBookInfo(isbn, DBEventType.VIEW_BOOK_CHANGED);
     }
 
     @Override

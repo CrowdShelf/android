@@ -15,7 +15,7 @@ import io.realm.Realm;
  */
 public class BookHandler implements ResponseHandler {
     @Override
-    public void handleJsonResponse(String jsonString) {
+    public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
             Book b = gson.fromJson(jsonString, Book.class);
             Log.i("BookHandler", "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo());
@@ -27,7 +27,7 @@ public class BookHandler implements ResponseHandler {
             if (b.getId().equals("")) {
                 Log.i("BookHandler", "Received book does not have an id");
             }
-            MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOK_READY, b.getId()));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, b.getId()));
         } catch (JsonSyntaxException e) {
             Log.w("BookHandler", "something wrong with JSON data");
             Log.w("BookHandler", e.getMessage());

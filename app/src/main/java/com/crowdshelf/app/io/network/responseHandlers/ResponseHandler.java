@@ -1,5 +1,7 @@
 package com.crowdshelf.app.io.network.responseHandlers;
 
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.MemberId;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -56,5 +58,5 @@ public interface ResponseHandler {
             .setPrettyPrinting()
             .create();
 
-    void handleJsonResponse(String jsonString);
+    void handleJsonResponse(String jsonString, DBEventType dbEventType);
 }

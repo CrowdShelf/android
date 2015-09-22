@@ -8,18 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.ScannedBookActions;
+import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
 
 public class UserScreenFragment extends Fragment implements BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
     private OnUserScreenFragmentInteractionListener mListener;
-
+    private Realm realm;
     private BookGridViewFragment bookGridViewFragment;
 
     // TODO: Rename and change types and number of parameters
@@ -32,6 +37,25 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         // Required empty public constructor
     }
 
+    @Subscribe
+    public void handleViewBook(DBEvent event) {
+        realm.refresh();
+        Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
+        switch (event.getDbEventType()) {
+            case USER_BOOKS_CHANGED:
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
+                String userId = event.getDbObjectId();
+
+                if (userId.equals(MainTabbedActivity.getMainUserId())) {
+                    List<Book> books = realm.where(Book.class)
+                            .equalTo("owner", userId)
+                            .findAll();
+                    // todo: show these books
+                }
+                break;
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +64,8 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MainTabbedActivity.getBus().register(this);
+        realm = Realm.getDefaultInstance();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_screen, container, false);
         List<Fragment> userScreenFragments = getChildFragmentManager().getFragments();
@@ -68,6 +94,13 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        realm.close();
+        MainTabbedActivity.getBus().unregister(this);
+        super.onDestroy();
     }
 
     public void updateBookShelf(List<Book> userBooks){

@@ -21,7 +21,7 @@ import io.realm.RealmList;
  */
 public class CrowdHandler implements ResponseHandler {
     @Override
-    public void handleJsonResponse(String jsonString) {
+    public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
             Crowd c = gson.fromJson(jsonString, Crowd.class);
             Log.i("CrowdHandler", "added _id " + c.getId() + " name " + c.getName() + " owner " + c.getOwner() + " members " + c.getMembers().toString());
@@ -33,7 +33,7 @@ public class CrowdHandler implements ResponseHandler {
             if (c.getId().equals("")) {
                 Log.w("CrowdHandler", "Received crowd does not have an id!");
             }
-            MainTabbedActivity.getBus().post(new DBEvent(DBEventType.CROWD_READY, c.getId()));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, c.getId()));
         } catch (JsonSyntaxException e) {
             Log.w("CrowdHandler", "something wrong with JSON data");
             Log.w("CrowdHandler", e.getMessage());
