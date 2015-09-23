@@ -3,9 +3,9 @@ package com.crowdshelf.app.io.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -35,6 +35,8 @@ public class NetworkHelper {
             @Override
             protected InputStreamReader doInBackground(Void... params) {
                 try {
+                    Log.i(MainTabbedActivity.TAG, "NetworkHelper - doInBackground");
+
                     URL url = new URL(host + "/api" + route);
                     Log.d("NETDBTEST", "NetworkHelper request: " + requestMethod.toString() + " URL: " + url.toString());
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -75,6 +77,8 @@ public class NetworkHelper {
             }
 
             protected void onPostExecute(InputStreamReader reader) {
+                Log.i(MainTabbedActivity.TAG, "NetworkHelper - onPostExecute - reader: " + reader);
+
                 if (reader != null) {
                     handleResponse(reader, responseHandler, dbEventType);
                 }
@@ -84,6 +88,8 @@ public class NetworkHelper {
 
     public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DBEventType dbEventType) {
         try {
+            Log.i(MainTabbedActivity.TAG, "NetworkHelper - handleResponse");
+
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();
             String line = null;

@@ -6,5 +6,5 @@ package com.crowdshelf.app.io;
 public enum DBEventType {
     USER_BOOKS_CHANGED,
     CROWD_BOOKS_CHANGED,
-    VIEW_BOOK_CHANGED;
+    BOOK_CREATED, BOOKINFO_READY, VIEW_BOOK_CHANGED
 }

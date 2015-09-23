@@ -41,7 +41,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public static final String TAG = "com.crowdshelf.app";
 
     private static Bus bus = new Bus(ThreadEnforcer.ANY);
-    private static String mainUserId = "";
+    private static String mainUserId = "markus";
     public final int GET_SCANNED_BOOK_ACTION = 1;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -89,9 +89,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public void handleViewBook(DBEvent event) {
         realm.refresh();
         Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
+        Log.d(MainTabbedActivity.TAG, "handleViewBook - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case VIEW_BOOK_CHANGED:
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED");
                 String bookInfoISBN = event.getDbObjectId();
                 // Determine if you own the book you just scanned:
                 Book book = realm.where(Book.class)
@@ -99,7 +100,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .equalTo("owner", mainUserId)
                         .findFirst();
                 if (book != null) {
-                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - case 1: BOOK not null");
+                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - case 1: BOOK not null");
                     startViewBook(ScannedBookActions.IS_OWNER, bookInfoISBN, book.getId());
                     return;
                 }
@@ -110,20 +111,27 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .equalTo("rentedTo", mainUserId)
                         .findFirst();
                 if (book != null) {
-                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - case 2: BOOK not null");
+                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - case 2: BOOK not null");
 
                     startViewBook(ScannedBookActions.IS_RENTING_BOOK, bookInfoISBN, book.getId());
                     return;
                 }
 
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY - lastCase");
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - lastCase");
 
                 // Case: you don't own or rent the book you just scanned:
                 book = new Book();
                 book.setIsbn(bookInfoISBN);
                 book.setOwner(getMainUserId());
+
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - newBookCreated: BookISBN: " + book.getIsbn() + " BookOwner: " + book.getOwner());
+                //TODO: Create book
+//                MainController.createBook(book, DBEventType.BOOK_CREATED);
+
                 startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, bookInfoISBN, "");
                 break;
+            case BOOK_CREATED:
+                Log.i(MainTabbedActivity.TAG, "BOOK_CREATED");
         }
     }
 

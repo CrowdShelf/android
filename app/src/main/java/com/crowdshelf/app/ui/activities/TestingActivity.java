@@ -9,13 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
-import com.crowdshelf.app.io.network.NetworkController;
-import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.models.Crowd;
-import com.crowdshelf.app.models.User;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
@@ -26,11 +20,10 @@ import ntnu.stud.markul.crowdshelf.R;
 
 public class TestingActivity extends AppCompatActivity {
 
+    private static Bus bus = new Bus(ThreadEnforcer.ANY);
     public TextView outputTextView;
     public EditText inputEditText;
-
     private Realm realm;
-    private static Bus bus = new Bus(ThreadEnforcer.ANY);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +54,10 @@ public class TestingActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -73,66 +66,66 @@ public class TestingActivity extends AppCompatActivity {
     public void handleViewBook(DBEvent event) {
         realm.refresh();
         Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
-        switch (event.getDbEventType()) {
-            case CROWD_READY:
-                String crowdId = event.getDbObjectId();
-                // Determine if you own the book you just scanned:
-                Crowd crowd = realm.where(Crowd.class)
-                        .equalTo("id", crowdId)
-                        .findFirst();
-
-                outputTextView.setText(crowd.getName());
-                outputTextView.setText(crowd.getMembers().get(0).getId());
-                break;
-            case BOOK_READY:
-                String bookId = event.getDbObjectId();
-                // Determine if you own the book you just scanned:
-                Book book = realm.where(Book.class)
-                        .equalTo("id", bookId)
-                        .findFirst();
-                BookInfo bookInfo = realm.where(BookInfo.class)
-                        .equalTo("id", book.getIsbn())
-                        .findFirst();
-                outputTextView.setText(bookInfo.getDescription());
-                break;
-            case USER_READY:
-                String userId = event.getDbObjectId();
-                // Determine if you own the book you just scanned:
-                User user = realm.where(User.class)
-                        .equalTo("id", userId)
-                        .findFirst();
-                outputTextView.setText(user.getName());
-        }
+//        switch (event.getDbEventType()) {
+//            case CROWD_READY:
+//                String crowdId = event.getDbObjectId();
+//                // Determine if you own the book you just scanned:
+//                Crowd crowd = realm.where(Crowd.class)
+//                        .equalTo("id", crowdId)
+//                        .findFirst();
+//
+//                outputTextView.setText(crowd.getName());
+//                outputTextView.setText(crowd.getMembers().get(0).getId());
+//                break;
+//            case BOOK_READY:
+//                String bookId = event.getDbObjectId();
+//                // Determine if you own the book you just scanned:
+//                Book book = realm.where(Book.class)
+//                        .equalTo("id", bookId)
+//                        .findFirst();
+//                BookInfo bookInfo = realm.where(BookInfo.class)
+//                        .equalTo("id", book.getIsbn())
+//                        .findFirst();
+//                outputTextView.setText(bookInfo.getDescription());
+//                break;
+//            case USER_READY:
+//                String userId = event.getDbObjectId();
+//                // Determine if you own the book you just scanned:
+//                User user = realm.where(User.class)
+//                        .equalTo("id", userId)
+//                        .findFirst();
+//                outputTextView.setText(user.getName());
+//        }
     }
 
     public void crowdOnClick(View v){
 
-        NetworkController.getCrowd("55fede47b379431100423430");
-
-        String input = String.valueOf(inputEditText.getText());
-
-//        String result = "crowd" + input;
-
-//        outputTextView.setText(result);
+//        NetworkController.getCrowd("55fede47b379431100423430");
+//
+//        String input = String.valueOf(inputEditText.getText());
+//
+////        String result = "crowd" + input;
+//
+////        outputTextView.setText(result);
 
 
     }
 
     public void userOnClick(View v){
-        String input = String.valueOf(inputEditText.getText());
-
-        String result = "user" + input;
-
-        outputTextView.setText(result);
+//        String input = String.valueOf(inputEditText.getText());
+//
+//        String result = "user" + input;
+//
+//        outputTextView.setText(result);
     }
 
     public void bookOnClick(View v){
 
-        String input = String.valueOf(inputEditText.getText());
-
-        NetworkController.getBooks();
-
-        //outputTextView.setText(result);
+//        String input = String.valueOf(inputEditText.getText());
+//
+//        NetworkController.getBooks();
+//
+//        //outputTextView.setText(result);
 
     }
 }

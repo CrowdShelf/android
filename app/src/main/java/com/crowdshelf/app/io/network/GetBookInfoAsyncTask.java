@@ -4,11 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
+import com.crowdshelf.app.bookInfo.GoogleBooksMain;
+import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.bookInfo.GoogleBooksMain;
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 
@@ -27,7 +27,7 @@ import io.realm.Realm;
 public class GetBookInfoAsyncTask {
     private static String googleBooksAPIUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
-    public static void getBookInfo(final String isbn) {
+    public static void getBookInfo(final String isbn, final DBEventType dbEventType) {
         new AsyncTask<Void, Void, BookInfo>() {
             @Override
             protected BookInfo doInBackground(Void... params) {
@@ -77,18 +77,18 @@ public class GetBookInfoAsyncTask {
 
             @Override
             protected void onPostExecute(BookInfo result) {
-                putBookInfoInDatabase(result);
+                putBookInfoInDatabase(result, dbEventType);
             }
         }.execute();
     }
 
-    private static void putBookInfoInDatabase(BookInfo bookInfo) {
+    private static void putBookInfoInDatabase(BookInfo bookInfo, DBEventType dbEventType) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(bookInfo);
         realm.commitTransaction();
         realm.close();
-        MainTabbedActivity.getBus().post(new DBEvent(DBEventType.BOOKINFO_READY, bookInfo.getIsbn()));
+        MainTabbedActivity.getBus().post(new DBEvent(dbEventType, bookInfo.getIsbn()));
     }
 
     public static String getAuthorsAsString(String[] authors) {

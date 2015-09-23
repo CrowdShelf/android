@@ -1,5 +1,7 @@
 package com.crowdshelf.app;
 
+import android.util.Log;
+
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.io.network.GetBookInfoAsyncTask;
@@ -21,13 +23,12 @@ import io.realm.Realm;
  */
 public class MainController {
     static Realm realm = Realm.getDefaultInstance();
-    Bus bus = new Bus();
+    //todo  get the user of this app
+    private static User mainUser = new User();
 
 
     // TODO: Handle revisions
-
-    //todo  get the user of this app
-    private static User mainUser = new User();
+    Bus bus = new Bus();
 
     /*
     Users
@@ -83,8 +84,10 @@ public class MainController {
     public static void createBook(Book book, DBEventType dbEventType) {
         // This book is never stored in the books hash map. It is sent to the server,
         // then retrieved to be stored with the correct _id
+        Log.i(MainTabbedActivity.TAG, "MainController - createBook");
+
         NetworkController.createBook(book, dbEventType);
-}
+    }
 
     public static void getBook(String bookId, DBEventType dbEventType) {
         Book book = realm.where(Book.class)
@@ -102,7 +105,7 @@ public class MainController {
                 .equalTo("isbn", isbn)
                 .findFirst();
         if (bookInfo == null) {
-            GetBookInfoAsyncTask.getBookInfo(isbn);
+            GetBookInfoAsyncTask.getBookInfo(isbn, dbEventType);
         } else {
             MainTabbedActivity.getBus().post(new DBEvent(dbEventType, isbn));
         }

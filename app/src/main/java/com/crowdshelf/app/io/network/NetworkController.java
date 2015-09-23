@@ -2,18 +2,17 @@ package com.crowdshelf.app.io.network;
 
 import android.util.Log;
 
-import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
-import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
-import com.crowdshelf.app.io.network.responseHandlers.CrowdListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.BookHandler;
+import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdHandler;
+import com.crowdshelf.app.io.network.responseHandlers.CrowdListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.UserHandler;
-import com.google.gson.Gson;
-
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
+import com.google.gson.Gson;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -31,6 +30,8 @@ public class NetworkController {
 
     // Add book to database or update existing one
     public static void createBook(Book book, DBEventType dbEventType) {
+        Log.i(MainTabbedActivity.TAG, "NetworkController - createBook");
+
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
                 "/books", new Gson().toJson(book, Book.class),
                 bookHandler, dbEventType);

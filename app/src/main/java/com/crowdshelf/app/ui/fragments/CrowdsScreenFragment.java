@@ -45,6 +45,10 @@ public class CrowdsScreenFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    public CrowdsScreenFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -89,10 +93,6 @@ public class CrowdsScreenFragment extends Fragment {
         }
     }
 
-    public CrowdsScreenFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +105,8 @@ public class CrowdsScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        MainTabbedActivity.getBus().register(this);
-        realm = Realm.getDefaultInstance();
+//        MainTabbedActivity.getBus().register(this);
+//        realm = Realm.getDefaultInstance();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_crowds_screen, container, false);
 

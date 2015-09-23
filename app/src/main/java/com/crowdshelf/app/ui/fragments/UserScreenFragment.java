@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
@@ -27,14 +25,14 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     private Realm realm;
     private BookGridViewFragment bookGridViewFragment;
 
+    public UserScreenFragment() {
+        // Required empty public constructor
+    }
+
     // TODO: Rename and change types and number of parameters
     public static UserScreenFragment newInstance() {
         UserScreenFragment fragment = new UserScreenFragment();
         return fragment;
-    }
-
-    public UserScreenFragment() {
-        // Required empty public constructor
     }
 
     @Subscribe
@@ -64,7 +62,7 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        MainTabbedActivity.getBus().register(this);
+//        MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_screen, container, false);
