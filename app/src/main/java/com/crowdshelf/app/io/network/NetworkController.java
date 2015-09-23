@@ -31,7 +31,7 @@ public class NetworkController {
 
     // Add book to database or update existing one
     public static void createBook(Book book, DBEventType dbEventType) {
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
+        NetworkHelper.sendRequest(HTTPRequestMethod.POST,
                 "/books", new Gson().toJson(book, Book.class),
                 bookHandler, dbEventType);
     }
