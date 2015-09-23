@@ -39,13 +39,6 @@ public class NetworkAndDBInstrumentationTest {
         bus.register(this);
     }
 
-    //annotate all test methods with
-    @Test
-    public void testGetCrowd() {
-        Log.d("NETDBTEST", "testGetCrowd");
-        NetworkController.getCrowd("55fede47b379431100423430");
-    }
-
     @Subscribe
     public void handleGetCrowd(DBEvent e) {
         Log.d("NETDBTEST", "handleGetCrowd");

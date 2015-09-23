@@ -10,10 +10,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Torstein on 01.09.2015.
  */
 public class Book extends RealmObject{
-    @SerializedName("_rev")
-    private String rev;
     @PrimaryKey
-    @SerializedName("_id") // Gson deserializing
     private String id;
     @Index
     private String isbn;
@@ -21,14 +18,7 @@ public class Book extends RealmObject{
     private String owner; // user _id
     @Index
     private String rentedTo; // user _id
-
-    public String getRev() {
-        return rev;
-    }
-
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
+    private String availableForRent;
 
     public String getId() {
         return id;
@@ -60,6 +50,14 @@ public class Book extends RealmObject{
 
     public void setRentedTo(String userId) {
         this.rentedTo = userId;
+    }
+
+    public String getAvailableForRent() {
+        return availableForRent;
+    }
+
+    public void setAvailableForRent(String availableForRent) {
+        this.availableForRent = availableForRent;
     }
 
     /* Does not work with realm:

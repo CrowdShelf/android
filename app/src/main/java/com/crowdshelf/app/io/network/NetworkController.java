@@ -8,11 +8,15 @@ import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.UserHandler;
+import com.crowdshelf.app.io.network.serializers.BookSerializer;
+import com.crowdshelf.app.io.network.serializers.CrowdSerializer;
+import com.crowdshelf.app.io.network.serializers.UserSerializer;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -24,6 +28,14 @@ public class NetworkController {
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
 
+    private static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Book.class, new BookSerializer())
+            .registerTypeAdapter(Crowd.class, new CrowdSerializer())
+            .registerTypeAdapter(User.class, new UserSerializer())
+            .setPrettyPrinting()
+            .create();
+
+
     /*
     Books
      */
@@ -33,7 +45,7 @@ public class NetworkController {
         Log.i(MainTabbedActivity.TAG, "NetworkController - createBook");
 
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
-                "/books", new Gson().toJson(book, Book.class),
+                "/books", gson.toJson(book, Book.class),
                 bookHandler, dbEventType);
     }
 
@@ -97,7 +109,7 @@ public class NetworkController {
 
     public static void createCrowd(Crowd crowd, DBEventType dbEventType) {
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
-                "/crowds", new Gson().toJson(crowd, Crowd.class),
+                "/crowds", gson.toJson(crowd, Crowd.class),
                 crowdHandler, dbEventType);
     }
 
@@ -132,7 +144,7 @@ public class NetworkController {
 
     public static void createUser(User user, DBEventType dbEventType) {
         NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
-                "/users", new Gson().toJson(user, User.class),
+                "/users", gson.toJson(user, User.class),
                 userHandler, dbEventType);
     }
 

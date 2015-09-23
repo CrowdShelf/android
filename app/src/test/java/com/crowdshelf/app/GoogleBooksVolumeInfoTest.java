@@ -22,11 +22,6 @@ public class GoogleBooksVolumeInfoTest {
 
     @Test
     public void getAuthorsAsString_returnsStringWithAuthors_ListOfAuthors(){
-        GoogleBooksVolumeInfo i = new GoogleBooksVolumeInfo();
-        String[] authors1 = {"Forfatter", "Formutter", "Harry Bjarne"};
-        Assert.assertEquals("Forfatter, Formutter, Harry Bjarne", HelperMethods.getAuthorsAsString(authors1));
-        String[] authors2 = {"Forfatter Formutter"};
-        Assert.assertEquals("Forfatter Formutter", HelperMethods.getAuthorsAsString(authors2));
     }
 
 
