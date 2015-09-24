@@ -11,6 +11,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Book extends RealmObject{
     @PrimaryKey
+    @SerializedName("_id")
     private String id;
     @Index
     private String isbn;
