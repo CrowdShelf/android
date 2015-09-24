@@ -41,22 +41,24 @@ public class ViewBookActivity extends Activity {
                 .findFirst();
 
         drawBookInfoUI(bookInfo);
-
-        if (!bookId.equals("")) {
-            Book b = realm.where(Book.class)
-                    .equalTo("id", bookId)
-                    .findFirst();
+        if (bookId != null) {
+            if (!bookId.equals("")) {
+                Book b = realm.where(Book.class)
+                        .equalTo("id", bookId)
+                        .findFirst();
+            }
         }
 
-        //TODO: Hide useless buttons
-        switch (scannedBookAction) {
-            case IS_OWNER:
-                break;
-            case IS_RENTING_BOOK:
-                break;
-            case NOT_OWNING_OR_RENTING:
-                break;
-        }
+
+//        //TODO: Hide useless buttons
+//        switch (scannedBookAction) {
+//            case IS_OWNER:
+//                break;
+//            case IS_RENTING_BOOK:
+//                break;
+//            case NOT_OWNING_OR_RENTING:
+//                break;
+//        }
     }
 
     private void drawBookInfoUI(BookInfo bookInfo) {
@@ -138,6 +140,12 @@ public class ViewBookActivity extends Activity {
         // "remove book" not implemented in API yet, wait with implementing this method
         Toast.makeText(ViewBookActivity.this, "Remove book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
         // don't do anything here
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", ScannedBookActions.REMOVE_BUTTON_CLICKED.value);
+        returnIntent.putExtra("isbn", bookInfo.getIsbn());
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 
     // todo show the buttons below in GUI

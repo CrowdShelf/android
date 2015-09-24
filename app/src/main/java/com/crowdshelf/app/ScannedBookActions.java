@@ -10,6 +10,7 @@ public enum ScannedBookActions {
     IS_OWNER(3),
     IS_RENTING_BOOK(4),
     NOT_OWNING_OR_RENTING(5),
+    REMOVE_BUTTON_CLICKED(6),
     UNKNOWN(10);
 
     public final int value;

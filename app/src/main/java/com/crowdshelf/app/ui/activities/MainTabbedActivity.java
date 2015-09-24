@@ -40,7 +40,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener, BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
     public static final String TAG = "com.crowdshelf.app";
-
+    private static final int GET_BOOK_CLIKCED_ACTION = 2;
     private static Bus bus = new Bus(ThreadEnforcer.ANY);
     private static String mainUserId = "5602a211a0913f110092352a";
     public final int GET_SCANNED_BOOK_ACTION = 1;
@@ -188,19 +188,44 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         b1.setOwner(mainUserId);
                         b1.setAvailableForRent(true);
 
-//                        MainController.getBookInfo(lastScannedBookIsbn, DBEventType.ADD_BOOKINFO_USERSHELF);
-                        Log.i(TAG, "onActivityResult createBook");
-                        MainController.createBook(b1, DBEventType.ADD_BOOKINFO_USERSHELF);
-                        Log.i(TAG, "onActivityResult createdBook");
-
-                    case RETURN_BUTTON_CLICKED:
-                        //TODO: Return book to owner
-                    case BORROW_BUTTON_CLICKED:
-                        //TODO Borrow book from owner
+                        MainController.getBookInfo(lastScannedBookIsbn, DBEventType.ADD_BOOKINFO_USERSHELF);
+//                        Log.i(TAG, "onActivityResult createBook");
+//                        MainController.createBook(b1, DBEventType.ADD_BOOKINFO_USERSHELF);
+//                        Log.i(TAG, "onActivityResult createdBook");
                 }
             }
-            if (resultCode == RESULT_CANCELED) {
-                //Write your code if there's no result
+        } else if (requestCode == GET_BOOK_CLIKCED_ACTION) {
+            Log.i(TAG, "onActivityResult  - GET_BOOK_CLIKCED_ACTION");
+
+            if (resultCode == RESULT_OK) {
+                Log.i(TAG, "onActivityResult  - GET_BOOK_CLIKCED_ACTION - RESULT_OK");
+
+                int enumInt = data.getIntExtra("result", 0);
+                String isbn = data.getStringExtra("isbn");
+                Log.i(TAG, "onActivityResult - GET_BOOK_CLIKCED_ACTION - isbn: " + isbn);
+
+                ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
+
+                Log.i(TAG, "onActivityResult - GET_BOOK_CLIKCED_ACTION - action: " + action);
+                switch (action) {
+                    case REMOVE_BUTTON_CLICKED:
+                        BookInfo bookInfo = null;
+                        for (BookInfo bi : userBookInfos) {
+                            if (bi.getIsbn().equals(isbn)) {
+                                bookInfo = bi;
+                                break;
+                            }
+                        }
+                        if (userBookInfos.size() > 0) {
+                            Log.i(TAG, "onActivityResult - REMOVE_BUTTON_CLICKED userbooksInfo object isbn: " + userBookInfos.get(0).getIsbn());
+                            Log.i(TAG, "onActivityResult - REMOVE_BUTTON_CLICKED isbn: " + isbn);
+                        }
+
+                        userBookInfos.remove(bookInfo);
+                        userScreenFragment.updateBookShelf(userBookInfos);
+
+
+                }
             }
         }
     }//onActivityResult
@@ -250,13 +275,15 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void itemInUserShelfClicked(Book book) {
+    public void itemInUserShelfClicked(String isbn) {
 
     }
 
     @Override
-    public void itemInBookGridViewClicked(Book book) {
-
+    public void itemInBookGridViewClicked(String isbn) {
+        Intent intent = new Intent(this, ViewBookActivity.class);
+        intent.putExtra("ISBN", isbn);
+        startActivityForResult(intent, GET_BOOK_CLIKCED_ACTION);
     }
 
     /**

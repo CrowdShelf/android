@@ -109,12 +109,13 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
 
 
     @Override
-    public void itemInBookGridViewClicked(Book book) {
-        mListener.itemInUserShelfClicked(book);
+    public void itemInBookGridViewClicked(String isbn) {
+
+        mListener.itemInUserShelfClicked(isbn);
     }
 
     public interface OnUserScreenFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void itemInUserShelfClicked(Book book);
+        public void itemInUserShelfClicked(String isbn);
     }
 }
