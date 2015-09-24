@@ -126,6 +126,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
                 break;
             case ADD_BOOKINFO_USERSHELF:
+                Log.i(TAG, "MainTabbedActivity - handleViewBook - ADD_BOOKINFO_USERSHELF");
                 BookInfo bi = realm.where(BookInfo.class)
                         .equalTo("isbn", event.getDbObjectId())
                         .findFirst();
