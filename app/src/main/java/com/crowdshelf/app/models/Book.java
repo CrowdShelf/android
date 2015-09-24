@@ -1,7 +1,5 @@
 package com.crowdshelf.app.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
@@ -18,7 +16,7 @@ public class Book extends RealmObject{
     private String owner; // user _id
     @Index
     private String rentedTo; // user _id
-    private String availableForRent;
+    private boolean availableForRent;
 
     public String getId() {
         return id;
@@ -52,11 +50,11 @@ public class Book extends RealmObject{
         this.rentedTo = userId;
     }
 
-    public String getAvailableForRent() {
+    public boolean getAvailableForRent() {
         return availableForRent;
     }
 
-    public void setAvailableForRent(String availableForRent) {
+    public void setAvailableForRent(boolean availableForRent) {
         this.availableForRent = availableForRent;
     }
 

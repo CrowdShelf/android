@@ -186,9 +186,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         Book b1 = new Book();
                         b1.setIsbn(lastScannedBookIsbn);
                         b1.setOwner(mainUserId);
+                        b1.setAvailableForRent(true);
 
 //                        MainController.getBookInfo(lastScannedBookIsbn, DBEventType.ADD_BOOKINFO_USERSHELF);
+                        Log.i(TAG, "onActivityResult createBook");
                         MainController.createBook(b1, DBEventType.ADD_BOOKINFO_USERSHELF);
+                        Log.i(TAG, "onActivityResult createdBook");
 
                     case RETURN_BUTTON_CLICKED:
                         //TODO: Return book to owner
