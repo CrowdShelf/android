@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DBEventType;
 
 import ntnu.stud.markul.crowdshelf.R;
 
@@ -37,5 +42,21 @@ public class loginActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void registrate(View view) {
+        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
+        String username = usernameTextfield.getText().toString();
+
+        EditText mailTextfield = (EditText) findViewById(R.id.mailTextfield);
+        String mail = mailTextfield.getText().toString();
+
+        EditText nameTextfield = (EditText) findViewById(R.id.nameTextfield);
+        String name = nameTextfield.getText().toString();
+
+        Toast.makeText(this, "User " + username + " has been created: ", Toast.LENGTH_SHORT).show();
+        // TODO: Create a user with username and mail
+//        MainController.createUser(username, DBEventType.USER_CREATED);
+
     }
 }
