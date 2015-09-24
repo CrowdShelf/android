@@ -17,10 +17,11 @@ import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
-import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
@@ -41,13 +42,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public static final String TAG = "com.crowdshelf.app";
 
     private static Bus bus = new Bus(ThreadEnforcer.ANY);
-    private static String mainUserId = "markus";
+    private static String mainUserId = "5602a211a0913f110092352a";
     public final int GET_SCANNED_BOOK_ACTION = 1;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
     private Realm realm;
     private UserScreenFragment userScreenFragment;
-    private List<Book> userBooks;
+    private List<BookInfo> userBookInfos;
     private String lastScannedBookIsbn;
 
     public static Bus getBus() {
@@ -63,6 +64,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbed);
+
+        String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
+        mixpanel.track("AppLaunched");
 
         // Set up database
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
@@ -82,56 +87,50 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mViewPager.addOnPageChangeListener(this);
 
         userScreenFragment = UserScreenFragment.newInstance();
-        userBooks = new ArrayList<>();
+        userBookInfos = new ArrayList<>();
     }
 
     @Subscribe
     public void handleViewBook(DBEvent event) {
         realm.refresh();
-        Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
         Log.d(MainTabbedActivity.TAG, "handleViewBook - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
-            case VIEW_BOOK_CHANGED:
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED");
-                String bookInfoISBN = event.getDbObjectId();
-                // Determine if you own the book you just scanned:
-                Book book = realm.where(Book.class)
-                        .equalTo("isbn", bookInfoISBN)
+            case SCAN_COMPLETE_GET_BOOKINFO:
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - SCAN_COMPLETE_GET_BOOKINFO");
+                String bookId = "5603d891e4b0d3b5acc4981c";
+
+                lastScannedBookIsbn = event.getDbObjectId();
+
+                Book b1 = realm.where(Book.class)
+                        .equalTo("isbn", lastScannedBookIsbn)
                         .equalTo("owner", mainUserId)
                         .findFirst();
-                if (book != null) {
-                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - case 1: BOOK not null");
-                    startViewBook(ScannedBookActions.IS_OWNER, bookInfoISBN, book.getId());
-                    return;
+
+                if (b1 == null) {
+                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1: " + b1);
+
+                    //Book does not exist
+
+                    startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn, "");
+                } else {
+                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1isbn: " + b1.getIsbn() + " b1owner: " + b1.getOwner());
+
+                    startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn, "");
                 }
-
-                // Determine if you rent the book you just scanned:
-                book = realm.where(Book.class)
-                        .equalTo("isbn", bookInfoISBN)
-                        .equalTo("rentedTo", mainUserId)
-                        .findFirst();
-                if (book != null) {
-                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - case 2: BOOK not null");
-
-                    startViewBook(ScannedBookActions.IS_RENTING_BOOK, bookInfoISBN, book.getId());
-                    return;
-                }
-
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - lastCase");
-
-                // Case: you don't own or rent the book you just scanned:
-                book = new Book();
-                book.setIsbn(bookInfoISBN);
-                book.setOwner(getMainUserId());
-
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - newBookCreated: BookISBN: " + book.getIsbn() + " BookOwner: " + book.getOwner());
-                //TODO: Create book
-//                MainController.createBook(book, DBEventType.BOOK_CREATED);
-
-                startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, bookInfoISBN, "");
                 break;
-            case BOOK_CREATED:
-                Log.i(MainTabbedActivity.TAG, "BOOK_CREATED");
+
+
+            case GET_BOOK:
+                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - GET_BOOK");
+
+
+                break;
+            case ADD_BOOKINFO_USERSHELF:
+                BookInfo bi = realm.where(BookInfo.class)
+                        .equalTo("isbn", event.getDbObjectId())
+                        .findFirst();
+                userBookInfos.add(bi);
+                userScreenFragment.updateBookShelf(userBookInfos);
         }
     }
 
@@ -183,13 +182,14 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 switch (action) {
                     case ADD_BUTTON_CLICKED:
                         //TODO: Add book to user shelf
-                        Book book = new Book();
-                        book.setIsbn(lastScannedBookIsbn);
-                        userBooks.add(book);
 
-                        MainController.getBooksOwned(mainUserId, DBEventType.VIEW_BOOK_CHANGED);
+                        Book b1 = new Book();
+                        b1.setIsbn(lastScannedBookIsbn);
+                        b1.setOwner(mainUserId);
 
-                        userScreenFragment.updateBookShelf(userBooks);
+//                        MainController.getBookInfo(lastScannedBookIsbn, DBEventType.ADD_BOOKINFO_USERSHELF);
+                        MainController.createBook(b1, DBEventType.ADD_BOOKINFO_USERSHELF);
+
                     case RETURN_BUTTON_CLICKED:
                         //TODO: Return book to owner
                     case BORROW_BUTTON_CLICKED:
@@ -214,7 +214,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void isbnReceived(String isbn) {
-        MainController.getBookInfo(isbn, DBEventType.VIEW_BOOK_CHANGED);
+        MainController.getBookInfo(isbn, DBEventType.SCAN_COMPLETE_GET_BOOKINFO);
     }
 
     @Override
@@ -275,8 +275,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     return userScreenFragment;
                 case 1:
                     return ScannerScreenFragment.newInstance();
-                case 2:
-                    return CrowdsScreenFragment.newInstance(null, null);
+//                case 2:
+//                    return CrowdsScreenFragment.newInstance(null, null);
                 default:
                     return null;
             }
@@ -284,7 +284,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         @Override

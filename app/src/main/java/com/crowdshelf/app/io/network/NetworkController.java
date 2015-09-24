@@ -35,7 +35,6 @@ public class NetworkController {
             .setPrettyPrinting()
             .create();
 
-
     /*
     Books
      */
@@ -44,8 +43,11 @@ public class NetworkController {
     public static void createBook(Book book, DBEventType dbEventType) {
         Log.i(MainTabbedActivity.TAG, "NetworkController - createBook");
 
+        String jsonData = gson.toJson(book, Book.class);
+        Log.i(MainTabbedActivity.TAG, "NetworkController - createBook - jsonData: " + jsonData);
+
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
-                "/books", gson.toJson(book, Book.class),
+                "/books", jsonData,
                 bookHandler, dbEventType);
     }
 

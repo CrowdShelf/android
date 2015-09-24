@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.squareup.otto.Subscribe;
 
@@ -101,7 +102,7 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         super.onDestroy();
     }
 
-    public void updateBookShelf(List<Book> userBooks){
+    public void updateBookShelf(List<BookInfo> userBooks) {
         Log.i(MainTabbedActivity.TAG, "UserScreenFragment - updateBookShelf");
         bookGridViewFragment.setmItems(userBooks);
     }

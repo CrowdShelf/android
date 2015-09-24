@@ -66,7 +66,7 @@ public class NetworkHelper {
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         return new InputStreamReader(connection.getInputStream());
                     } else {
-
+                        Log.i(MainTabbedActivity.TAG, "NetworkHelper - connection.getResponseMessage(): " + connection.getResponseMessage());
                     }
                 } catch (java.net.MalformedURLException e) {
                     Log.d("NETDBTEST", "NetworkHelper SendRequest MalformedURLException" + e.toString());
@@ -103,7 +103,7 @@ public class NetworkHelper {
             //System.out.print("Received JSON-data in NetworkHelper: \n");
             Log.d("NETDBTEST", "Received JSON: " + gson.toJson(jsonElement));
             if (responseHandler != null) {
-                responseHandler.handleJsonResponse(jsonString, dbEventType);
+                responseHandler.handleJsonResponse(gson.toJson(jsonElement), dbEventType);
             }
             iReader.close();
             bReader.close();
