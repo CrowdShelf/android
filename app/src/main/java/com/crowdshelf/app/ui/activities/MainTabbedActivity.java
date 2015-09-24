@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -143,8 +144,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void onDestroy() {
-        realm.close();
-        MainTabbedActivity.getBus().unregister(this);
+        //realm.close();
+        //MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
 
@@ -254,6 +255,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public void itemInBookGridViewClicked(Book book) {
 
+    }
+
+    public void testingButtonClicked(View view) {
+        Intent intent = new Intent(this, loginActivity.class);
+        startActivity(intent);
     }
 
     /**

@@ -23,4 +23,7 @@
     <string name="flash_on">Flash on</string>
     <string name="flash_off">Flash off</string>
     <string name="title_activity_crowd_testing">CrowdTestingActivity</string>
+    <string name="title_activity_login">loginActivity</string>
+    <string name="nameText">Enter username</string>
+    <string name="mailText">Enter mail</string>
 </resources>
