@@ -103,6 +103,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - case 1: BOOK not null");
                     startViewBook(ScannedBookActions.IS_OWNER, bookInfoISBN, book.getId());
                     return;
+                } else {
+                    // Change Add-button text to "Add another copy"
                 }
 
                 // Determine if you rent the book you just scanned:
