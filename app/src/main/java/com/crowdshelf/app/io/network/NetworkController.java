@@ -17,6 +17,9 @@ import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by Torstein on 01.09.2015.
@@ -27,6 +30,8 @@ public class NetworkController {
     private static CrowdHandler crowdHandler = new CrowdHandler();
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
+
+    private static Type bookType = new TypeToken<Book>(){}.getType();
 
     private static Gson gson = new GsonBuilder()
             .registerTypeAdapter(Book.class, new BookSerializer())
@@ -43,9 +48,10 @@ public class NetworkController {
     // Add book to database or update existing one
     public static void createBook(Book book, DBEventType dbEventType) {
         Log.i(MainTabbedActivity.TAG, "NetworkController - createBook");
+        String jsonString = gson.toJson(book, bookType);
 
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
-                "/books", gson.toJson(book, Book.class),
+                "/books", jsonString,
                 bookHandler, dbEventType);
     }
 
