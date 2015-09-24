@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -18,7 +19,6 @@ import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
-import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
 import com.squareup.otto.Bus;
@@ -258,6 +258,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     }
 
+    public void testingButtonClicked(View view) {
+        Intent intent = new Intent(this, loginActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -277,8 +282,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     return userScreenFragment;
                 case 1:
                     return ScannerScreenFragment.newInstance();
-                case 2:
-                    return CrowdsScreenFragment.newInstance(null, null);
+//                case 2:
+//                    return CrowdsScreenFragment.newInstance(null, null);
                 default:
                     return null;
             }
@@ -286,8 +291,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            return 3;
-        }
+            return 2;
+        } // Change to the right amount of fragments
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -297,8 +302,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
+//                case 2:
+//                    return getString(R.string.title_section3).toUpperCase(l);
             }
             return null;
         }

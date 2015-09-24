@@ -33,7 +33,7 @@
         <Button
             android:layout_width="128dp"
             android:layout_height="100dp"
-            android:text="TESTING"
+            android:text="Create a user"
             android:id="@+id/testButton"
             android:layout_row="0"
             android:layout_column="1"
