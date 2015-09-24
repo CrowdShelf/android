@@ -54,7 +54,7 @@ public class NetworkHelper {
                     Log.d("NETDBTEST", "NetworkHelper DoOutput: " + connection.getDoOutput());
                     Log.d("NETDBTEST", "NetworkHelper DoInput: " + connection.getDoInput());
                     if (jsonData != null) {
-                        Log.d("NETDBTEST", "NetworkHelper Sending JsonData");
+                        Log.d("NETDBTEST", "NetworkHelper Sending JsonData:" + jsonData);
                         OutputStreamWriter writer = new OutputStreamWriter(
                                 connection.getOutputStream());
                         writer.write(jsonData);
