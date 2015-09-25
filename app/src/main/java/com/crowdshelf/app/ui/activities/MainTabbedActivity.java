@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -235,7 +236,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }//onActivityResult
 
     public void startViewBook(ScannedBookActions scannedBookAction, String ISBN, String bookId) {
-        Toast.makeText(getBaseContext(), "ISBN: " + ISBN, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("SCANNEDBOOKACTION", scannedBookAction.value);
         intent.putExtra("ISBN", ISBN);
@@ -288,6 +288,14 @@ public class MainTabbedActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("ISBN", isbn);
         startActivityForResult(intent, GET_BOOK_CLIKCED_ACTION);
+    }
+
+    public void scannerButtonClicked(View view) {
+        mViewPager.setCurrentItem(1);
+    }
+
+    public void allBooksButtonClicked(View view) {
+        Toast.makeText(MainTabbedActivity.this, "At this page you can, in the next version, see all the books you have the possibility to borrow", Toast.LENGTH_LONG).show();
     }
 
     /**
