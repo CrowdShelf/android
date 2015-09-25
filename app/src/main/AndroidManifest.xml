@@ -14,11 +14,13 @@
         <activity
             android:name="com.crowdshelf.app.ui.activities.ViewBookActivity"
             android:label="Result"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.crowdshelf.app.ui.activities.MainTabbedActivity"
-            android:label="@string/title_activity_main_tabbed" >
+            android:label="@string/title_activity_main_tabbed"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

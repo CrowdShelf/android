@@ -50,6 +50,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private UserScreenFragment userScreenFragment;
     private List<BookInfo> userBookInfos;
     private String lastScannedBookIsbn;
+    private RealmConfiguration realmConfiguration;
 
     public static Bus getBus() {
         return bus;
@@ -71,7 +72,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.deleteRealm(realmConfiguration); // Clean slate
+        //Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
 
         MainTabbedActivity.getBus().register(this);
@@ -88,6 +89,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         userScreenFragment = UserScreenFragment.newInstance();
         userBookInfos = new ArrayList<>();
+
+        Toast.makeText(this, "Swipe to the left to go to the scanner", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe
