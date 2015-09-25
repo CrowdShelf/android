@@ -89,9 +89,6 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
         BookInfo item = mItems.get(position);
 
         mListener.itemInBookGridViewClicked(item.getIsbn());
-
-        // do something
-        Toast.makeText(getActivity(), item.getIsbn(), Toast.LENGTH_SHORT).show();
     }
 
 
