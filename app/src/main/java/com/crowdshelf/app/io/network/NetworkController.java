@@ -46,18 +46,11 @@ public class NetworkController {
 
     // Add book to database or update existing one
     public static void createBook(Book book, DBEventType dbEventType) {
-        Log.i(MainTabbedActivity.TAG, "NetworkController - createBook");
-        String jsonString = gson.toJson(book, bookType);
-
         String jsonData = gson.toJson(book, Book.class);
         Log.i(MainTabbedActivity.TAG, "NetworkController - createBook - jsonData: " + jsonData);
 
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
-<<<<<<< HEAD
-                "/books", jsonString,
-=======
                 "/books", jsonData,
->>>>>>> origin/0.2
                 bookHandler, dbEventType);
     }
 
