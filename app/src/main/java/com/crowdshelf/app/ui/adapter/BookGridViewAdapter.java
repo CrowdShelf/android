@@ -1,6 +1,8 @@
 package com.crowdshelf.app.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.io.network.GetBookPreviewInfoAsync;
 
 import java.util.List;
 
@@ -21,9 +21,9 @@ import ntnu.stud.markul.crowdshelf.R;
  */
 public class BookGridViewAdapter extends BaseAdapter {
     private Context mContext;
-    private List<Book> mItems;
+    private List<BookInfo> mItems;
 
-    public BookGridViewAdapter(Context context, List<Book> items) {
+    public BookGridViewAdapter(Context context, List<BookInfo> items) {
         mContext = context;
         mItems = items;
     }
@@ -63,18 +63,12 @@ public class BookGridViewAdapter extends BaseAdapter {
         }
 
         // update the item view
-        Book item = mItems.get(position);
-        BookInfo bookInfo = null;
+        BookInfo bookInfo = mItems.get(position);
 //        BookInfo bookInfo = item.getBookInfo();
         //TODO: Wait until bookInfo is initialized async
-        if (bookInfo == null){
-            //This is only a backup solution that works...
-            new GetBookPreviewInfoAsync(item.getIsbn(), viewHolder.bookTitleTextView, viewHolder.bookCoverImageView, null).execute();
-        }
-        else {
-//            viewHolder.bookCoverImageView.setImageBitmap(item.getBookInfo().getArtwork());
-//            viewHolder.bookTitleTextView.setText(item.getBookInfo().getTitle());
-        }
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
+        viewHolder.bookCoverImageView.setImageBitmap(bitmap);
+        viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
         return convertView;
     }
 

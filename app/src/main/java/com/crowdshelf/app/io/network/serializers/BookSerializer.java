@@ -19,7 +19,7 @@ public class BookSerializer implements JsonSerializer<Book> {
         object.addProperty("isbn", book.getIsbn());
         object.addProperty("owner", book.getOwner());
         object.addProperty("rentedTo", book.getRentedTo());
-        object.addProperty("availableForRent", book.getAvailableForRent());
+//        object.addProperty("availableForRent", book.getAvailableForRent());
         return object;
     }
 }

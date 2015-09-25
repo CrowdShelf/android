@@ -17,6 +17,7 @@ public class BookHandler implements ResponseHandler {
     @Override
     public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
+            Log.i("BookHandler", "Json-string: " + jsonString);
             Book b = gson.fromJson(jsonString, Book.class);
             Log.i("BookHandler", "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent" + String.valueOf(b.getAvailableForRent()));
             Realm realm = Realm.getDefaultInstance();
