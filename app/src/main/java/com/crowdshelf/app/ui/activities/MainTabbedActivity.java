@@ -106,15 +106,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .equalTo("isbn", lastScannedBookIsbn)
                         .equalTo("owner", mainUserId)
                         .findFirst();
-<<<<<<< HEAD
-                if (book != null) {
-                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - VIEW_BOOK_CHANGED - case 1: BOOK not null");
-                    startViewBook(ScannedBookActions.IS_OWNER, bookInfoISBN, book.getId());
-                    // Change Add-button text to "Add another copy"
-                    return;
-                }
-=======
->>>>>>> origin/0.2
 
                 if (b1 == null) {
                     Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1: " + b1);
@@ -300,11 +291,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         @Override
         public int getCount() {
             return 2;
-<<<<<<< HEAD
-        } // Change to the right amount of fragments
-=======
         }
->>>>>>> origin/0.2
 
         @Override
         public CharSequence getPageTitle(int position) {
