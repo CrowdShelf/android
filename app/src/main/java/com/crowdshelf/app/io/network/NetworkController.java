@@ -31,7 +31,8 @@ public class NetworkController {
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
 
-    private static Type bookType = new TypeToken<Book>(){}.getType();
+    private static Type bookType = new TypeToken<Book>() {
+    }.getType();
 
     private static Gson gson = new GsonBuilder()
             .registerTypeAdapter(Book.class, new BookSerializer())
@@ -39,6 +40,7 @@ public class NetworkController {
             .registerTypeAdapter(User.class, new UserSerializer())
             .setPrettyPrinting()
             .create();
+
 
     /*
     Books
@@ -48,9 +50,10 @@ public class NetworkController {
     public static void createBook(Book book, DBEventType dbEventType) {
         String jsonData = gson.toJson(book, Book.class);
         Log.i(MainTabbedActivity.TAG, "NetworkController - createBook - jsonData: " + jsonData);
+        String jsonString = gson.toJson(book, bookType);
 
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
-                "/books", jsonData,
+                "/books", jsonString,
                 bookHandler, dbEventType);
     }
 

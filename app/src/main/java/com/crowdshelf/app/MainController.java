@@ -154,5 +154,4 @@ public class MainController {
             MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
         }
     }
-
 }

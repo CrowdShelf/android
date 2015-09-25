@@ -12,7 +12,7 @@
     <string name="addButton">Add</string>
     <string name="removeButton">Remove</string>
     <string name="title_activity_shelf">ShelfActivity</string>
-    <string name="title_activity_main_tabbed">MainTabbedActivity</string>
+    <string name="title_activity_main_tabbed">CrowdShelf</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>

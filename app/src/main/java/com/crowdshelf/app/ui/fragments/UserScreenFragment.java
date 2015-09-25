@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
@@ -98,7 +99,7 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     @Override
     public void onDestroy() {
         realm.close();
-        MainTabbedActivity.getBus().unregister(this);
+//        MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
 
@@ -109,12 +110,13 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
 
 
     @Override
-    public void itemInBookGridViewClicked(Book book) {
-        mListener.itemInUserShelfClicked(book);
+    public void itemInBookGridViewClicked(String isbn) {
+
+        mListener.itemInUserShelfClicked(isbn);
     }
 
     public interface OnUserScreenFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void itemInUserShelfClicked(Book book);
+        public void itemInUserShelfClicked(String isbn);
     }
 }

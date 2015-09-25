@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.adapter.BookGridViewAdapter;
 
@@ -89,12 +88,14 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
         // retrieve the GridView item
         BookInfo item = mItems.get(position);
 
+        mListener.itemInBookGridViewClicked(item.getIsbn());
+
         // do something
         Toast.makeText(getActivity(), item.getIsbn(), Toast.LENGTH_SHORT).show();
     }
 
 
     public interface OnBookGridViewFragmentInteractionListener {
-        public void itemInBookGridViewClicked(Book book);
+        public void itemInBookGridViewClicked(String isbn);
     }
 }
