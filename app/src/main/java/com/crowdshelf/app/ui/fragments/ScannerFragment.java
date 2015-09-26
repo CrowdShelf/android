@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +120,8 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(getActivity().getApplicationContext(), notification);
             r.play();
+            MixpanelAPI mixpanel = MixpanelAPI.getInstance(getActivity(), MainTabbedActivity.getProjectToken());
+            mixpanel.track("BookScanned");
         } catch (Exception e) {
         }
         mListener.isbnReceived(rawResult.getText());

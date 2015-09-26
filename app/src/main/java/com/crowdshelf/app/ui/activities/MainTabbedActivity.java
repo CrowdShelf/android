@@ -51,7 +51,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private UserScreenFragment userScreenFragment;
     private List<BookInfo> userBookInfos;
     private String lastScannedBookIsbn;
-    private RealmConfiguration realmConfiguration;
+    // projectToken for dev: 93ef1952b96d0faa696176aadc2fbed4
+    // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
+    private static String projectToken = "9f321d1662e631f2995d9b8f050c4b44"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
 
     public static Bus getBus() {
         return bus;
@@ -67,7 +69,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbed);
 
-        String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
         mixpanel.track("AppLaunched");
 
@@ -296,6 +297,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     public void allBooksButtonClicked(View view) {
         Toast.makeText(MainTabbedActivity.this, "At this page you can, in the next version, see all the books you have the possibility to borrow", Toast.LENGTH_LONG).show();
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
+        mixpanel.track("AllBooksClicked");
+    }
+
+    public static String getProjectToken() {
+        return projectToken;
     }
 
     /**

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -104,6 +105,9 @@ public class ViewBookActivity extends Activity {
 
         // Add book to my shelf
         Toast.makeText(ViewBookActivity.this, "Book added", Toast.LENGTH_SHORT).show();
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MainTabbedActivity.getProjectToken());
+        mixpanel.track("BookAdded");
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", ScannedBookActions.ADD_BUTTON_CLICKED.value);
