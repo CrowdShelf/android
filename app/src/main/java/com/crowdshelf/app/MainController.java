@@ -34,11 +34,12 @@ public class MainController {
      */
 
     public static void login(String username, DBEventType dbEventType) {
-        // Todo implement this.. wait for server implementation.. passwords..
+        // Todo implement this.. wait for server implementation.. handle passwords..
     }
 
     public static void createUser(User user, DBEventType dbEventType) {
-        // Create a new user
+        // This user is never stored in the database. It is sent to the server,
+        // then retrieved to be stored with the correct _id
         NetworkController.createUser(user, dbEventType);
     }
 
@@ -58,7 +59,8 @@ public class MainController {
      */
 
     public static void createCrowd(String name, String ownerId, List<MemberId> members, DBEventType dbEventType){
-        // Create new crowd
+        // This crowd is never stored in the database. It is sent to the server,
+        // then retrieved to be stored with the correct _id
         Crowd crowd = new Crowd();
         crowd.setName(name);
         crowd.setOwner(ownerId);
@@ -86,7 +88,6 @@ public class MainController {
     public static void createBook(Book book, DBEventType dbEventType) {
         // This book is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
-        Log.i(MainTabbedActivity.TAG, "MainController - createBook");
         NetworkController.createBook(book, dbEventType);
     }
 

@@ -14,26 +14,26 @@ import io.realm.Realm;
  * Created by Torstein on 07.09.2015.
  */
 public class BookHandler implements ResponseHandler {
+    private static final String TAG = "BookHandler";
     @Override
     public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
-            Log.i("BookHandler", "Json-string: " + jsonString);
+            Log.i(TAG, "Json-string: " + jsonString);
             Book b = gson.fromJson(jsonString, Book.class);
-            Log.i("BookHandler", "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent" + String.valueOf(b.getAvailableForRent()));
+            Log.i(TAG, "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent" + String.valueOf(b.getAvailableForRent()));
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(b);
             realm.commitTransaction();
             realm.close();
             if (b.getId().equals("")) {
-                Log.i("BookHandler", "Received book does not have an id");
+                Log.w(TAG, "Received book does not have an id");
             }
             MainTabbedActivity.getBus().post(new DBEvent(dbEventType, b.getId()));
         } catch (JsonSyntaxException e) {
-            Log.w("BookHandler", "something wrong with JSON data");
-            Log.w("BookHandler", e.getMessage());
+            Log.w(TAG, "something wrong with JSON data" + e.getMessage());
         } catch (RuntimeException e) {
-            Log.w("BookHandler", e.getMessage());
+            Log.w(TAG, e.getMessage());
         }
     }
 }

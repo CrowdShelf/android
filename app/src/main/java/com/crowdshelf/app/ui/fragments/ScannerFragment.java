@@ -30,6 +30,7 @@ import ntnu.stud.markul.crowdshelf.R;
  * Created by markuslund92 on 14.09.15.
  */
 public class ScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
+    private static final String TAG = "ScannerFragmet";
     private static final String FLASH_STATE = "FLASH_STATE";
     private static final String AUTO_FOCUS_STATE = "AUTO_FOCUS_STATE";
     private static final String SELECTED_FORMATS = "SELECTED_FORMATS";
@@ -158,7 +159,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         super.onAttach(context);
 
         if (context instanceof MainTabbedActivity) {
-            Log.i(MainTabbedActivity.TAG, "onAttach, is MainTabbedActivity");
+            Log.i(TAG, "onAttach, is MainTabbedActivity");
             try {
                 mListener = (ScannerScreenFragment.OnScannerScreenInteractionListener) context;
             } catch (ClassCastException e) {

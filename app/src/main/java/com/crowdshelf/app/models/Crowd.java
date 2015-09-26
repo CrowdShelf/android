@@ -11,8 +11,6 @@ import io.realm.annotations.PrimaryKey;
  * Created by Torstein on 01.09.2015.
  */
 public class Crowd extends RealmObject {
-    @SerializedName("_rev")
-    private String rev;
     @PrimaryKey
     @SerializedName("_id")
     private String id; // Unique identifier
@@ -20,14 +18,6 @@ public class Crowd extends RealmObject {
     private String name;
     private String owner; // _id of member
     private RealmList<MemberId> members; // _id of member
-
-    public String getRev() {
-        return rev;
-    }
-
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
 
     public String getId() {
         return id;

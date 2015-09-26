@@ -1,5 +1,7 @@
 package com.crowdshelf.app.io.network.serializers;
 
+import android.util.Log;
+
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
 import com.google.gson.JsonArray;
@@ -26,6 +28,7 @@ public class CrowdSerializer implements JsonSerializer<Crowd> {
             members.add(new JsonPrimitive(memberId.getId()));
         }
         object.add("members", members);
+        Log.i("CrowdSerializer", "Serialized: " + object.getAsString());
         return object;
     }
 }

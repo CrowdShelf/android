@@ -10,8 +10,6 @@ import io.realm.annotations.PrimaryKey;
  * Created by Torstein on 01.09.2015.
  */
 public class User extends RealmObject{
-    @SerializedName("_rev")
-    private String rev;
     @PrimaryKey
     @SerializedName("_id")
     private String id;
@@ -19,14 +17,6 @@ public class User extends RealmObject{
     private String username;
     private String name;
     private String email;
-
-    public String getRev() {
-        return rev;
-    }
-
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
 
     public String getId() {
         return id;

@@ -43,7 +43,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     // projectToken for dev: 93ef1952b96d0faa696176aadc2fbed4
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
     private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
-    public static final String TAG = "com.crowdshelf.app";
+    public static final String TAG = "MainTabbedActivity";
     private static final int GET_BOOK_CLIKCED_ACTION = 2;
     public final int GET_SCANNED_BOOK_ACTION = 1;
     SectionsPagerAdapter mSectionsPagerAdapter;
@@ -89,12 +89,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Subscribe
     public void handleViewBook(DBEvent event) {
         realm.refresh();
-        Log.d(MainTabbedActivity.TAG, "handleViewBook - event: " + event.getDbEventType());
+        Log.i(TAG, "handleViewBook - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case SCAN_COMPLETE_GET_BOOKINFO:
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - SCAN_COMPLETE_GET_BOOKINFO");
                 String bookId = "5603d891e4b0d3b5acc4981c";
-
                 lastScannedBookIsbn = event.getDbObjectId();
 
                 Book b1 = realm.where(Book.class)
@@ -103,13 +101,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .findFirst();
 
                 if (b1 == null) {
-                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1: " + b1);
-
+                    Log.i(TAG, "handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1: " + b1);
                     //Book does not exist
-
                     startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn, "");
                 } else {
-                    Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1isbn: " + b1.getIsbn() + " b1owner: " + b1.getOwner());
+                    Log.i(TAG, "handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1isbn: " + b1.getIsbn() + " b1owner: " + b1.getOwner());
 
                     startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn, "");
                 }
@@ -117,12 +113,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
 
             case GET_BOOK:
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - GET_BOOK");
-
-
                 break;
             case ADD_BOOKINFO_USERSHELF:
-                Log.i(TAG, "MainTabbedActivity - handleViewBook - ADD_BOOKINFO_USERSHELF");
                 BookInfo bi = realm.where(BookInfo.class)
                         .equalTo("isbn", event.getDbObjectId())
                         .findFirst();

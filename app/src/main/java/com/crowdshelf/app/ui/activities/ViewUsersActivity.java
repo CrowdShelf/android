@@ -19,6 +19,8 @@ public class ViewUsersActivity extends Activity {
     etc
      */
 
+    // todo Maybe this should be a fragment?
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();

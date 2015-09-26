@@ -36,15 +36,15 @@ public class BookListHandler implements ResponseHandler {
             /*
             Just for verification:
              */
-            Realm realm = Realm.getDefaultInstance();
+
+            /*Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             RealmResults<Book> results = realm.allObjects(Book.class);
             Log.i("BookListHandler", "added " + String.valueOf(results.size()) + " books to the database");
             realm.commitTransaction();
-            realm.close();
+            realm.close();*/
         } catch (JSONException e){
-            Log.w("BookListHandler", "something wrong with JSON data");
-            Log.w("BookListHandler", e.getMessage());
+            Log.w("BookListHandler", "something wrong with JSON data" + e.getMessage());
         }
     }
 }

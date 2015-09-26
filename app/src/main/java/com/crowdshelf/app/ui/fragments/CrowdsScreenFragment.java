@@ -35,7 +35,7 @@ public class CrowdsScreenFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final String TAG = "CrowdScreenFragment";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -70,10 +70,9 @@ public class CrowdsScreenFragment extends Fragment {
     @Subscribe
     public void handleViewBook(DBEvent event) {
         realm.refresh();
-        Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
+        Log.i(TAG, " handleViewBook " + event.getDbEventType().toString());
         switch (event.getDbEventType()) {
             case CROWD_BOOKS_CHANGED:
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
                 String crowdId = event.getDbObjectId();
 
                 if (crowdId.equals(crowdToShowId)) {

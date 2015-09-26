@@ -20,37 +20,25 @@ import io.realm.RealmList;
  * Created by Torstein on 07.09.2015.
  */
 public class CrowdHandler implements ResponseHandler {
+    private static final String TAG = "CrowdHandler";
     @Override
     public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
             Crowd c = gson.fromJson(jsonString, Crowd.class);
-            Log.i("CrowdHandler", "added _id " + c.getId() + " name " + c.getName() + " owner " + c.getOwner() + " members " + c.getMembers().toString());
+            Log.i(TAG, "added _id " + c.getId() + " name " + c.getName() + " owner " + c.getOwner() + " members " + c.getMembers().toString());
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(c);
             realm.commitTransaction();
             realm.close();
             if (c.getId().equals("")) {
-                Log.w("CrowdHandler", "Received crowd does not have an id!");
+                Log.w(TAG, "Received crowd does not have an id!");
             }
             MainTabbedActivity.getBus().post(new DBEvent(dbEventType, c.getId()));
         } catch (JsonSyntaxException e) {
-            Log.w("CrowdHandler", "something wrong with JSON data");
-            Log.w("CrowdHandler", e.getMessage());
+            Log.w(TAG, "something wrong with JSON data" +  e.getMessage());
         } catch (RuntimeException e) {
-            Log.w("CrowdHandler", e.getMessage());
+            Log.w(TAG, e.getMessage());
         }
     }
-
-    /*
-        // Method 2
-        try {
-            List<Crowd> crowds = gson.fromJson(jsonArray, crowdListType);
-            MainController.receiveCrowds(crowds);
-        } catch (JsonSyntaxException e) {
-            System.out.print("Received crowds was not in expected format\n");
-            e.printStackTrace();
-        }
-        */
-
 }

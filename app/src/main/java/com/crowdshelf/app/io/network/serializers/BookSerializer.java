@@ -1,5 +1,7 @@
 package com.crowdshelf.app.io.network.serializers;
 
+import android.util.Log;
+
 import com.crowdshelf.app.models.Book;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,7 +21,8 @@ public class BookSerializer implements JsonSerializer<Book> {
         object.addProperty("isbn", book.getIsbn());
         object.addProperty("owner", book.getOwner());
         object.addProperty("rentedTo", book.getRentedTo());
-//        object.addProperty("availableForRent", book.getAvailableForRent());
+        object.addProperty("availableForRent", book.getAvailableForRent());
+        Log.i("BookSerializer", "Serialized: " + object.getAsString());
         return object;
     }
 }

@@ -34,15 +34,14 @@ public class UserListHandler implements ResponseHandler {
             /*
             Just for verification:
              */
-            Realm realm = Realm.getDefaultInstance();
+            /*Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             RealmResults<User> results = realm.allObjects(User.class);
             Log.i("UserHandler", "UserListHandler added " + String.valueOf(results.size()) + " users to the database");
             realm.commitTransaction();
-            realm.close();
+            realm.close();*/
         } catch (JSONException e){
-            Log.w("UserHandler", "UserList something wrong with JSON data");
-            Log.w("UserHandler", e.getMessage());
+            Log.w("UserListHandler", "something wrong with JSON data" + e.getMessage());
         }
     }
 }

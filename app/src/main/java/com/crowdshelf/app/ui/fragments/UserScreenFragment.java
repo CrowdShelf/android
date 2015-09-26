@@ -22,7 +22,7 @@ import ntnu.stud.markul.crowdshelf.R;
 
 
 public class UserScreenFragment extends Fragment implements BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
-
+    private static final String TAG = "UserScreenFragment";
     private OnUserScreenFragmentInteractionListener mListener;
     private Realm realm;
     private BookGridViewFragment bookGridViewFragment;
@@ -38,12 +38,11 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     }
 
     @Subscribe
-    public void handleViewBook(DBEvent event) {
+    public void handleViewUser(DBEvent event) {
         realm.refresh();
-        Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
+        Log.i(TAG, "handleViewUser" +  event.getDbEventType().toString());
         switch (event.getDbEventType()) {
             case USER_BOOKS_CHANGED:
-                Log.i(MainTabbedActivity.TAG, "MainTabbedActivity - handleViewBook - BOOKINFO_READY");
                 String userId = event.getDbObjectId();
 
                 if (userId.equals(MainTabbedActivity.getMainUserId())) {
@@ -104,7 +103,7 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     }
 
     public void updateBookShelf(List<BookInfo> userBooks) {
-        Log.i(MainTabbedActivity.TAG, "UserScreenFragment - updateBookShelf");
+        Log.i(TAG, "updateBookShelf");
         bookGridViewFragment.setmItems(userBooks);
     }
 

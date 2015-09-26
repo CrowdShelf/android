@@ -1,5 +1,7 @@
 package com.crowdshelf.app.io.network.serializers;
 
+import android.util.Log;
+
 import com.crowdshelf.app.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -22,6 +24,7 @@ public class UserSerializer implements JsonSerializer<User> {
         object.addProperty("username", user.getUsername());
         object.addProperty("name", user.getName());
         object.addProperty("email", user.getEmail());
+        Log.i("UserSerializer", "Serialized: " + object.getAsString());
         return object;
     }
 }

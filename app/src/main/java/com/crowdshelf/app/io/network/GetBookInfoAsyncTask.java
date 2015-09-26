@@ -3,6 +3,7 @@ package com.crowdshelf.app.io.network;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.crowdshelf.app.bookInfo.GoogleBooksMain;
 import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
@@ -70,7 +71,7 @@ public class GetBookInfoAsyncTask {
                         //TODO: Do something if books does not exist in google books
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.w("GetBookInfoAsyncTask", e.getMessage());
                 }
                 return null;
             }

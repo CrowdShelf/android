@@ -49,7 +49,6 @@ public class NetworkController {
     // Add book to database or update existing one
     public static void createBook(Book book, DBEventType dbEventType) {
         String jsonData = gson.toJson(book, Book.class);
-        Log.i(MainTabbedActivity.TAG, "NetworkController - createBook - jsonData: " + jsonData);
         String jsonString = gson.toJson(book, bookType);
 
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
@@ -122,7 +121,6 @@ public class NetworkController {
     }
 
     public static void getCrowd(String crowdId, DBEventType dbEventType) {
-        Log.d("NETDBTEST", "NetworkController getCrowd");
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
                 "/crowds/" + crowdId, null,
                 crowdHandler, dbEventType);

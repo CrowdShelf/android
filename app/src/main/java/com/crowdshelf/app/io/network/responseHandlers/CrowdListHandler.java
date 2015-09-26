@@ -35,26 +35,14 @@ public class CrowdListHandler implements ResponseHandler {
             /*
             Just for verification:
              */
-            Realm realm = Realm.getDefaultInstance();
+ /*           Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             RealmResults<Crowd> results = realm.allObjects(Crowd.class);
             Log.i("UserHandler", "added " + String.valueOf(results.size()) + " crowds to the database");
             realm.commitTransaction();
-            realm.close();
+            realm.close();*/
         } catch (JSONException e){
-            Log.w("UserHandler", "something wrong with JSON data");
-            Log.w("UserHandler", e.getMessage());
+            Log.w("UserHandler", "something wrong with JSON data" + e.getMessage());
         }
-
-        /*
-        // Method 2
-        try {
-            List<Crowd> crowds = gson.fromJson(jsonArray, crowdListType);
-            MainController.receiveCrowds(crowds);
-        } catch (JsonSyntaxException e) {
-            System.out.print("Received crowds was not in expected format\n");
-            e.printStackTrace();
-        }
-        */
     }
 }
