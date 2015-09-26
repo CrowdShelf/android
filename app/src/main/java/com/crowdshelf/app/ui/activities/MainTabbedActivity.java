@@ -53,7 +53,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private String lastScannedBookIsbn;
     // projectToken for dev: 93ef1952b96d0faa696176aadc2fbed4
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
-    private static String projectToken = "9f321d1662e631f2995d9b8f050c4b44"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
+    private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
 
     public static Bus getBus() {
         return bus;
