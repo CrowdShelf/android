@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -103,7 +104,10 @@ public class ViewBookActivity extends Activity {
         // Create new book object
 
         // Add book to my shelf
-        Toast.makeText(ViewBookActivity.this, "Add a book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(ViewBookActivity.this, "Book added", Toast.LENGTH_SHORT).show();
+
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MainTabbedActivity.getProjectToken());
+        mixpanel.track("BookAdded");
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", ScannedBookActions.ADD_BUTTON_CLICKED.value);
@@ -138,7 +142,7 @@ public class ViewBookActivity extends Activity {
 
     public void removeButtonClick(View view) {
         // "remove book" not implemented in API yet, wait with implementing this method
-        Toast.makeText(ViewBookActivity.this, "Remove book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(ViewBookActivity.this, "Book removed", Toast.LENGTH_SHORT).show();
         // don't do anything here
 
         Intent returnIntent = new Intent();

@@ -1,16 +1,45 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="com.crowdshelf.app.ui.fragments.UserScreenFragment">
+    tools:context="com.crowdshelf.app.ui.fragments.UserScreenFragment"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/myBooksButton"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Shelf"
+            />
+
+        <Button
+            android:id="@+id/allBooksButton"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="All Books"
+            android:textColor="@color/common_signin_btn_light_text_disabled"
+            android:onClick="allBooksButtonClicked" />
+
+    </LinearLayout>
 
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical">
+        android:layout_height="450dp"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/linearLayout">
 
         <TextView
             android:id="@+id/numberOfBooksTextView"
@@ -18,7 +47,6 @@
             android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_row="0"
-            android:text="My shelf"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <fragment
@@ -29,7 +57,14 @@
             android:layout_column="0"
             android:layout_columnSpan="2"
             android:layout_row="1" />
-
     </GridLayout>
 
-</LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scanner"
+        android:onClick="scannerButtonClicked"
+        android:layout_below="@+id/gridLayout"
+        android:layout_alignEnd="@id/gridLayout"/>
+
+</RelativeLayout>
