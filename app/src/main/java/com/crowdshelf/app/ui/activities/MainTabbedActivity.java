@@ -40,29 +40,20 @@ public class MainTabbedActivity extends AppCompatActivity implements
         UserScreenFragment.OnUserScreenFragmentInteractionListener,
         ViewPager.OnPageChangeListener, BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
-    public static final String TAG = "com.crowdshelf.app";
-    private static final int GET_BOOK_CLIKCED_ACTION = 2;
-    private static Bus bus = new Bus(ThreadEnforcer.ANY);
-    private static String mainUserId = "5602a211a0913f110092352a";
-    public final int GET_SCANNED_BOOK_ACTION = 1;
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
-    private Realm realm;
-    private UserScreenFragment userScreenFragment;
-    private List<BookInfo> userBookInfos;
-    private String lastScannedBookIsbn;
     // projectToken for dev: 93ef1952b96d0faa696176aadc2fbed4
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
     private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
-
-    public static Bus getBus() {
-        return bus;
-    }
-
-    public static String getMainUserId() {
-        return mainUserId;
-    }
-
+    public static final String TAG = "com.crowdshelf.app";
+    private static final int GET_BOOK_CLIKCED_ACTION = 2;
+    public final int GET_SCANNED_BOOK_ACTION = 1;
+    SectionsPagerAdapter mSectionsPagerAdapter;
+    private UserScreenFragment userScreenFragment;
+    ViewPager mViewPager;
+    private Realm realm;
+    private static Bus bus = new Bus(ThreadEnforcer.ANY);
+    private static String mainUserId = "5602a211a0913f110092352a";
+    private String lastScannedBookIsbn;
+    private List<BookInfo> userBookInfos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +139,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void onDestroy() {
+        MainController.onDestroy();
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
@@ -301,10 +293,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mixpanel.track("AllBooksClicked");
     }
 
-    public static String getProjectToken() {
-        return projectToken;
-    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -349,6 +337,18 @@ public class MainTabbedActivity extends AppCompatActivity implements
             }
             return null;
         }
+
+    }
+    public static Bus getBus() {
+        return bus;
+    }
+
+    public static String getMainUserId() {
+        return mainUserId;
+    }
+
+    public static String getProjectToken() {
+        return projectToken;
     }
 
 }

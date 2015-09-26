@@ -17,27 +17,28 @@ import com.squareup.otto.Bus;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by Torstein on 02.09.2015.
  */
 public class MainController {
-    static Realm realm = Realm.getDefaultInstance();
+    private static Realm realm = Realm.getDefaultInstance();
+    private static Bus bus = MainTabbedActivity.getBus();
+
     //todo  get the user of this app
     private static User mainUser = new User();
-
-
-    // TODO: Handle revisions
-    Bus bus = new Bus();
 
     /*
     Users
      */
 
-    public static void createUser(String username, DBEventType dbEventType) {
+    public static void login(String username, DBEventType dbEventType) {
+        // Todo implement this.. wait for server implementation.. passwords..
+    }
+
+    public static void createUser(User user, DBEventType dbEventType) {
         // Create a new user
-        User user = new User();
-        user.setUsername(username);
         NetworkController.createUser(user, dbEventType);
     }
 
@@ -48,7 +49,7 @@ public class MainController {
         if (user == null) {
             NetworkController.getUser(userId, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
+            bus.post(new DBEvent(dbEventType, userId));
         }
     }
 
@@ -61,7 +62,9 @@ public class MainController {
         Crowd crowd = new Crowd();
         crowd.setName(name);
         crowd.setOwner(ownerId);
-        // todo handle members
+        RealmList<MemberId> memberIds = new RealmList<MemberId>();
+        memberIds.addAll(members);
+        crowd.setMembers(memberIds);
         NetworkController.createCrowd(crowd, dbEventType);
     }
 
@@ -72,20 +75,18 @@ public class MainController {
         if (crowd == null) {
             NetworkController.getCrowd(crowdId, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, crowdId));
+            bus.post(new DBEvent(dbEventType, crowdId));
         }
     }
-
 
     /*
     Books
      */
 
     public static void createBook(Book book, DBEventType dbEventType) {
-        // This book is never stored in the books hash map. It is sent to the server,
+        // This book is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
         Log.i(MainTabbedActivity.TAG, "MainController - createBook");
-
         NetworkController.createBook(book, dbEventType);
     }
 
@@ -96,7 +97,7 @@ public class MainController {
         if (book == null) {
             NetworkController.getBook(bookId, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, bookId));
+            bus.post(new DBEvent(dbEventType, bookId));
         }
     }
 
@@ -107,7 +108,7 @@ public class MainController {
         if (bookInfo == null) {
             GetBookInfoAsyncTask.getBookInfo(isbn, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, isbn));
+            bus.post(new DBEvent(dbEventType, isbn));
         }
     }
 
@@ -123,7 +124,7 @@ public class MainController {
         if (books.size() == 0) {
             NetworkController.getBooksOwnedAndRented(userId, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(dbEventType);
+            bus.post(dbEventType);
         }
     }
 
@@ -137,7 +138,7 @@ public class MainController {
         if (books.size() == 0) {
             NetworkController.getBooksOwned(userId, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
+            bus.post(new DBEvent(dbEventType, userId));
         }
     }
 
@@ -151,9 +152,11 @@ public class MainController {
         if (books.size() == 0) {
             NetworkController.getBooksRented(userId, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
+            bus.post(new DBEvent(dbEventType, userId));
         }
     }
 
-    // Todo destroy realm. When??
+    public static void onDestroy() {
+        realm.close();
+    }
 }

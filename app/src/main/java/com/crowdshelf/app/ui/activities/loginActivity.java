@@ -3,6 +3,7 @@ package com.crowdshelf.app.ui.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,16 +11,23 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.models.User;
+import com.squareup.otto.Subscribe;
 
+import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
-public class loginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        realm = Realm.getDefaultInstance();
+        MainTabbedActivity.getBus().register(this);
     }
 
     @Override
@@ -44,19 +52,60 @@ public class loginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void registrate(View view) {
+    public void register(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         String username = usernameTextfield.getText().toString();
 
-        EditText mailTextfield = (EditText) findViewById(R.id.mailTextfield);
-        String mail = mailTextfield.getText().toString();
+        EditText emailTextfield = (EditText) findViewById(R.id.mailTextfield);
+        String email = emailTextfield.getText().toString();
 
         EditText nameTextfield = (EditText) findViewById(R.id.nameTextfield);
         String name = nameTextfield.getText().toString();
 
         Toast.makeText(this, "User " + username + " has been created: ", Toast.LENGTH_SHORT).show();
-        // TODO: Create a user with username and mail
-//        MainController.createUser(username, DBEventType.USER_CREATED);
+        User user = new User();
+        user.setUsername(username);
+        user.setName(name);
+        user.setEmail(email);
+        MainController.createUser(user, DBEventType.USER_CREATED);
+    }
 
+    public void login(View view) {
+        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
+        String username = usernameTextfield.getText().toString();
+
+        EditText passwordTextfield = (EditText) findViewById(R.id.usernameTextfield);
+        String password = passwordTextfield.getText().toString();
+        MainController.login(username, DBEventType.LOGIN);
+    }
+
+    @Subscribe
+    public void handleLogin(DBEvent event) {
+        realm.refresh();
+        Log.d(MainTabbedActivity.TAG, "LoginActivity - handleLogin - event: " + event.getDbEventType());
+        switch (event.getDbEventType()) {
+            case LOGIN:
+                Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - LOGIN");
+                if (event.getDbObjectId().equals("True")) {
+                    // login succesful
+                } else if (event.getDbObjectId().equals("False")) {
+                    // login failed
+                }
+                break;
+
+            case USER_CREATED:
+                Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
+                // log in with new user
+                break;
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        MainController.onDestroy();
+        realm.close();
+        MainTabbedActivity.getBus().unregister(this);
+        super.onDestroy();
     }
 }
