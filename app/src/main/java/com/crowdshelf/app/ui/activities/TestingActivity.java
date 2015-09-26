@@ -32,10 +32,6 @@ public class TestingActivity extends AppCompatActivity {
         inputEditText = (EditText) findViewById(R.id.inputTextView);
         outputTextView = (TextView) findViewById(R.id.resultTextView);
 
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-//        Realm.deleteRealm(realmConfiguration); // Clean slate
-        Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
-
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
     }
@@ -127,5 +123,11 @@ public class TestingActivity extends AppCompatActivity {
 //
 //        //outputTextView.setText(result);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        realm.close();
+        super.onDestroy();
     }
 }

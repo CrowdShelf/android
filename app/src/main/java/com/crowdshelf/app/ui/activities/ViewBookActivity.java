@@ -163,4 +163,11 @@ public class ViewBookActivity extends Activity {
         Toast.makeText(ViewBookActivity.this, "Lend book out: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
         // todo switch to ViewUsersActivity
     }
+
+
+    @Override
+    public void onDestroy() {
+        realm.close();
+        super.onDestroy();
+    }
 }

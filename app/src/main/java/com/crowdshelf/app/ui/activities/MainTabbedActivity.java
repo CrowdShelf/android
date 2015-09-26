@@ -72,7 +72,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-        //Realm.deleteRealm(realmConfiguration); // Clean slate
+        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
 
         MainTabbedActivity.getBus().register(this);
