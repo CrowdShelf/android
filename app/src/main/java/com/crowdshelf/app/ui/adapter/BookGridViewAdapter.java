@@ -3,6 +3,7 @@ package com.crowdshelf.app.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
 /**
@@ -21,11 +29,15 @@ import ntnu.stud.markul.crowdshelf.R;
  */
 public class BookGridViewAdapter extends BaseAdapter {
     private Context mContext;
-    private List<BookInfo> mItems;
+    private List<Book> mItems;
+    private Realm realm;
 
-    public BookGridViewAdapter(Context context, List<BookInfo> items) {
+
+    public BookGridViewAdapter(Context context, List<Book> items) {
         mContext = context;
         mItems = items;
+        realm = Realm.getDefaultInstance();
+        MainTabbedActivity.getBus().register(this);
     }
 
     @Override
@@ -62,14 +74,36 @@ public class BookGridViewAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // update the item view
-        BookInfo bookInfo = mItems.get(position);
-//        BookInfo bookInfo = item.getBookInfo();
-        //TODO: Wait until bookInfo is initialized async
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
-        viewHolder.bookCoverImageView.setImageBitmap(bitmap);
-        viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
+        Book book = mItems.get(position);
+
+        MainController.getBookInfo(book.getIsbn(), DBEventType.BOOKINFO_READY);
+
+        BookInfo bookInfo = realm.where(BookInfo.class)
+                .equalTo("isbn", book.getIsbn())
+                .findFirst();
+
+        if (bookInfo == null) {
+            viewHolder.bookCoverImageView.setImageResource(R.mipmap.icon);
+            viewHolder.bookTitleTextView.setText("Bookinfo not found");
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
+            viewHolder.bookCoverImageView.setImageBitmap(bitmap);
+            viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
+        }
+
+
         return convertView;
+    }
+
+    @Subscribe
+    public void handleGetBookInfo(DBEvent event) {
+        realm.refresh();
+        Log.d(MainTabbedActivity.TAG, "BookGridviewAdapter - handleGetBookInfo - event: " + event.getDbEventType());
+        switch (event.getDbEventType()) {
+            case BOOKINFO_READY:
+
+                break;
+        }
     }
 
     private static class ViewHolder {

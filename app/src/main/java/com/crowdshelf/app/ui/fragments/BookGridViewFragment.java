@@ -8,9 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.adapter.BookGridViewAdapter;
 
 import java.util.ArrayList;
@@ -24,14 +23,14 @@ import ntnu.stud.markul.crowdshelf.R;
 public class BookGridViewFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private OnBookGridViewFragmentInteractionListener mListener;
-    private List<BookInfo> mItems;    // GridView items list
+    private List<Book> mItems;    // GridView items list
     private BookGridViewAdapter mAdapter;    // GridView adapter
 
-    public List<BookInfo> getmItems() {
+    public List<Book> getmItems() {
         return mItems;
     }
 
-    public void setmItems(List<BookInfo> newmItems) {
+    public void setmItems(List<Book> newmItems) {
         this.mItems.clear();
         this.mItems.addAll(newmItems);
         this.mAdapter.notifyDataSetChanged();
@@ -86,7 +85,7 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // retrieve the GridView item
-        BookInfo item = mItems.get(position);
+        Book item = mItems.get(position);
 
         mListener.itemInBookGridViewClicked(item.getIsbn());
     }
