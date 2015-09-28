@@ -16,10 +16,12 @@ public class ViewUsersActivity extends Activity {
     -you want to borrow a book and you have to choose who to borrow it from
     -you want to lend a book out and you have to choose who to lend it to
     -you want to take a book in return and you have to choose who returned it
-    etc
-     */
+    etc.
 
-    // todo Maybe this should be a fragment?
+    In other words, this screen should let you choose a user from a suitable list and
+    return the selected user
+
+     */
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
