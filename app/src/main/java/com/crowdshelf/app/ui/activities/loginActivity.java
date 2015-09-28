@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.User;
@@ -21,6 +22,9 @@ import ntnu.stud.markul.crowdshelf.R;
 
 public class LoginActivity extends AppCompatActivity {
     private Realm realm;
+    private String username;
+    private String email;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,28 +58,29 @@ public class LoginActivity extends AppCompatActivity {
 
     public void register(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        String username = usernameTextfield.getText().toString();
+        username = usernameTextfield.getText().toString();
 
         EditText emailTextfield = (EditText) findViewById(R.id.mailTextfield);
-        String email = emailTextfield.getText().toString();
+        email = emailTextfield.getText().toString();
 
         EditText nameTextfield = (EditText) findViewById(R.id.nameTextfield);
-        String name = nameTextfield.getText().toString();
+        name = nameTextfield.getText().toString();
 
-        Toast.makeText(this, "User " + username + " has been created: ", Toast.LENGTH_SHORT).show();
-        User user = new User();
+        User user=new User();
         user.setUsername(username);
         user.setName(name);
         user.setEmail(email);
+
         MainController.createUser(user, DBEventType.USER_CREATED);
+
     }
 
     public void login(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         String username = usernameTextfield.getText().toString();
 
-        EditText passwordTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        String password = passwordTextfield.getText().toString();
+//        EditText passwordTextfield = (EditText) findViewById(R.id.usernameTextfield);
+//        String password = passwordTextfield.getText().toString();
         MainController.login(username, DBEventType.LOGIN);
     }
 
@@ -88,14 +93,23 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - LOGIN");
                 if (event.getDbObjectId().equals("True")) {
                     // login succesful
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("username",username);
+                    setResult(RESULT_OK,returnIntent);
+                    finish();
                 } else if (event.getDbObjectId().equals("False")) {
                     // login failed
+                    Toast.makeText(this, "User " + username + " not in database", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case USER_CREATED:
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
                 // log in with new user
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("username",username);
+                setResult(RESULT_OK,returnIntent);
+                finish();
                 break;
         }
     }

@@ -19,6 +19,7 @@ import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
@@ -46,6 +47,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public static final String TAG = "MainTabbedActivity";
     private static final int GET_BOOK_CLIKCED_ACTION = 2;
     public final int GET_SCANNED_BOOK_ACTION = 1;
+    public final int USERNAME = 3;
     SectionsPagerAdapter mSectionsPagerAdapter;
     private UserScreenFragment userScreenFragment;
     ViewPager mViewPager;
@@ -71,6 +73,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, USERNAME);
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -217,6 +223,18 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
 
                 }
+            }
+        }
+        else if (requestCode == USERNAME) {
+            if (resultCode == RESULT_OK) {
+                String username = data.getStringExtra("username");
+                User u = realm.where(User.class)
+                        .equalTo("username", username)
+                        .findFirst();
+                mainUserId = u.getId();
+//MainController.createUser(user,DBEventType.USER_CREATED);
+
+
             }
         }
     }//onActivityResult
