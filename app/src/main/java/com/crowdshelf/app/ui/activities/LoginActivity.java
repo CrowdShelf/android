@@ -21,6 +21,7 @@ import ntnu.stud.markul.crowdshelf.R;
 
 public class LoginActivity extends AppCompatActivity {
     private Realm realm;
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,19 +83,19 @@ public class LoginActivity extends AppCompatActivity {
     @Subscribe
     public void handleLogin(DBEvent event) {
         realm.refresh();
-        Log.d(MainTabbedActivity.TAG, "LoginActivity - handleLogin - event: " + event.getDbEventType());
+        Log.i(TAG, "handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case LOGIN:
-                Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - LOGIN");
                 if (event.getDbObjectId().equals("True")) {
-                    // login succesful
+                    Log.i(TAG, "handleLogin - LOGIN successful");
+                    // login successful
                 } else if (event.getDbObjectId().equals("False")) {
+                    Log.i(TAG, "handleLogin - LOGIN failed");
                     // login failed
                 }
                 break;
 
             case USER_CREATED:
-                Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
                 // log in with new user
                 break;
         }

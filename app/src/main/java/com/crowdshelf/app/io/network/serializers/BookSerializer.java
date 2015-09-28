@@ -3,7 +3,9 @@ package com.crowdshelf.app.io.network.serializers;
 import android.util.Log;
 
 import com.crowdshelf.app.models.Book;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -17,10 +19,22 @@ public class BookSerializer implements JsonSerializer<Book> {
     @Override
     public JsonElement serialize(Book book, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject object = new JsonObject();
-        object.addProperty("_id", book.getId());
+
+        if (book.getId().isEmpty()) {
+            object.add("_id", JsonNull.INSTANCE);
+        } else {
+            object.addProperty("_id", book.getId());
+        }
+
         object.addProperty("isbn", book.getIsbn());
         object.addProperty("owner", book.getOwner());
-        object.addProperty("rentedTo", book.getRentedTo());
+
+        if (book.getRentedTo().isEmpty()) {
+            object.add("rentedTo", JsonNull.INSTANCE);
+        } else {
+            object.addProperty("rentedTo", book.getRentedTo());
+        }
+
         object.addProperty("availableForRent", book.getAvailableForRent());
         Log.i("BookSerializer", "Serialized: " + object.getAsString());
         return object;

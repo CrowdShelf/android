@@ -5,6 +5,7 @@ import android.util.Log;
 import com.crowdshelf.app.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -21,9 +22,24 @@ public class UserSerializer implements JsonSerializer<User> {
     public JsonElement serialize(User user, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject object = new JsonObject();
         object.addProperty("_id", user.getId());
-        object.addProperty("username", user.getUsername());
-        object.addProperty("name", user.getName());
-        object.addProperty("email", user.getEmail());
+        if (user.getUsername().isEmpty()) {
+            object.add("username", JsonNull.INSTANCE);
+        } else {
+            object.addProperty("username", user.getUsername());
+        }
+
+        if (user.getName().isEmpty()) {
+            object.add("name", JsonNull.INSTANCE);
+        } else {
+            object.addProperty("name", user.getName());
+        }
+
+        if (user.getEmail().isEmpty()) {
+            object.add("email", JsonNull.INSTANCE);
+        } else {
+            object.addProperty("email", user.getEmail());
+        }
+
         Log.i("UserSerializer", "Serialized: " + object.getAsString());
         return object;
     }
