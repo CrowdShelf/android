@@ -76,7 +76,7 @@ public class BookGridViewAdapter extends BaseAdapter {
 
         Book book = mItems.get(position);
 
-        MainController.getBookInfo(book.getIsbn(), DBEventType.BOOKINFO_READY);
+        MainController.getBookInfo(book.getIsbn(), DBEventType.BOOKINFO_CHANGED);
 
         BookInfo bookInfo = realm.where(BookInfo.class)
                 .equalTo("isbn", book.getIsbn())
@@ -100,7 +100,7 @@ public class BookGridViewAdapter extends BaseAdapter {
         realm.refresh();
         Log.d(MainTabbedActivity.TAG, "BookGridviewAdapter - handleGetBookInfo - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
-            case BOOKINFO_READY:
+            case BOOKINFO_CHANGED:
 
                 break;
         }

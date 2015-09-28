@@ -82,10 +82,7 @@ public class TestingActivity extends AppCompatActivity {
                 Book book = realm.where(Book.class)
                         .equalTo("id", bookId)
                         .findFirst();
-                BookInfo bookInfo = realm.where(BookInfo.class)
-                        .equalTo("id", book.getIsbn())
-                        .findFirst();
-                outputTextView.setText(bookInfo.getDescription());
+                outputTextView.setText(book.getIsbn());
                 break;
             case USER_CHANGED:
                 String userId = event.getDbObjectId();
@@ -94,6 +91,7 @@ public class TestingActivity extends AppCompatActivity {
                         .equalTo("id", userId)
                         .findFirst();
                 outputTextView.setText(user.getName());
+                break;
         }
     }
 
