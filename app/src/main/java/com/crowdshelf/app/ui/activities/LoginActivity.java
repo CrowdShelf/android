@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         user.setName(name);
         user.setEmail(email);
 
-        MainController.createUser(user, DBEventType.USER_CREATED);
+        //MainController.createUser(user, DBEventType.USER_CREATED);
 
     }
 
