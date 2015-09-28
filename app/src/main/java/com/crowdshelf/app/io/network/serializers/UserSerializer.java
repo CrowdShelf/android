@@ -39,7 +39,7 @@ public class UserSerializer implements JsonSerializer<User> {
             object.addProperty("email", user.getEmail());
         }
 
-        Log.i("UserSerializer", "Serialized: " + object.getAsString());
+        Log.i("UserSerializer", "Serialized: " + object.toString());
         return object;
     }
 }

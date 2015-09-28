@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         user.setName(name);
         user.setEmail(email);
 
-        //MainController.createUser(user, DBEventType.USER_CREATED);
+        MainController.createUser(user, DBEventType.USER_CREATED);
 
     }
 
@@ -99,13 +99,14 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 } else if (event.getDbObjectId().equals("False")) {
                     // login failed
-                    Toast.makeText(this, "User " + username + " not in database", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "User " + username + " not registrated", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case USER_CREATED:
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
                 // log in with new user
+                Toast.makeText(this, "User created!!!!!!", Toast.LENGTH_SHORT).show();
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("username",username);
                 setResult(RESULT_OK,returnIntent);

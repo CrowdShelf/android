@@ -146,7 +146,7 @@ public class NetworkController {
      */
 
     public static void createUser(User user, DBEventType dbEventType) {
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
+        NetworkHelper.sendRequest(HTTPRequestMethod.POST,
                 "/users", gson.toJson(user, User.class),
                 userHandler, dbEventType);
     }
