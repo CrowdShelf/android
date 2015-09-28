@@ -28,7 +28,7 @@ public class CrowdSerializer implements JsonSerializer<Crowd> {
             members.add(new JsonPrimitive(memberId.getId()));
         }
         object.add("members", members);
-        Log.i("CrowdSerializer", "Serialized: " + object.getAsString());
+        Log.i("CrowdSerializer", "Serialized: " + object.toString());
         return object;
     }
 }
