@@ -123,4 +123,22 @@ public class LoginActivity extends AppCompatActivity {
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
+
+    public void registerLayout(View view) {
+        findViewById(R.id.mailTextfield).setVisibility(View.VISIBLE);
+        findViewById(R.id.nameTextfield).setVisibility(View.VISIBLE);
+        findViewById(R.id.registationButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.registerLayout).setVisibility(View.INVISIBLE);
+        findViewById(R.id.cancelLayout).setVisibility(View.VISIBLE);
+    }
+
+    public void cancelLayout(View view) {
+        findViewById(R.id.mailTextfield).setVisibility(View.INVISIBLE);
+        findViewById(R.id.nameTextfield).setVisibility(View.INVISIBLE);
+        findViewById(R.id.registationButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.registerLayout).setVisibility(View.VISIBLE);
+        findViewById(R.id.cancelLayout).setVisibility(View.INVISIBLE);
+    }
 }
