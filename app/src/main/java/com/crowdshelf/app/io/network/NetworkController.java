@@ -1,7 +1,5 @@
 package com.crowdshelf.app.io.network;
 
-import android.util.Log;
-
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.io.network.responseHandlers.BookHandler;
 import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
@@ -14,7 +12,6 @@ import com.crowdshelf.app.io.network.serializers.UserSerializer;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -38,6 +35,7 @@ public class NetworkController {
             .registerTypeAdapter(Book.class, new BookSerializer())
             .registerTypeAdapter(Crowd.class, new CrowdSerializer())
             .registerTypeAdapter(User.class, new UserSerializer())
+            .serializeNulls()
             .setPrettyPrinting()
             .serializeNulls()
             .create();
@@ -50,10 +48,9 @@ public class NetworkController {
     // Add book to database or update existing one
     public static void createBook(Book book, DBEventType dbEventType) {
         String jsonData = gson.toJson(book, Book.class);
-        String jsonString = gson.toJson(book, bookType);
 
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
-                "/books", jsonString,
+                "/books", jsonData,
                 bookHandler, dbEventType);
     }
 
@@ -150,7 +147,7 @@ public class NetworkController {
      */
 
     public static void createUser(User user, DBEventType dbEventType) {
-        NetworkHelper.sendRequest(HTTPRequestMethod.PUT,
+        NetworkHelper.sendRequest(HTTPRequestMethod.POST,
                 "/users", gson.toJson(user, User.class),
                 userHandler, dbEventType);
     }
