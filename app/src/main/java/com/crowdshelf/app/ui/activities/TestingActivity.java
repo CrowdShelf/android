@@ -10,6 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.network.NetworkController;
+import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.User;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
@@ -20,7 +26,6 @@ import ntnu.stud.markul.crowdshelf.R;
 
 public class TestingActivity extends AppCompatActivity {
 
-    private static Bus bus = new Bus(ThreadEnforcer.ANY);
     public TextView outputTextView;
     public EditText inputEditText;
     private Realm realm;
@@ -50,79 +55,80 @@ public class TestingActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Subscribe
-    public void handleViewBook(DBEvent event) {
+    public void handleTestResult(DBEvent event) {
         realm.refresh();
-        Log.d(MainTabbedActivity.TAG, "realmpath: " + realm.getPath());
-//        switch (event.getDbEventType()) {
-//            case CROWD_READY:
-//                String crowdId = event.getDbObjectId();
-//                // Determine if you own the book you just scanned:
-//                Crowd crowd = realm.where(Crowd.class)
-//                        .equalTo("id", crowdId)
-//                        .findFirst();
-//
-//                outputTextView.setText(crowd.getName());
-//                outputTextView.setText(crowd.getMembers().get(0).getId());
-//                break;
-//            case BOOK_READY:
-//                String bookId = event.getDbObjectId();
-//                // Determine if you own the book you just scanned:
-//                Book book = realm.where(Book.class)
-//                        .equalTo("id", bookId)
-//                        .findFirst();
-//                BookInfo bookInfo = realm.where(BookInfo.class)
-//                        .equalTo("id", book.getIsbn())
-//                        .findFirst();
-//                outputTextView.setText(bookInfo.getDescription());
-//                break;
-//            case USER_READY:
-//                String userId = event.getDbObjectId();
-//                // Determine if you own the book you just scanned:
-//                User user = realm.where(User.class)
-//                        .equalTo("id", userId)
-//                        .findFirst();
-//                outputTextView.setText(user.getName());
-//        }
+        switch (event.getDbEventType()) {
+            case CROWD_CHANGED:
+                String crowdId = event.getDbObjectId();
+                Crowd crowd = realm.where(Crowd.class)
+                        .equalTo("id", crowdId)
+                        .findFirst();
+
+                outputTextView.setText(crowd.getName());
+                outputTextView.setText(crowd.getMembers().get(0).getId());
+                break;
+            case BOOK_CHANGED:
+                String bookId = event.getDbObjectId();
+                // Determine if you own the book you just scanned:
+                Book book = realm.where(Book.class)
+                        .equalTo("id", bookId)
+                        .findFirst();
+                BookInfo bookInfo = realm.where(BookInfo.class)
+                        .equalTo("id", book.getIsbn())
+                        .findFirst();
+                outputTextView.setText(bookInfo.getDescription());
+                break;
+            case USER_CHANGED:
+                String userId = event.getDbObjectId();
+                // Determine if you own the book you just scanned:
+                User user = realm.where(User.class)
+                        .equalTo("id", userId)
+                        .findFirst();
+                outputTextView.setText(user.getName());
+        }
     }
 
-    public void crowdOnClick(View v){
-
-//        NetworkController.getCrowd("55fede47b379431100423430");
-//
-//        String input = String.valueOf(inputEditText.getText());
-//
-////        String result = "crowd" + input;
-//
-////        outputTextView.setText(result);
-
-
+    public void getCrowdOnClick(View v){
+        NetworkController.getCrowd("55fee5bab379431100423434", DBEventType.CROWD_CHANGED);
     }
 
-    public void userOnClick(View v){
-//        String input = String.valueOf(inputEditText.getText());
-//
-//        String result = "user" + input;
-//
-//        outputTextView.setText(result);
+    public void getUserOnClick(View v){
+        NetworkController.getUser("5603b4a4e4c6851100a24381", DBEventType.USER_CHANGED);
     }
 
-    public void bookOnClick(View v){
+    public void getBookOnClick(View v){
+        NetworkController.getBook("56046eca62cc8e11003a7865", DBEventType.BOOK_CHANGED);
+    }
 
-//        String input = String.valueOf(inputEditText.getText());
-//
-//        NetworkController.getBooks();
-//
-//        //outputTextView.setText(result);
+    public void createCrowdOnClick(View v){
+        Crowd crowd = new Crowd();
+        crowd.setName("kekass");
+        crowd.setOwner("5603b4a4e4c6851100a24381");
+        NetworkController.createCrowd(crowd, DBEventType.CROWD_CHANGED);
+    }
 
+    public void createUserOnClick(View v){
+        User user = new User();
+        user.setName("jayson gason");
+        user.setUsername("jayson");
+        user.setEmail("jayson@gmail.com");
+        NetworkController.createUser(user, DBEventType.USER_CHANGED);
+    }
+
+    public void createBookOnClick(View v){
+        Book book = new Book();
+        book.setOwner("5603b4a4e4c6851100a24381");
+        book.setIsbn("9780552128484");
+        NetworkController.createBook(book, DBEventType.BOOK_CHANGED);
     }
 
     @Override

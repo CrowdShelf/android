@@ -39,6 +39,7 @@ public class NetworkController {
             .registerTypeAdapter(Crowd.class, new CrowdSerializer())
             .registerTypeAdapter(User.class, new UserSerializer())
             .setPrettyPrinting()
+            .serializeNulls()
             .create();
 
 
@@ -157,6 +158,12 @@ public class NetworkController {
     public static void getUser(String userId, DBEventType dbEventType){
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
                 "/users/" + userId, null,
+                userHandler, dbEventType);
+    }
+
+    public static void login(String username, DBEventType dbEventType) {
+        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+                "/login/" + username, null,
                 userHandler, dbEventType);
     }
 }

@@ -113,7 +113,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 break;
 
 
-            case GET_BOOK:
+            case BOOK_CHANGED:
                 break;
             case ADD_BOOKINFO_USERSHELF:
                 BookInfo bi = realm.where(BookInfo.class)
