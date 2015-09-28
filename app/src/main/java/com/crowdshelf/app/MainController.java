@@ -148,7 +148,7 @@ public class MainController {
     }
 
     /*
-    Get books rented by a given user
+    Get books rented to a given user
      */
     public static void getBooksRented(String userId, DBEventType dbEventType) {
         List<Book> books = realm.where(Book.class)
@@ -159,6 +159,10 @@ public class MainController {
         } else {
             bus.post(new DBEvent(dbEventType, userId));
         }
+    }
+
+    // todo Find out what books to get. Books owned AND rented by the users in the crowd?
+    public static void getCrowdBooks(String crowdId, DBEventType dbEventType) {
     }
 
     public static void onDestroy() {

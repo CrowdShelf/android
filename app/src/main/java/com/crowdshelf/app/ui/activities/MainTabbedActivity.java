@@ -52,7 +52,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private UserScreenFragment userScreenFragment;
     ViewPager mViewPager;
     private Realm realm;
-    private static Bus bus = new Bus(ThreadEnforcer.ANY);
+    private static Bus bus = new Bus(ThreadEnforcer.ANY); // ThreadEnforcer.ANY lets any thread post to the bus (but only main thread can subscribe)
     private static String mainUserId = "5602a211a0913f110092352a";
     private String lastScannedBookIsbn;
     private List<BookInfo> userBookInfos;
@@ -192,18 +192,18 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 }
             }
         } else if (requestCode == GET_BOOK_CLIKCED_ACTION) {
-            Log.i(TAG, "onActivityResult  - GET_BOOK_CLIKCED_ACTION");
+            Log.i(TAG, "onActivityResult  - GET_BOOK_CLICKED_ACTION");
 
             if (resultCode == RESULT_OK) {
-                Log.i(TAG, "onActivityResult  - GET_BOOK_CLIKCED_ACTION - RESULT_OK");
+                Log.i(TAG, "onActivityResult  - GET_BOOK_CLICKED_ACTION - RESULT_OK");
 
                 int enumInt = data.getIntExtra("result", 0);
                 String isbn = data.getStringExtra("isbn");
-                Log.i(TAG, "onActivityResult - GET_BOOK_CLIKCED_ACTION - isbn: " + isbn);
+                Log.i(TAG, "onActivityResult - GET_BOOK_CLICKED_ACTION - isbn: " + isbn);
 
                 ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
 
-                Log.i(TAG, "onActivityResult - GET_BOOK_CLIKCED_ACTION - action: " + action);
+                Log.i(TAG, "onActivityResult - GET_BOOK_CLICKED_ACTION - action: " + action);
                 switch (action) {
                     case REMOVE_BUTTON_CLICKED:
                         BookInfo bookInfo = null;
