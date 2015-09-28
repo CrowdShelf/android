@@ -23,11 +23,15 @@ import io.realm.RealmList;
  * Created by Torstein on 02.09.2015.
  */
 public class MainController {
-    private static Realm realm = Realm.getDefaultInstance();
+    private static Realm realm;
     private static Bus bus = MainTabbedActivity.getBus();
 
     //todo  get the user of this app
     private static User mainUser = new User();
+
+    public static void onCreate() {
+        realm = Realm.getDefaultInstance();
+    }
 
     /*
     Users

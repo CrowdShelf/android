@@ -31,6 +31,11 @@
             android:name="com.crowdshelf.app.ui.activities.TestingActivity"
             android:label="@string/title_activity_crowd_testing" >
         </activity>
+        <activity
+            android:name="com.crowdshelf.app.ui.activities.LoginActivity"
+            android:label="login"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
