@@ -4,70 +4,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:weightSum="1"
-    tools:context="com.crowdshelf.app.ui.fragments.UserScreenFragment">
+    tools:context="com.crowdshelf.app.ui.fragments.UserScreenFragment"
+    android:weightSum="1">
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
+        android:orientation="horizontal" >
 
+        <Button
+            android:id="@+id/myBooksButton"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Shelf"
+            />
 
+        <Button
+            android:id="@+id/allBooksButton"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="All Books"
+            android:textColor="@color/common_signin_btn_light_text_disabled"
+            android:onClick="allBooksButtonClicked" />
 
-
+    </LinearLayout>
 
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
         android:layout_height="450dp"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/linearLayout">
 
-        <Button
-            android:id="@+id/myBooksButton"
+        <TextView
+            android:id="@+id/numberOfBooksTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
-            android:layout_columnSpan="1"
             android:layout_row="0"
-            android:layout_rowSpan="1"
-            android:layout_weight="1"
-            android:text="My Shelf" />
-
-        <Button
-            android:id="@+id/allBooksButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="right"
-            android:layout_row="0"
-            android:layout_rowSpan="1"
-            android:layout_weight="1"
-            android:onClick="allBooksButtonClicked"
-            android:text="All Books"
-            android:textColor="@color/common_signin_btn_light_text_disabled" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <fragment
             android:id="@+id/fragment2"
             android:name="com.crowdshelf.app.ui.fragments.BookGridViewFragment"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="474dp"
             android:layout_column="0"
             android:layout_columnSpan="2"
-            android:layout_gravity="center_vertical|top"
-            android:layout_row="1"
-            android:layout_rowSpan="1" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/gridLayout"
-            android:layout_below="@+id/gridLayout"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="right"
-            android:layout_row="2"
-            android:layout_rowSpan="1"
-            android:onClick="scannerButtonClicked"
-            android:text="Scanner" />
-
+            android:layout_row="1" />
     </GridLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scanner"
+        android:onClick="scannerButtonClicked"
+        android:layout_below="@+id/gridLayout"
+        android:layout_alignEnd="@id/gridLayout"/>
 
 </RelativeLayout>
