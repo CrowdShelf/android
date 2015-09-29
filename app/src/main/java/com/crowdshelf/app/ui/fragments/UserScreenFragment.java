@@ -97,6 +97,7 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
 
     @Override
     public void onDestroy() {
+        bookGridViewFragment.onDestroy();
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();

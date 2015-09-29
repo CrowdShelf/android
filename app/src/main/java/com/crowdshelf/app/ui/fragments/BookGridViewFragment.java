@@ -52,6 +52,11 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
+    public void onDestroy() {
+        mAdapter.onDestroy();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;

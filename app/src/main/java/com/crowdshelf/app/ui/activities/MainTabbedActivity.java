@@ -20,6 +20,7 @@ import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.adapter.BookGridViewAdapter;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
@@ -162,6 +163,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         MainController.onDestroy();
+        userScreenFragment.onDestroy();
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
