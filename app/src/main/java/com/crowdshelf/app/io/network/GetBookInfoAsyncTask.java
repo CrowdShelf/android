@@ -69,6 +69,7 @@ public class GetBookInfoAsyncTask {
                         return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray, description);
                     } else {
                         //TODO: Do something if books does not exist in google books
+                        return new BookInfo(isbn, "not found", "not found", "not found", "not found", "not found", null, "not found");
                     }
                 } catch (Exception e) {
                     Log.w("GetBookInfoAsyncTask", e.getMessage());
