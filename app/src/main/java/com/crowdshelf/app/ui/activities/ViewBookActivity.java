@@ -26,6 +26,7 @@ public class ViewBookActivity extends Activity {
     private static final String TAG = "ViewBookActivity";
     private Realm realm;
     private BookInfo bookInfo;
+    private Book book;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +46,11 @@ public class ViewBookActivity extends Activity {
         drawBookInfoUI(bookInfo);
         if (bookId != null) {
             if (!bookId.equals("")) {
-                Book b = realm.where(Book.class)
+                book = realm.where(Book.class)
                         .equalTo("id", bookId)
                         .findFirst();
             }
         }
-
 
 //        //TODO: Hide useless buttons
 //        switch (scannedBookAction) {
@@ -148,7 +148,7 @@ public class ViewBookActivity extends Activity {
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", ScannedBookActions.REMOVE_BUTTON_CLICKED.value);
-        returnIntent.putExtra("isbn", bookInfo.getIsbn());
+        returnIntent.putExtra("bookid", book.getId());
         setResult(RESULT_OK, returnIntent);
         finish();
     }

@@ -22,7 +22,6 @@ import ntnu.stud.markul.crowdshelf.R;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private Realm realm;
     private String username;
     private String email;
     private String name;
@@ -31,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        realm = Realm.getDefaultInstance();
         MainTabbedActivity.getBus().register(this);
     }
 
@@ -79,13 +77,11 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         username = usernameTextfield.getText().toString();
-
         MainController.login(username, DBEventType.LOGIN);
     }
 
     @Subscribe
     public void handleLogin(DBEvent event) {
-        realm.refresh();
         Intent returnIntent;
         Log.i(TAG, "handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
@@ -121,7 +117,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy: realm, bus, super");
-        realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }

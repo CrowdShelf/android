@@ -95,6 +95,12 @@ public class MainController {
         NetworkController.createBook(book, dbEventType);
     }
 
+    public static void removeBook(String bookId, DBEventType dbEventType) {
+        // This book is never stored in the database. It is sent to the server,
+        // then retrieved to be stored with the correct _id
+        NetworkController.removeBook(bookId, dbEventType);
+    }
+
     public static void getBook(String bookId, DBEventType dbEventType) {
         Book book = realm.where(Book.class)
                 .equalTo("id", bookId)
@@ -121,16 +127,7 @@ public class MainController {
     Get books owned and rented by a given user
      */
     public static void getBooks(String userId, DBEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("owner", userId)
-                .or()
-                .equalTo("rentedTo", userId)
-                .findAll();
-        if (books.size() == 0) {
-            NetworkController.getBooksOwnedAndRented(userId, dbEventType);
-        } else {
-            MainTabbedActivity.getBus().post(dbEventType);
-        }
+        NetworkController.getBooksOwnedAndRented(userId, dbEventType);
     }
 
     /*

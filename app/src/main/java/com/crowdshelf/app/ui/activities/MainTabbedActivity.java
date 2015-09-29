@@ -231,7 +231,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 switch (action) {
                     case REMOVE_BUTTON_CLICKED:
                         BookInfo bookInfo = null;
-                        //TODO remobe book
+                        MainController.removeBook(data.getStringExtra("username"), null);
                         userScreenFragment.updateBookShelf(userBooks);
                 }
             }
@@ -243,6 +243,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .equalTo("username", username)
                         .findFirst();
                 mainUserId = u.getId();
+                Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
                 MainController.getBooks(u.getId(), DBEventType.ADD_BOOK_USERSHELF);
                 Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
             }
