@@ -55,6 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {}
+
     public void register(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         username = usernameTextfield.getText().toString();

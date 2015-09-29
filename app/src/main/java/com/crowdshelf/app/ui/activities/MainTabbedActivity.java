@@ -91,16 +91,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
 
-        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        if(!prefs.getBoolean("firstTime",false)){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, USERNAME);
-
-        //mark first time as runned.
-            SharedPreferences.Editor editor=prefs.edit();
-            editor.putBoolean("firstTime",true);
-            editor.commit();
-        }
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, USERNAME);
 
 
         // Create the adapter that will return a fragment for each of the three
