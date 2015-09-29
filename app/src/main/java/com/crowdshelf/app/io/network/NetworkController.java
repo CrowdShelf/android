@@ -14,6 +14,7 @@ import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -159,8 +160,11 @@ public class NetworkController {
     }
 
     public static void login(String username, DBEventType dbEventType) {
+        JsonObject object = new JsonObject();
+        object.addProperty("username", username);
+        String jsonData = object.toString();
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
-                "/login/" + username, null,
+                "/login/", jsonData,
                 userHandler, dbEventType);
     }
 }

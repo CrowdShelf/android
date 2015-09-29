@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
+        EditText usernameTextfield = (EditText) findViewById(R.id.usernameLoginTextfield);
         username = usernameTextfield.getText().toString();
 
         EditText emailTextfield = (EditText) findViewById(R.id.mailTextfield);
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
+        EditText usernameTextfield = (EditText) findViewById(R.id.usernameLoginTextfield);
         String username = usernameTextfield.getText().toString();
 
 //        EditText passwordTextfield = (EditText) findViewById(R.id.usernameTextfield);

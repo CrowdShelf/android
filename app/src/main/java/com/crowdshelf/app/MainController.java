@@ -38,7 +38,8 @@ public class MainController {
      */
 
     public static void login(String username, DBEventType dbEventType) {
-        // Todo implement this.. wait for server implementation.. handle passwords..
+        NetworkController.login(username, dbEventType);
+
     }
 
     public static void createUser(User user, DBEventType dbEventType) {
