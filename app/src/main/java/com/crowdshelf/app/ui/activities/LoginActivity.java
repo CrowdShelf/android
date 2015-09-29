@@ -79,35 +79,36 @@ public class LoginActivity extends AppCompatActivity {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameLoginTextfield);
         String username = usernameTextfield.getText().toString();
 
-//        EditText passwordTextfield = (EditText) findViewById(R.id.usernameTextfield);
-//        String password = passwordTextfield.getText().toString();
         MainController.login(username, DBEventType.LOGIN);
     }
 
     @Subscribe
     public void handleLogin(DBEvent event) {
         realm.refresh();
+        Intent returnIntent;
         Log.d(MainTabbedActivity.TAG, "LoginActivity - handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case LOGIN:
+                returnIntent = new Intent();
+                returnIntent.putExtra("username",username);
+                setResult(RESULT_OK,returnIntent);
+                finish();
+                /*
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - LOGIN");
                 if (event.getDbObjectId().equals("True")) {
                     // login succesful
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("username",username);
-                    setResult(RESULT_OK,returnIntent);
-                    finish();
+
                 } else if (event.getDbObjectId().equals("False")) {
                     // login failed
                     Toast.makeText(this, "User " + username + " not registrated", Toast.LENGTH_SHORT).show();
                 }
                 break;
-
+                */
             case USER_CREATED:
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
                 // log in with new user
                 Toast.makeText(this, "User created!!!!!!", Toast.LENGTH_SHORT).show();
-                Intent returnIntent = new Intent();
+                returnIntent = new Intent();
                 returnIntent.putExtra("username",username);
                 setResult(RESULT_OK,returnIntent);
                 finish();

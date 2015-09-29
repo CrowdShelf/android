@@ -163,7 +163,7 @@ public class NetworkController {
         JsonObject object = new JsonObject();
         object.addProperty("username", username);
         String jsonData = object.toString();
-        NetworkHelper.sendRequest(HTTPRequestMethod.GET,
+        NetworkHelper.sendRequest(HTTPRequestMethod.POST,
                 "/login/", jsonData,
                 userHandler, dbEventType);
     }
