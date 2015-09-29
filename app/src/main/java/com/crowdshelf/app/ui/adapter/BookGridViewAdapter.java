@@ -28,10 +28,10 @@ import ntnu.stud.markul.crowdshelf.R;
  * Created by markuslund92 on 19.09.15.
  */
 public class BookGridViewAdapter extends BaseAdapter {
+    private static final String TAG = "BookGridViewAdapter";
     private Context mContext;
     private List<Book> mItems;
     private Realm realm;
-
 
     public BookGridViewAdapter(Context context, List<Book> items) {
         mContext = context;
@@ -98,7 +98,7 @@ public class BookGridViewAdapter extends BaseAdapter {
     @Subscribe
     public void handleGetBookInfo(DBEvent event) {
         realm.refresh();
-        Log.d(MainTabbedActivity.TAG, "BookGridviewAdapter - handleGetBookInfo - event: " + event.getDbEventType());
+        Log.i(TAG, "handleGetBookInfo - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case BOOKINFO_CHANGED:
 
@@ -112,6 +112,7 @@ public class BookGridViewAdapter extends BaseAdapter {
     }
 
     public void onDestroy() {
+        Log.i(TAG, "onDestroy: realm, bus");
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
     }

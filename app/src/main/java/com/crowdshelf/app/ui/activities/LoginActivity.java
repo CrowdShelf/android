@@ -21,6 +21,7 @@ import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final String TAG = "LoginActivity";
     private Realm realm;
     private String username;
     private String email;
@@ -86,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
     public void handleLogin(DBEvent event) {
         realm.refresh();
         Intent returnIntent;
-        Log.d(MainTabbedActivity.TAG, "LoginActivity - handleLogin - event: " + event.getDbEventType());
+        Log.i(TAG, "handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case LOGIN:
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
@@ -96,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
                 break;
                 /*
-                Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - LOGIN");
                 if (event.getDbObjectId().equals("True")) {
                     // login succesful
 
@@ -107,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
                 break;
                 */
             case USER_CREATED:
-                Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
                 // log in with new user
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
@@ -121,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        MainController.onDestroy();
+        Log.i(TAG, "onDestroy: realm, bus, super");
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();

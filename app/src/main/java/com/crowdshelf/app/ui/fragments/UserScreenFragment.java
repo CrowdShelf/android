@@ -35,26 +35,6 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         return fragment;
     }
 
-    /*
-    @Subscribe
-    public void handleViewUser(DBEvent event) {
-        realm.refresh();
-        Log.i(TAG, "handleViewUser" +  event.getDbEventType().toString());
-        switch (event.getDbEventType()) {
-            case USER_BOOKS_CHANGED:
-                String userId = event.getDbObjectId();
-
-                if (userId.equals(MainTabbedActivity.getMainUserId())) {
-                    List<Book> books = realm.where(Book.class)
-                            .equalTo("owner", userId)
-                            .findAll();
-                    // todo: show these books
-                }
-                break;
-        }
-    }
-    */
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,9 +77,9 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
 
     @Override
     public void onDestroy() {
-        bookGridViewFragment.onDestroy();
+        //bookGridViewFragment.onDestroy();
+        Log.i(TAG, "onDestroy: realm, super");
         realm.close();
-        MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
 

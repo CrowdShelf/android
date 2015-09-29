@@ -24,7 +24,6 @@ import io.realm.RealmList;
  */
 public class MainController {
     private static Realm realm;
-    private static Bus bus = MainTabbedActivity.getBus();
 
     //todo  get the user of this app
     private static User mainUser = new User();
@@ -55,7 +54,7 @@ public class MainController {
         if (user == null) {
             NetworkController.getUser(userId, dbEventType);
         } else {
-            bus.post(new DBEvent(dbEventType, userId));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
         }
     }
 
@@ -82,7 +81,7 @@ public class MainController {
         if (crowd == null) {
             NetworkController.getCrowd(crowdId, dbEventType);
         } else {
-            bus.post(new DBEvent(dbEventType, crowdId));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, crowdId));
         }
     }
 
@@ -103,7 +102,7 @@ public class MainController {
         if (book == null) {
             NetworkController.getBook(bookId, dbEventType);
         } else {
-            bus.post(new DBEvent(dbEventType, bookId));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, bookId));
         }
     }
 
@@ -114,7 +113,7 @@ public class MainController {
         if (bookInfo == null) {
             GetBookInfoAsyncTask.getBookInfo(isbn, dbEventType);
         } else {
-            bus.post(new DBEvent(dbEventType, isbn));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, isbn));
         }
     }
 
@@ -130,7 +129,7 @@ public class MainController {
         if (books.size() == 0) {
             NetworkController.getBooksOwnedAndRented(userId, dbEventType);
         } else {
-            bus.post(dbEventType);
+            MainTabbedActivity.getBus().post(dbEventType);
         }
     }
 
@@ -144,7 +143,7 @@ public class MainController {
         if (books.size() == 0) {
             NetworkController.getBooksOwned(userId, dbEventType);
         } else {
-            bus.post(new DBEvent(dbEventType, userId));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
         }
     }
 
@@ -158,7 +157,7 @@ public class MainController {
         if (books.size() == 0) {
             NetworkController.getBooksRented(userId, dbEventType);
         } else {
-            bus.post(new DBEvent(dbEventType, userId));
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
         }
     }
 

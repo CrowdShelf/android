@@ -29,8 +29,7 @@ public class NetworkController {
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
 
-    private static Type bookType = new TypeToken<Book>() {
-    }.getType();
+    private static Type bookType = new TypeToken<Book>(){}.getType();
 
     private static Gson gson = new GsonBuilder()
             .registerTypeAdapter(Book.class, new BookSerializer())
@@ -38,7 +37,6 @@ public class NetworkController {
             .registerTypeAdapter(User.class, new UserSerializer())
             .serializeNulls()
             .setPrettyPrinting()
-            .serializeNulls()
             .create();
 
 
@@ -49,7 +47,6 @@ public class NetworkController {
     // Add book to database or update existing one
     public static void createBook(Book book, DBEventType dbEventType) {
         String jsonData = gson.toJson(book, Book.class);
-
         NetworkHelper.sendRequest(HTTPRequestMethod.POST,
                 "/books", jsonData,
                 bookHandler, dbEventType);

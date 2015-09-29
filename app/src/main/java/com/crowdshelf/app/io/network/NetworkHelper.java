@@ -86,8 +86,6 @@ public class NetworkHelper {
 
     public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DBEventType dbEventType) {
         try {
-            Log.i(TAG, "handleResponse");
-
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();
             String line = null;
@@ -98,8 +96,7 @@ public class NetworkHelper {
             String jsonString = builder.toString();
             JsonElement jsonElement = new JsonParser().parse(jsonString);
 
-            //System.out.print("Received JSON-data in NetworkHelper: \n");
-            Log.i(TAG, "Received JSON: " + gson.toJson(jsonElement));
+            //Log.i(TAG, "Received JSON: " + gson.toJson(jsonElement));
             if (responseHandler != null) {
                 responseHandler.handleJsonResponse(jsonString, dbEventType);
             }

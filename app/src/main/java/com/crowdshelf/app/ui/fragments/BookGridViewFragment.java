@@ -3,6 +3,7 @@ package com.crowdshelf.app.ui.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import ntnu.stud.markul.crowdshelf.R;
  * Created by markuslund92 on 19.09.15.
  */
 public class BookGridViewFragment extends Fragment implements AdapterView.OnItemClickListener {
-
+    private static final String TAG = "BookGridViewFragment";
     private OnBookGridViewFragmentInteractionListener mListener;
     private List<Book> mItems;    // GridView items list
     private BookGridViewAdapter mAdapter;    // GridView adapter
@@ -53,7 +54,9 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy: mAdapter, super");
         mAdapter.onDestroy();
+        super.onDestroy();
     }
 
     @Override

@@ -23,6 +23,7 @@ import ntnu.stud.markul.crowdshelf.R;
  * Created by MortenAlver on 07.09.2015.
  */
 public class ViewBookActivity extends Activity {
+    private static final String TAG = "ViewBookActivity";
     private Realm realm;
     private BookInfo bookInfo;
 
@@ -77,7 +78,7 @@ public class ViewBookActivity extends Activity {
 
     public void setBook(String ISBN) {
 
-        Log.i("ScanResult", ISBN);
+        Log.i(TAG, "ScanResult: " + ISBN);
 
 
 
@@ -171,6 +172,7 @@ public class ViewBookActivity extends Activity {
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy: realm, super");
         realm.close();
         super.onDestroy();
     }

@@ -113,6 +113,7 @@ public class CrowdsScreenFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy: realm, bus, super");
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();

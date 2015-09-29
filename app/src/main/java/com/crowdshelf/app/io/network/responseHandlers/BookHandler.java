@@ -20,7 +20,7 @@ public class BookHandler implements ResponseHandler {
         try {
             Log.i(TAG, "Json-string: " + jsonString);
             Book b = gson.fromJson(jsonString, Book.class);
-            Log.i(TAG, "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent" + String.valueOf(b.getAvailableForRent()));
+            Log.i(TAG, "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent " + String.valueOf(b.getAvailableForRent()));
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(b);

@@ -133,7 +133,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 }
                 break;
 
-
             case BOOK_CHANGED:
                 break;
             case ADD_BOOK_USERSHELF:
@@ -162,8 +161,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy: MainController, realm, bus, super");
         MainController.onDestroy();
-        userScreenFragment.onDestroy();
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
@@ -245,10 +244,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .findFirst();
                 mainUserId = u.getId();
                 MainController.getBooks(u.getId(), DBEventType.ADD_BOOK_USERSHELF);
-                Toast.makeText(this, "Swipe to the left to go to the scanner", Toast.LENGTH_LONG).show();
-//MainController.createUser(user,DBEventType.USER_CREATED);
-
-
+                Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
             }
         }
     }//onActivityResult
