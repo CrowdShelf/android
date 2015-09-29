@@ -26,7 +26,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/usernameLoginTextfield"
+        android:id="@+id/usernameTextfield"
         android:hint="Username"
         android:width="200dp"
         android:layout_below="@+id/registerLayout"
@@ -38,7 +38,7 @@
         android:text="@string/loginButtonText"
         android:id="@+id/loginButton"
         android:onClick="login"
-        android:layout_below="@+id/usernameLoginTextfield"
+        android:layout_below="@+id/usernameTextfield"
         android:layout_centerHorizontal="true" />
 
     <EditText
@@ -48,7 +48,7 @@
         android:hint="Mail"
         android:ems="10"
         android:id="@+id/mailTextfield"
-        android:layout_below="@+id/usernameLoginTextfield"
+        android:layout_below="@+id/usernameTextfield"
         android:layout_centerHorizontal="true"
         android:visibility="invisible"/>
 
