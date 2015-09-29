@@ -35,6 +35,7 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         return fragment;
     }
 
+    /*
     @Subscribe
     public void handleViewUser(DBEvent event) {
         realm.refresh();
@@ -52,6 +53,7 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
                 break;
         }
     }
+    */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

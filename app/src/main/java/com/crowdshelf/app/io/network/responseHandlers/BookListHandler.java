@@ -3,6 +3,7 @@ package com.crowdshelf.app.io.network.responseHandlers;
 import android.util.Log;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;

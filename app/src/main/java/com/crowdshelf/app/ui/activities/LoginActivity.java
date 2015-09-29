@@ -72,12 +72,11 @@ public class LoginActivity extends AppCompatActivity {
         user.setEmail(email);
 
         MainController.createUser(user, DBEventType.USER_CREATED);
-
     }
 
     public void login(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameLoginTextfield);
-        String username = usernameTextfield.getText().toString();
+        username = usernameTextfield.getText().toString();
 
         MainController.login(username, DBEventType.LOGIN);
     }

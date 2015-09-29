@@ -55,7 +55,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private UserScreenFragment userScreenFragment;
     private Realm realm;
     private String lastScannedBookIsbn;
-    private List<Book> userBookInfos;
+
+    private List<Book> userBooks;
+    private List<BookInfo> userBookInfos;
 
     public static Bus getBus() {
         return bus;
@@ -100,13 +102,14 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mViewPager.addOnPageChangeListener(this);
 
         userScreenFragment = UserScreenFragment.newInstance();
-        userBookInfos = new ArrayList<>();
+        userBookInfos = new ArrayList<BookInfo>();
+        userBooks = new ArrayList<Book>();
 
         Toast.makeText(this, "Swipe to the left to go to the scanner", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe
-    public void handleViewBook(DBEvent event) {
+    public void handleDBEvents(DBEvent event) {
         realm.refresh();
         Log.i(TAG, "handleViewBook - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
@@ -133,20 +136,25 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
             case BOOK_CHANGED:
                 break;
-            case ADD_BOOKINFO_USERSHELF:
+            case ADD_BOOK_USERSHELF:
 //                BookInfo bi = realm.where(BookInfo.class)
 //                        .equalTo("isbn", event.getDbObjectId())
 //                        .findFirst();
-                List<Book> books = realm.where(Book.class)
-                        .equalTo("owner", getMainUserId())
-                        .or()
-                        .equalTo("rentedTo", getMainUserId())
-                        .findAll();
+                Book book = realm.where(Book.class)
+                        .equalTo("id",  event.getDbObjectId())
+                        .findFirst();
 
-                userBookInfos.clear();
-                userBookInfos.addAll(books);
-//                userScreenFragment.updateBookShelf(userBookInfos);
-                //TODO: Userbooks updated
+                userBooks.add(book);
+                MainController.getBookInfo(book.getIsbn(), DBEventType.ADD_BOOKINFO_USERSHELF);
+                break;
+
+            case ADD_BOOKINFO_USERSHELF:
+                BookInfo bookInfo = realm.where(BookInfo.class)
+                        .equalTo("isbn", event.getDbObjectId())
+                        .findFirst();
+                userBookInfos.add(bookInfo);
+                userScreenFragment.updateBookShelf(userBooks);
+                break;
         }
     }
 
@@ -205,7 +213,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         b1.setOwner(mainUserId);
                         b1.setAvailableForRent(true);
 
-//                        MainController.getBookInfo(lastScannedBookIsbn, DBEventType.ADD_BOOKINFO_USERSHELF);
+                        //MainController.getBookInfo(lastScannedBookIsbn, DBEventType.ADD_BOOKINFO_USERSHELF);
                         Log.i(TAG, "onActivityResult createBook");
                         MainController.createBook(b1, DBEventType.ADD_BOOKINFO_USERSHELF);
                         Log.i(TAG, "onActivityResult createdBook");
@@ -228,22 +236,17 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     case REMOVE_BUTTON_CLICKED:
                         BookInfo bookInfo = null;
                         //TODO remobe book
-                        userScreenFragment.updateBookShelf(userBookInfos);
-
-
+                        userScreenFragment.updateBookShelf(userBooks);
                 }
             }
-        }
-        else if (requestCode == USERNAME) {
+        } else if (requestCode == USERNAME) {
             if (resultCode == RESULT_OK) {
                 String username = data.getStringExtra("username");
                 User u = realm.where(User.class)
                         .equalTo("username", username)
                         .findFirst();
                 mainUserId = u.getId();
-//MainController.createUser(user,DBEventType.USER_CREATED);
-
-
+                MainController.getBooks(u.getId(), DBEventType.ADD_BOOK_USERSHELF);
             }
         }
     }//onActivityResult
