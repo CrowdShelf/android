@@ -93,7 +93,7 @@ public class NetworkController {
 
     public static void getBooksOwnedAndRented(String userId, DBEventType dbEventType) {
         NetworkHelper.sendRequest(HTTPRequestMethod.GET,
-                "/books?owner=" + userId + "&rentedTo=" + userId, null,
+                "/books?owner=" + userId + "&?rentedTo=" + userId, null,
                 bookListHandler, dbEventType);
     }
 
