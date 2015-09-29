@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
+//        getMenuInflater().inflate(R.menu.menu_login, menu);
         return true;
     }
 
@@ -125,6 +125,9 @@ public class LoginActivity extends AppCompatActivity {
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
+
+/*    @Override
+    public void onBackPressed() {}*/
 
     public void registerLayout(View view) {
         findViewById(R.id.mailTextfield).setVisibility(View.VISIBLE);
