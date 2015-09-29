@@ -110,4 +110,9 @@ public class BookGridViewAdapter extends BaseAdapter {
         ImageView bookCoverImageView;
         TextView bookTitleTextView;
     }
+
+    public void onDestroy() {
+        realm.close();
+        MainTabbedActivity.getBus().unregister(this);
+    }
 }
