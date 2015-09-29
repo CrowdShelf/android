@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameLoginTextfield);
+        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         username = usernameTextfield.getText().toString();
 
         EditText emailTextfield = (EditText) findViewById(R.id.mailTextfield);
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameLoginTextfield);
+        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         String username = usernameTextfield.getText().toString();
 
 //        EditText passwordTextfield = (EditText) findViewById(R.id.usernameTextfield);
@@ -93,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - LOGIN");
                 if (event.getDbObjectId().equals("True")) {
                     // login succesful
+                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("username",username);
                     setResult(RESULT_OK,returnIntent);
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
             case USER_CREATED:
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
                 // log in with new user
-                Toast.makeText(this, "User created!!!!!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("username",username);
                 setResult(RESULT_OK,returnIntent);

@@ -147,6 +147,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 userBookInfos.addAll(books);
 //                userScreenFragment.updateBookShelf(userBookInfos);
                 //TODO: Userbooks updated
+                break;
         }
     }
 
