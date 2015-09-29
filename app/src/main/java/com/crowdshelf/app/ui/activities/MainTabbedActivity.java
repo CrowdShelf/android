@@ -1,7 +1,9 @@
 package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -48,7 +50,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
     private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
     private static Bus bus = new Bus(ThreadEnforcer.ANY); // ThreadEnforcer.ANY lets any thread post to the bus (but only main thread can subscribe)
-    private static String mainUserId = "5602a211a0913f110092352a";
+    private static String mainUserId; //= "5602a211a0913f110092352a";
     public final int GET_SCANNED_BOOK_ACTION = 1;
     public final int USERNAME = 3;
     SectionsPagerAdapter mSectionsPagerAdapter;
@@ -89,8 +91,16 @@ public class MainTabbedActivity extends AppCompatActivity implements
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, USERNAME);
+        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        if(!prefs.getBoolean("firstTime",false)){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, USERNAME);
+
+        //mark first time as runned.
+            SharedPreferences.Editor editor=prefs.edit();
+            editor.putBoolean("firstTime",true);
+            editor.commit();
+        }
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -106,6 +116,14 @@ public class MainTabbedActivity extends AppCompatActivity implements
         userBookInfos = new ArrayList<BookInfo>();
         userBooks = new ArrayList<Book>();
 
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item= menu.findItem(R.id.action_testing);
+        item.setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+        return true;
     }
 
     @Subscribe
@@ -151,7 +169,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 userScreenFragment.updateBookShelf(userBooks);
                 break;
         }
-    }
+        }
 
     private void loginUser(String username) {
         //TODO: Login user
@@ -317,6 +335,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
         Toast.makeText(MainTabbedActivity.this, "At this page you can, in the next version, see all the books you have the possibility to borrow", Toast.LENGTH_LONG).show();
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
         mixpanel.track("AllBooksClicked");
+    }
+
+    public void changeUser(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, USERNAME);
     }
 
     /**
