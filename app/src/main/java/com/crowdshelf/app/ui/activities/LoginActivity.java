@@ -77,8 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        String username = usernameTextfield.getText().toString();
-
+        username = usernameTextfield.getText().toString();
         MainController.login(username, DBEventType.LOGIN);
     }
 
@@ -89,10 +88,12 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(MainTabbedActivity.TAG, "LoginActivity - handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case LOGIN:
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
                 returnIntent.putExtra("username",username);
                 setResult(RESULT_OK,returnIntent);
                 finish();
+                break;
                 /*
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - LOGIN");
                 if (event.getDbObjectId().equals("True")) {
@@ -107,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
             case USER_CREATED:
                 Log.i(MainTabbedActivity.TAG, "LoginActivity - handleLogin - USER_CREATED");
                 // log in with new user
-                Toast.makeText(this, "User created!!!!!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
                 returnIntent.putExtra("username",username);
                 setResult(RESULT_OK,returnIntent);

@@ -102,7 +102,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         userScreenFragment = UserScreenFragment.newInstance();
         userBookInfos = new ArrayList<>();
 
-        Toast.makeText(this, "Swipe to the left to go to the scanner", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe
@@ -238,10 +237,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
         else if (requestCode == USERNAME) {
             if (resultCode == RESULT_OK) {
                 String username = data.getStringExtra("username");
+                Log.i(TAG, "Username: " + username);
                 User u = realm.where(User.class)
                         .equalTo("username", username)
                         .findFirst();
                 mainUserId = u.getId();
+                Toast.makeText(this, "Swipe to the left to go to the scanner", Toast.LENGTH_LONG).show();
 //MainController.createUser(user,DBEventType.USER_CREATED);
 
 
