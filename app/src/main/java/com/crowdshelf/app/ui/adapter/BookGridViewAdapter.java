@@ -37,7 +37,6 @@ public class BookGridViewAdapter extends BaseAdapter {
         mContext = context;
         mItems = items;
         realm = Realm.getDefaultInstance();
-        MainTabbedActivity.getBus().register(this);
     }
 
     @Override
@@ -76,8 +75,6 @@ public class BookGridViewAdapter extends BaseAdapter {
 
         Book book = mItems.get(position);
 
-        MainController.getBookInfo(book.getIsbn(), DBEventType.BOOKINFO_CHANGED);
-
         BookInfo bookInfo = realm.where(BookInfo.class)
                 .equalTo("isbn", book.getIsbn())
                 .findFirst();
@@ -95,25 +92,9 @@ public class BookGridViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    @Subscribe
-    public void handleGetBookInfo(DBEvent event) {
-        realm.refresh();
-        Log.i(TAG, "handleGetBookInfo - event: " + event.getDbEventType());
-        switch (event.getDbEventType()) {
-            case BOOKINFO_CHANGED:
-
-                break;
-        }
-    }
 
     private static class ViewHolder {
         ImageView bookCoverImageView;
         TextView bookTitleTextView;
-    }
-
-    public void onDestroy() {
-        Log.i(TAG, "onDestroy: realm, bus");
-        realm.close();
-        MainTabbedActivity.getBus().unregister(this);
     }
 }

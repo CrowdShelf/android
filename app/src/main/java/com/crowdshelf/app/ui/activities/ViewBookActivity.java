@@ -36,12 +36,21 @@ public class ViewBookActivity extends Activity {
 
         Intent intent = getIntent();
         String ISBN = intent.getStringExtra("ISBN");
-        ScannedBookActions scannedBookAction = ScannedBookActions.fromValue(intent.getIntExtra("SCANNEDBOOKACTION", ScannedBookActions.UNKNOWN.value));
-        String bookId = intent.getStringExtra("BOOKID");
+        String bookId = intent.getStringExtra("bookID");
 
-        bookInfo = realm.where(BookInfo.class)
-                .equalTo("isbn", ISBN)
-                .findFirst();
+        if (ISBN != null){
+            bookInfo = realm.where(BookInfo.class)
+                    .equalTo("isbn", ISBN)
+                    .findFirst();
+        }
+        else if (bookId != null){
+            book = realm.where(Book.class)
+                    .equalTo("id", bookId)
+                    .findFirst();
+            bookInfo = realm.where(BookInfo.class)
+                    .equalTo("isbn", book.getIsbn())
+                    .findFirst();
+        }
 
         drawBookInfoUI(bookInfo);
         if (bookId != null) {
@@ -52,6 +61,7 @@ public class ViewBookActivity extends Activity {
             }
         }
 
+        ScannedBookActions scannedBookAction = ScannedBookActions.fromValue(intent.getIntExtra("SCANNEDBOOKACTION", ScannedBookActions.UNKNOWN.value));
 //        //TODO: Hide useless buttons
 //        switch (scannedBookAction) {
 //            case IS_OWNER:
@@ -148,7 +158,7 @@ public class ViewBookActivity extends Activity {
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", ScannedBookActions.REMOVE_BUTTON_CLICKED.value);
-        returnIntent.putExtra("bookid", book.getId());
+        returnIntent.putExtra("bookID", book.getId());
         setResult(RESULT_OK, returnIntent);
         finish();
     }

@@ -94,7 +94,7 @@ public class NetworkHelper {
                 builder.append(line).append("\n");
             }
             String jsonString = builder.toString();
-            JsonElement jsonElement = new JsonParser().parse(jsonString);
+//            JsonElement jsonElement = new JsonParser().parse(jsonString);
 
             //Log.i(TAG, "Received JSON: " + gson.toJson(jsonElement));
             if (responseHandler != null) {

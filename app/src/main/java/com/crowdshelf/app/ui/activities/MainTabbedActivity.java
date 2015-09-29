@@ -1,9 +1,7 @@
 package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,7 +20,6 @@ import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.ui.adapter.BookGridViewAdapter;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
@@ -34,6 +31,7 @@ import com.squareup.otto.ThreadEnforcer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -45,13 +43,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
         ViewPager.OnPageChangeListener, BookGridViewFragment.OnBookGridViewFragmentInteractionListener {
 
     public static final String TAG = "MainTabbedActivity";
-    private static final int GET_BOOK_CLIKCED_ACTION = 2;
+    private static final int GET_BOOK_CLICKED_ACTION = 2;
     // projectToken for dev: 93ef1952b96d0faa696176aadc2fbed4
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
     private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
     private static Bus bus = new Bus(ThreadEnforcer.ANY); // ThreadEnforcer.ANY lets any thread post to the bus (but only main thread can subscribe)
     private static String mainUserId; //= "5602a211a0913f110092352a";
-    public final int GET_SCANNED_BOOK_ACTION = 1;
+    public final int SCANNED_BOOK_ACTION = 1;
     public final int USERNAME = 3;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -112,7 +110,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item= menu.findItem(R.id.action_testing);
+        MenuItem item = menu.findItem(R.id.action_testing);
         item.setVisible(false);
         super.onPrepareOptionsMenu(menu);
         return true;
@@ -124,7 +122,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         Log.i(TAG, "handleViewBook - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case SCAN_COMPLETE_GET_BOOKINFO:
-                String bookId = "5603d891e4b0d3b5acc4981c";
                 lastScannedBookIsbn = event.getDbObjectId();
 
                 Book b1 = realm.where(Book.class)
@@ -135,11 +132,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 if (b1 == null) {
                     Log.i(TAG, "handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1: " + b1);
                     //Book does not exist
-                    startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn, "");
+                    startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn);
                 } else {
                     Log.i(TAG, "handleViewBook - SCAN_COMPLETE_GET_BOOKINFO - b1isbn: " + b1.getIsbn() + " b1owner: " + b1.getOwner());
 
-                    startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn, "");
+                    startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn);
                 }
                 break;
 
@@ -147,21 +144,30 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 break;
             case ADD_BOOK_USERSHELF:
                 Book book = realm.where(Book.class)
-                        .equalTo("id",  event.getDbObjectId())
+                        .equalTo("id", event.getDbObjectId())
                         .findFirst();
                 userBooks.add(book);
-                MainController.getBookInfo(book.getIsbn(), DBEventType.ADD_BOOKINFO_USERSHELF);
+                MainController.getBookInfo(book.getIsbn(), DBEventType.CREATE_BOOK_AFTER_ADD);
                 break;
 
-            case ADD_BOOKINFO_USERSHELF:
-                BookInfo bookInfo = realm.where(BookInfo.class)
+            case CREATE_BOOK_AFTER_ADD:
+                Log.i(TAG, "CREATE_BOOK_AFTER_ADD");
+                MainController.getBookInfo(event.getDbObjectId(), DBEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
+                break;
+
+            case BOOK_INFO_RECEIVED_ADD_TO_USERSHELF:
+                Log.i(TAG, "Should add to userhself");
+                Book bookToAdd = realm.where(Book.class)
                         .equalTo("isbn", event.getDbObjectId())
+                        .equalTo("owner", getMainUserId())
                         .findFirst();
-                userBookInfos.add(bookInfo);
+                userBooks.add(bookToAdd);
                 userScreenFragment.updateBookShelf(userBooks);
                 break;
+            case BOOK_REMOVED:
+
         }
-        }
+    }
 
     private void loginUser(String username) {
         //TODO: Login user
@@ -178,95 +184,81 @@ public class MainTabbedActivity extends AppCompatActivity implements
         super.onDestroy();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_tabbed, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_testing) {
-            Intent intent = new Intent(this, TestingActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "onActivityResult");
-        if (requestCode == GET_SCANNED_BOOK_ACTION) {
-            if (resultCode == RESULT_OK) {
-                int enumInt = data.getIntExtra("result", 0);
-                ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
+        switch (requestCode) {
+            case SCANNED_BOOK_ACTION:
+                if (resultCode == RESULT_OK) {
+                    int enumInt = data.getIntExtra("result", 0);
+                    ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
 
-                Log.i(TAG, "onActivityResult action: " + action);
-                switch (action) {
-                    case ADD_BUTTON_CLICKED:
-                        //TODO: Add book to user shelf
+                    Log.i(TAG, "onActivityResult action: " + action);
+                    switch (action) {
+                        case ADD_BUTTON_CLICKED:
+                            //TODO: Add book to user shelf
 
-                        Book b1 = new Book();
-                        b1.setIsbn(lastScannedBookIsbn);
-                        b1.setOwner(mainUserId);
-                        b1.setAvailableForRent(true);
+                            Book b1 = new Book();
+                            b1.setIsbn(lastScannedBookIsbn);
+                            b1.setOwner(mainUserId);
+                            b1.setAvailableForRent(true);
 
-                        //MainController.getBookInfo(lastScannedBookIsbn, DBEventType.ADD_BOOKINFO_USERSHELF);
-                        Log.i(TAG, "onActivityResult createBook");
-                        MainController.createBook(b1, DBEventType.ADD_BOOKINFO_USERSHELF);
-                        Log.i(TAG, "onActivityResult createdBook");
+                            //MainController.getBookInfo(lastScannedBookIsbn, DBEventType.CREATE_BOOK_AFTER_ADD);
+                            Log.i(TAG, "onActivityResult createBook");
+                            MainController.createBook(b1, DBEventType.CREATE_BOOK_AFTER_ADD);
+                            Log.i(TAG, "onActivityResult createdBook");
+                    }
                 }
-            }
-        } else if (requestCode == GET_BOOK_CLIKCED_ACTION) {
-            Log.i(TAG, "onActivityResult  - GET_BOOK_CLICKED_ACTION");
+                break;
+            case GET_BOOK_CLICKED_ACTION:
+                Log.i(TAG, "onActivityResult  - GET_BOOK_CLICKED_ACTION");
 
-            if (resultCode == RESULT_OK) {
-                Log.i(TAG, "onActivityResult  - GET_BOOK_CLICKED_ACTION - RESULT_OK");
+                if (resultCode == RESULT_OK) {
+                    int enumInt = data.getIntExtra("result", -1);
+                    ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
 
-                int enumInt = data.getIntExtra("result", 0);
-                String isbn = data.getStringExtra("isbn");
-                Log.i(TAG, "onActivityResult - GET_BOOK_CLICKED_ACTION - isbn: " + isbn);
 
-                ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
+                    String bookID = data.getStringExtra("bookID");
 
-                Log.i(TAG, "onActivityResult - GET_BOOK_CLICKED_ACTION - action: " + action);
-                switch (action) {
-                    case REMOVE_BUTTON_CLICKED:
-                        BookInfo bookInfo = null;
-                        MainController.removeBook(data.getStringExtra("username"), null);
-                        userScreenFragment.updateBookShelf(userBooks);
+                    switch (action) {
+                        case REMOVE_BUTTON_CLICKED:
+                            Log.i(TAG, "REMOVE_BUTTON_CLICKED");
+                            for (Book b: userBooks) {
+                                if (b.getId().equals(bookID)){
+
+                                    MainController.removeBook(bookID, DBEventType.BOOK_REMOVED);
+                                    userBooks.remove(b);
+                                    userScreenFragment.updateBookShelf(userBooks);
+                                    break;
+                                }
+
+                            }
+                    }
                 }
-            }
-        } else if (requestCode == USERNAME) {
-            if (resultCode == RESULT_OK) {
-                String username = data.getStringExtra("username");
-                Log.i(TAG, "Username: " + username);
-                User u = realm.where(User.class)
-                        .equalTo("username", username)
-                        .findFirst();
-                mainUserId = u.getId();
-                Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
-                MainController.getBooks(u.getId(), DBEventType.ADD_BOOK_USERSHELF);
-                Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
-            }
+                break;
+            case USERNAME:
+                if (resultCode == RESULT_OK) {
+                    String username = data.getStringExtra("username");
+                    Log.i(TAG, "Username: " + username);
+                    User u = realm.where(User.class)
+                            .equalTo("username", username)
+                            .findFirst();
+                    mainUserId = u.getId();
+                    Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
+                    MainController.getBooks(u.getId(), DBEventType.ADD_BOOK_USERSHELF);
+                    Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
+                }
+                break;
         }
     }//onActivityResult
 
-    public void startViewBook(ScannedBookActions scannedBookAction, String ISBN, String bookId) {
+    public void startViewBook(ScannedBookActions scannedBookAction, String ISBN) {
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("SCANNEDBOOKACTION", scannedBookAction.value);
         intent.putExtra("ISBN", ISBN);
-        intent.putExtra("BOOKID", bookId);
         lastScannedBookIsbn = ISBN;
-        startActivityForResult(intent, GET_SCANNED_BOOK_ACTION);
+        startActivityForResult(intent, SCANNED_BOOK_ACTION);
     }
 
     public void fakeScan(View v) {
@@ -308,15 +300,15 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void itemInUserShelfClicked(String isbn) {
-
+    public void itemInUserShelfClicked(String bookID) {
+        //TODO: Remove this method
     }
 
     @Override
-    public void itemInBookGridViewClicked(String isbn) {
+    public void itemInBookGridViewClicked(String bookID) {
         Intent intent = new Intent(this, ViewBookActivity.class);
-        intent.putExtra("ISBN", isbn);
-        startActivityForResult(intent, GET_BOOK_CLIKCED_ACTION);
+        intent.putExtra("bookID", bookID);
+        startActivityForResult(intent, GET_BOOK_CLICKED_ACTION);
     }
 
     public void scannerButtonClicked(View view) {
@@ -332,6 +324,30 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public void changeUser(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, USERNAME);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main_tabbed, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_testing) {
+            Intent intent = new Intent(this, TestingActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
