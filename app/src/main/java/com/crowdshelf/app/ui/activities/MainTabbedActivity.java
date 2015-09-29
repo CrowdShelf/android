@@ -136,13 +136,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
             case BOOK_CHANGED:
                 break;
             case ADD_BOOK_USERSHELF:
-//                BookInfo bi = realm.where(BookInfo.class)
-//                        .equalTo("isbn", event.getDbObjectId())
-//                        .findFirst();
                 Book book = realm.where(Book.class)
                         .equalTo("id",  event.getDbObjectId())
                         .findFirst();
-
                 userBooks.add(book);
                 MainController.getBookInfo(book.getIsbn(), DBEventType.ADD_BOOKINFO_USERSHELF);
                 break;

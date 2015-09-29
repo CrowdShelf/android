@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        String username = usernameTextfield.getText().toString();
+        username = usernameTextfield.getText().toString();
 
         MainController.login(username, DBEventType.LOGIN);
     }
