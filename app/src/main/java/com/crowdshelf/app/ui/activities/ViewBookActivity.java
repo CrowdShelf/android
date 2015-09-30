@@ -11,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
+import java.util.List;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -26,7 +29,7 @@ public class ViewBookActivity extends Activity {
     private static final String TAG = "ViewBookActivity";
     private Realm realm;
     private BookInfo bookInfo;
-    private Book book;
+    private List<Book> books;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,30 +39,22 @@ public class ViewBookActivity extends Activity {
 
         Intent intent = getIntent();
         String ISBN = intent.getStringExtra("ISBN");
-        String bookId = intent.getStringExtra("bookID");
 
-        if (ISBN != null){
-            bookInfo = realm.where(BookInfo.class)
-                    .equalTo("isbn", ISBN)
-                    .findFirst();
-        }
-        else if (bookId != null){
-            book = realm.where(Book.class)
-                    .equalTo("id", bookId)
-                    .findFirst();
-            bookInfo = realm.where(BookInfo.class)
-                    .equalTo("isbn", book.getIsbn())
-                    .findFirst();
-        }
-
-        drawBookInfoUI(bookInfo);
-        if (bookId != null) {
-            if (!bookId.equals("")) {
-                book = realm.where(Book.class)
-                        .equalTo("id", bookId)
-                        .findFirst();
+        if (ISBN == null){
+            if (ISBN.equals("")) {
+                Log.w(TAG, "Got called without ISBN!");
             }
         }
+        bookInfo = realm.where(BookInfo.class)
+                .equalTo("isbn", ISBN)
+                .findFirst();
+
+        MainController.getBooksByIsbnOwnedByYourCrowds(ISBN)
+        books = realm.where(Book.class)
+                    .equalTo("isbn", ISBN)
+                    .findAll();
+
+        drawBookInfoUI(bookInfo);
 
         ScannedBookActions scannedBookAction = ScannedBookActions.fromValue(intent.getIntExtra("SCANNEDBOOKACTION", ScannedBookActions.UNKNOWN.value));
 //        //TODO: Hide useless buttons
@@ -71,33 +66,6 @@ public class ViewBookActivity extends Activity {
 //            case NOT_OWNING_OR_RENTING:
 //                break;
 //        }
-    }
-
-    private void drawBookInfoUI(BookInfo bookInfo) {
-        TextView titleTextView = (TextView)findViewById(R.id.titleView);
-
-        ImageView imageView = (ImageView)findViewById(R.id.imageView);
-
-        TextView infoTextView = (TextView)findViewById(R.id.infoView);
-
-        titleTextView.setText(bookInfo.getTitle());
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
-        imageView.setImageBitmap(bitmap);
-        infoTextView.setText(bookInfo.getDescription());
-    }
-
-    public void setBook(String ISBN) {
-
-        Log.i(TAG, "ScanResult: " + ISBN);
-
-
-
-        /*        // todo: Display a list of people who you can rent this book from
-        List<Book> books = MainController.getBooksByIsbnOwnedByYourCrowds(ISBN);
-        for (Book b : books) {
-            b.getOwner();
-        }
-        /*
 
         /*
         Buttons to show and when to show them:
@@ -108,12 +76,20 @@ public class ViewBookActivity extends Activity {
         -Return - you borrow the book from someone else
         -Remove book (from your own shelf - how do we select specific copy if the owner has many?) - WAIT WITH IMPLEMENTATION
          */
+    }
 
+    private void drawBookInfoUI(BookInfo bookInfo) {
+        TextView titleTextView = (TextView)findViewById(R.id.titleView);
+        ImageView imageView = (ImageView)findViewById(R.id.imageView);
+        TextView infoTextView = (TextView)findViewById(R.id.infoView);
+        titleTextView.setText(bookInfo.getTitle());
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
+        imageView.setImageBitmap(bitmap);
+        infoTextView.setText(bookInfo.getDescription());
     }
 
     public void addButtonClick(View view) {
         // Create new book object
-
         // Add book to my shelf
         Toast.makeText(ViewBookActivity.this, "Book added", Toast.LENGTH_SHORT).show();
 

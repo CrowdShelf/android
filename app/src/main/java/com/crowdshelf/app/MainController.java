@@ -86,6 +86,13 @@ public class MainController {
     }
 
     /*
+    Get all the crowds which the given userId is a member of
+     */
+    public static void getCrowdsByMember(String userId, DBEventType dbEventType) {
+        NetworkController.getCrowdsByMember(userId, dbEventType);
+    }
+
+    /*
     Books
      */
 

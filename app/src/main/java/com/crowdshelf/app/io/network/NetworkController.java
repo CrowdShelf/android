@@ -149,6 +149,13 @@ public class NetworkController {
                 dbEventType);
     }
 
+    public static void getCrowdsByMember(String userId, DBEventType dbEventType) {
+        NetworkHelper.sendRequest(
+                HTTPRequestMethod.GET, "/crowds?member=" + userId,
+                null, crowdListHandler,
+                dbEventType);
+    }
+
     public static void addCrowdMember(String crowdId, String userId, DBEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HTTPRequestMethod.PUT, "/crowds/" + crowdId + "/members/" + userId,
