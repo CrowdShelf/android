@@ -24,6 +24,7 @@ import ntnu.stud.markul.crowdshelf.R;
  */
 public class ViewBookActivity extends Activity {
     private static final String TAG = "ViewBookActivity";
+    private static final int BORROW_BOOK_ACTION = 0;
     private Realm realm;
     private BookInfo bookInfo;
     private Book book;
@@ -131,10 +132,14 @@ public class ViewBookActivity extends Activity {
         // Check if someone in your crowd owns this book, get that book object
 
         Toast.makeText(ViewBookActivity.this, "Borrow book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", ScannedBookActions.BORROW_BUTTON_CLICKED.value);
-        setResult(RESULT_OK, returnIntent);
-        finish();
+
+        Intent intent = new Intent(this, UserListActivity.class);
+        startActivityForResult(intent, BORROW_BOOK_ACTION);
+
+//        Intent returnIntent = new Intent();
+//        returnIntent.putExtra("result", ScannedBookActions.BORROW_BUTTON_CLICKED.value);
+//        setResult(RESULT_OK, returnIntent);
+//        finish();
 
         // todo switch to ViewUsersActivity
     }

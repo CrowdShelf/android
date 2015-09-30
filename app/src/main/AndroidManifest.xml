@@ -21,7 +21,7 @@
         <activity
             android:name="com.crowdshelf.app.ui.activities.MainTabbedActivity"
             android:label="@string/title_activity_main_tabbed"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +36,10 @@
             android:name="com.crowdshelf.app.ui.activities.LoginActivity"
             android:label="login"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.crowdshelf.app.ui.activities.UserListActivity"
+            android:label="@string/title_activity_user_list" >
         </activity>
     </application>
 

@@ -39,8 +39,7 @@
         android:layout_above="@+id/returnButton"
         android:layout_centerHorizontal="true"
         android:onClick="borrowButtonClick"
-        android:text="@string/borrowButton"
-        android:visibility="invisible" />
+        android:text="@string/borrowButton"/>
 
     <Button
         android:id="@+id/returnButton"
@@ -50,7 +49,7 @@
         android:layout_centerVertical="true"
         android:onClick="returnButtonClick"
         android:text="@string/returnButton"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/addButton"
