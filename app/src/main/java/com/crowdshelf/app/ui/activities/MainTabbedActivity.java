@@ -83,7 +83,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         realmConfiguration = new RealmConfiguration.Builder(this).build();
-//        Realm.deleteRealm(realmConfiguration); // Clean slate
+        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         MainController.onCreate();
 
@@ -156,7 +156,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
                         .findFirst();
                 userBooks.add(newlyCreatedBook);
                 userScreenFragment.updateBookShelf(userBooks);
-                MainController.getBook(event.getDbObjectId(), DBEventType.GET_BOOK_AFTER_ADD);
                 break;
 
             case GET_BOOK_AFTER_ADD:
@@ -232,9 +231,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
                                     Book bookStoredOnServer = realm.where(Book.class)
                                             .equalTo("isbn", b.getIsbn())
                                             .findFirst();
-                                    MainController.removeBook(bookStoredOnServer.getId(), DBEventType.BOOK_REMOVED);
                                     userBooks.remove(b);
                                     userScreenFragment.updateBookShelf(userBooks);
+                                    MainController.removeBook(b.getId(), DBEventType.BOOK_REMOVED);
                                     break;
                                 }
                             }
