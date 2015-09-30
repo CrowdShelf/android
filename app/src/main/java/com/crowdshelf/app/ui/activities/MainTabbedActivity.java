@@ -19,6 +19,8 @@ import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
@@ -48,18 +50,21 @@ public class MainTabbedActivity extends AppCompatActivity implements
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
     private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
     private static Bus bus = new Bus(ThreadEnforcer.ANY); // ThreadEnforcer.ANY lets any thread post to the bus (but only main thread can subscribe)
-    private static String mainUserId; //= "5602a211a0913f110092352a";
     public final int SCANNED_BOOK_ACTION = 1;
     public final int USERNAME = 3;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
     private UserScreenFragment userScreenFragment;
+    private MainController mainController;
     private Realm realm;
+    private RealmConfiguration realmConfiguration;
     private String lastScannedBookIsbn;
 
-    private List<Book> userBooks;
+    private static String mainUserId; //= "5602a211a0913f110092352a";
     private List<BookInfo> userBookInfos;
-    private RealmConfiguration realmConfiguration;
+    private List<Book> userBooks;
+    private List<Crowd> userCrowds;
+    private List<Book> userCrowdBooks;
 
     public static Bus getBus() {
         return bus;
@@ -85,7 +90,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
         realmConfiguration = new RealmConfiguration.Builder(this).build();
         Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
-        MainController.onCreate();
+        mainController = new MainController();
+        mainController.onCreate();
+
 
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
@@ -105,7 +112,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         userScreenFragment = UserScreenFragment.newInstance();
         userBookInfos = new ArrayList<BookInfo>();
-        userBooks = new ArrayList<Book>();
 
     }
 
@@ -122,6 +128,15 @@ public class MainTabbedActivity extends AppCompatActivity implements
         realm.refresh();
         Log.i(TAG, "handleViewBook - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
+            case USER_BOOKS_CHANGED:
+                updateUserBooks();
+                break;
+            case USER_CROWDS_CHANGED:
+                updateUserCrowds();
+                break;
+            case USER_CROWD_BOOKS_CHANGED:
+                updateUserCrowdBooks();
+                break;
             case SCAN_COMPLETE_GET_BOOKINFO:
                 lastScannedBookIsbn = event.getDbObjectId();
 
@@ -139,9 +154,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
                     startViewBook(ScannedBookActions.NOT_OWNING_OR_RENTING, lastScannedBookIsbn);
                 }
-                break;
-
-            case BOOK_CHANGED:
                 break;
             case ADD_BOOK_USERSHELF:
                 Book book = realm.where(Book.class)
@@ -178,6 +190,51 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 break;
             case BOOK_REMOVED:
         }
+    }
+
+    public void updateUserBooks() {
+        userBooks = realm.where(Book.class)
+                .equalTo("owner", mainUserId)
+                .or()
+                .equalTo("rentedTo", mainUserId)
+                .findAll();
+    }
+
+    public void updateUserCrowds() {
+        List<Crowd> allCrowds = realm.where(Crowd.class)
+                .findAll();
+        List<Crowd> userCrowdsTemp = new ArrayList<>();
+        for (Crowd crowd : allCrowds) {
+            for (MemberId memberId : crowd.getMembers()) {
+                if (memberId.getId().equals(mainUserId)) {
+                    userCrowdsTemp.add(crowd);
+                }
+            }
+        }
+        userCrowds = userCrowdsTemp;
+    }
+
+    public void updateUserCrowdBooks() {
+        List<Book> userCrowdBooksTemp = new ArrayList<>();
+        for (Crowd crowd : userCrowds) {
+            for (MemberId memberId : crowd.getMembers()) {
+                if (memberId.getId().equals(mainUserId)) {
+                    continue;
+                } else {
+                    /*
+                    PS! todo: this may add duplicates
+                     */
+                    userCrowdBooksTemp.addAll(
+                            realm.where(Book.class)
+                                    .equalTo("owner", memberId.getId())
+                                    .or()
+                                    .equalTo("rentedTo" , memberId.getId())
+                                    .findAll()
+                    );
+                }
+            }
+        }
+        userCrowdBooks = userCrowdBooksTemp;
     }
 
     private void loginUser(String username) {
@@ -249,7 +306,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                             .findFirst();
                     mainUserId = u.getId();
                     Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
-                    MainController.getBooks(u.getId(), DBEventType.ADD_BOOK_USERSHELF);
+                    MainController.getMainUserData(mainUserId);
                     Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -329,7 +386,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy: MainController, realm, bus, super");
-        MainController.onDestroy();
+        mainController.onDestroy();
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();

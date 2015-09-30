@@ -63,6 +63,7 @@ public class TestingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     @Subscribe
     public void handleTestResult(DBEvent event) {
         realm.refresh();
@@ -129,6 +130,7 @@ public class TestingActivity extends AppCompatActivity {
         NetworkController.createBook(book, DBEventType.BOOK_CHANGED);
     }
 
+    */
     @Override
     public void onDestroy() {
         realm.close();

@@ -49,7 +49,6 @@ public class ViewBookActivity extends Activity {
                 .equalTo("isbn", ISBN)
                 .findFirst();
 
-        MainController.getBooksByIsbnOwnedByYourCrowds(ISBN)
         books = realm.where(Book.class)
                     .equalTo("isbn", ISBN)
                     .findAll();
@@ -132,9 +131,14 @@ public class ViewBookActivity extends Activity {
         Toast.makeText(ViewBookActivity.this, "Book removed", Toast.LENGTH_SHORT).show();
         // don't do anything here
 
+        /*
+        todo: Here we should figure out which Book (e.g.) bookId to delete. There may be
+        many options.
+         */
+
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", ScannedBookActions.REMOVE_BUTTON_CLICKED.value);
-        returnIntent.putExtra("bookID", book.getId());
+        //returnIntent.putExtra("bookID", book.getId());
         setResult(RESULT_OK, returnIntent);
         finish();
     }
