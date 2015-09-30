@@ -75,14 +75,7 @@ public class MainController {
     }
 
     public static void getCrowd(String crowdId, DBEventType dbEventType) {
-        Crowd crowd = realm.where(Crowd.class)
-                .equalTo("id", crowdId)
-                .findFirst();
-        if (crowd == null) {
-            NetworkController.getCrowd(crowdId, dbEventType);
-        } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, crowdId));
-        }
+        NetworkController.getCrowd(crowdId, dbEventType);
     }
 
     /*
@@ -106,14 +99,7 @@ public class MainController {
     }
 
     public static void getBook(String bookId, DBEventType dbEventType) {
-        Book book = realm.where(Book.class)
-                .equalTo("id", bookId)
-                .findFirst();
-        if (book == null) {
-            NetworkController.getBook(bookId, dbEventType);
-        } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, bookId));
-        }
+        NetworkController.getBook(bookId, dbEventType);
     }
 
     public static void getBookInfo(String isbn, DBEventType dbEventType) {
@@ -138,28 +124,14 @@ public class MainController {
     Get books owned by a given user
      */
     public static void getBooksOwned(String userId, DBEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-            .equalTo("owner", userId)
-            .findAll();
-        if (books.size() == 0) {
-            NetworkController.getBooksOwned(userId, dbEventType);
-        } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
-        }
+        NetworkController.getBooksOwned(userId, dbEventType);
     }
 
     /*
     Get books rented to a given user
      */
     public static void getBooksRented(String userId, DBEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("rentedTo", userId)
-                .findAll();
-        if (books.size() == 0) {
-            NetworkController.getBooksRented(userId, dbEventType);
-        } else {
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, userId));
-        }
+        NetworkController.getBooksRented(userId, dbEventType);
     }
 
     // todo Find out what books to get. Books owned AND rented by the users in the crowd?
