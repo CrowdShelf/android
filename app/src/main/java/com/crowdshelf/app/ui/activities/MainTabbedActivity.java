@@ -59,6 +59,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     private List<Book> userBooks;
     private List<BookInfo> userBookInfos;
+    private RealmConfiguration realmConfiguration;
 
     public static Bus getBus() {
         return bus;
@@ -81,8 +82,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mixpanel.track("AppLaunched");
 
         // Set up database
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-//        Realm.deleteRealm(realmConfiguration); // Clean slate
+        realmConfiguration = new RealmConfiguration.Builder(this).build();
+        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         MainController.onCreate();
 
@@ -146,26 +147,36 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 Book book = realm.where(Book.class)
                         .equalTo("id", event.getDbObjectId())
                         .findFirst();
-                userBooks.add(book);
-                MainController.getBookInfo(book.getIsbn(), DBEventType.CREATE_BOOK_AFTER_ADD);
+                MainController.getBookInfo(book.getIsbn(), DBEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
                 break;
 
             case CREATE_BOOK_AFTER_ADD:
-                Log.i(TAG, "CREATE_BOOK_AFTER_ADD");
-                MainController.getBookInfo(event.getDbObjectId(), DBEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
+                Book newlyCreatedBook = realm.where(Book.class)
+                        .equalTo("id", event.getDbObjectId())
+                        .findFirst();
+                userBooks.add(newlyCreatedBook);
+                userScreenFragment.updateBookShelf(userBooks);
+                break;
+
+            case GET_BOOK_AFTER_ADD:
+                Book bookAdded = realm.where(Book.class)
+                        .equalTo("id", event.getDbObjectId())
+                        .findFirst();
+                MainController.getBookInfo(bookAdded.getIsbn(), DBEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
                 break;
 
             case BOOK_INFO_RECEIVED_ADD_TO_USERSHELF:
-                Log.i(TAG, "Should add to userhself");
+                Log.i(TAG, "Should add to user shelf");
                 Book bookToAdd = realm.where(Book.class)
                         .equalTo("isbn", event.getDbObjectId())
                         .equalTo("owner", getMainUserId())
                         .findFirst();
-                userBooks.add(bookToAdd);
-                userScreenFragment.updateBookShelf(userBooks);
+                if (bookToAdd != null){
+                    userBooks.add(bookToAdd);
+                    userScreenFragment.updateBookShelf(userBooks);
+                }
                 break;
             case BOOK_REMOVED:
-
         }
     }
 
@@ -174,16 +185,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         Toast.makeText(MainTabbedActivity.this, "User: " + username + " logged in.", Toast.LENGTH_SHORT).show();
         //TODO: populate userShelfISBNs with users books.
     }
-
-    @Override
-    public void onDestroy() {
-        Log.i(TAG, "onDestroy: MainController, realm, bus, super");
-        MainController.onDestroy();
-        realm.close();
-        MainTabbedActivity.getBus().unregister(this);
-        super.onDestroy();
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -224,15 +225,17 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     switch (action) {
                         case REMOVE_BUTTON_CLICKED:
                             Log.i(TAG, "REMOVE_BUTTON_CLICKED");
-                            for (Book b: userBooks) {
-                                if (b.getId().equals(bookID)){
-
-                                    MainController.removeBook(bookID, DBEventType.BOOK_REMOVED);
+                            for (Book b : userBooks) {
+                                if (b.getId().equals(bookID)) {
+                                    Log.i(TAG, "Book deleted: " + b.getId());
+                                    Book bookStoredOnServer = realm.where(Book.class)
+                                            .equalTo("isbn", b.getIsbn())
+                                            .findFirst();
                                     userBooks.remove(b);
                                     userScreenFragment.updateBookShelf(userBooks);
+                                    MainController.removeBook(b.getId(), DBEventType.BOOK_REMOVED);
                                     break;
                                 }
-
                             }
                     }
                 }
@@ -270,34 +273,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         MainController.getBookInfo(isbn, DBEventType.SCAN_COMPLETE_GET_BOOKINFO);
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        switch (position) {
-            case 0:
-                Log.i(TAG, "onPageSelected position: " + position);
-                break;
-            case 1:
-                Log.i(TAG, "onPageSelected position: " + position);
-                break;
-            case 2:
-                Log.i(TAG, "onPageSelected position: " + position);
-                break;
-            default:
-                Log.i(TAG, "onPageSelected positiondefault: " + position);
-                break;
-        }
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 
     @Override
     public void itemInUserShelfClicked(String bookID) {
@@ -306,6 +281,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void itemInBookGridViewClicked(String bookID) {
+        Log.i(TAG, "bookID clicked: " + bookID);
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("bookID", bookID);
         startActivityForResult(intent, GET_BOOK_CLICKED_ACTION);
@@ -348,6 +324,44 @@ public class MainTabbedActivity extends AppCompatActivity implements
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy: MainController, realm, bus, super");
+        MainController.onDestroy();
+        realm.close();
+        MainTabbedActivity.getBus().unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        switch (position) {
+            case 0:
+                Log.i(TAG, "onPageSelected position: " + position);
+                break;
+            case 1:
+                Log.i(TAG, "onPageSelected position: " + position);
+                break;
+            case 2:
+                Log.i(TAG, "onPageSelected position: " + position);
+                break;
+            default:
+                Log.i(TAG, "onPageSelected positiondefault: " + position);
+                break;
+        }
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     /**

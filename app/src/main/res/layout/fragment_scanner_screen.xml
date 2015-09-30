@@ -10,12 +10,12 @@
         android:layout_height="match_parent"
         android:text="Scanner screen" />
 
-    <!--<fragment-->
-    <!--android:layout_width="284dp"-->
-    <!--android:layout_height="371dp"-->
-    <!--android:name="com.crowdshelf.app.ui.fragments.ScannerFragment"-->
-    <!--android:id="@+id/fragment"-->
-    <!--android:layout_gravity="center" />-->
+    <fragment
+    android:layout_width="284dp"
+    android:layout_height="371dp"
+    android:name="com.crowdshelf.app.ui.fragments.ScannerFragment"
+    android:id="@+id/fragment"
+    android:layout_gravity="center" />
 
     <Button
         android:id="@+id/button2"
