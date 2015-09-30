@@ -88,7 +88,6 @@ public class BookGridViewAdapter extends BaseAdapter {
             viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
         }
 
-
         return convertView;
     }
 
