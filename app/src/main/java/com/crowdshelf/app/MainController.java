@@ -96,8 +96,12 @@ public class MainController {
     }
 
     public static void removeBook(String bookId, DBEventType dbEventType) {
-        // This book is never stored in the database. It is sent to the server,
-        // then retrieved to be stored with the correct _id
+        realm.beginTransaction();
+        Book book = realm.where(Book.class)
+                .equalTo("id", bookId)
+                .findFirst();
+        book.removeFromRealm();
+        realm.commitTransaction();
         NetworkController.removeBook(bookId, dbEventType);
     }
 
