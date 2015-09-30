@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +28,13 @@ public class ViewBookActivity extends Activity {
     private Realm realm;
     private BookInfo bookInfo;
     private Book book;
+    private Button removeButton;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_result);
+
+        removeButton = (Button)findViewById(R.id.removeButton);
 
         realm = Realm.getDefaultInstance();
 
@@ -42,6 +46,7 @@ public class ViewBookActivity extends Activity {
             bookInfo = realm.where(BookInfo.class)
                     .equalTo("isbn", ISBN)
                     .findFirst();
+            removeButton.setVisibility(View.INVISIBLE);
         }
         else if (bookId != null){
             book = realm.where(Book.class)
