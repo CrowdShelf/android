@@ -63,31 +63,29 @@ public class TestingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*
+
     @Subscribe
     public void handleTestResult(DBEvent event) {
         realm.refresh();
         switch (event.getDbEventType()) {
-            case CROWD_CHANGED:
+            case CROWD_CREATED:
                 String crowdId = event.getDbObjectId();
                 Crowd crowd = realm.where(Crowd.class)
                         .equalTo("id", crowdId)
                         .findFirst();
-
                 outputTextView.setText(crowd.getName());
-                outputTextView.setText(crowd.getMembers().get(0).getId());
                 break;
-            case BOOK_CHANGED:
+
+            case BOOK_CREATED:
                 String bookId = event.getDbObjectId();
-                // Determine if you own the book you just scanned:
                 Book book = realm.where(Book.class)
                         .equalTo("id", bookId)
                         .findFirst();
                 outputTextView.setText(book.getIsbn());
                 break;
-            case USER_CHANGED:
+
+            case USER_CREATED:
                 String userId = event.getDbObjectId();
-                // Determine if you own the book you just scanned:
                 User user = realm.where(User.class)
                         .equalTo("id", userId)
                         .findFirst();
@@ -97,22 +95,25 @@ public class TestingActivity extends AppCompatActivity {
     }
 
     public void getCrowdOnClick(View v){
-        NetworkController.getCrowd("55fee5bab379431100423434", DBEventType.CROWD_CHANGED);
+        outputTextView.setText(MainTabbedActivity.getUserCrowds().get(0).getName());
     }
 
     public void getUserOnClick(View v){
-        NetworkController.getUser("5603b4a4e4c6851100a24381", DBEventType.USER_CHANGED);
+        outputTextView.setText(MainTabbedActivity.getUserCrowdBooks().get(0).getIsbn());
     }
 
     public void getBookOnClick(View v){
-        NetworkController.getBook("56046eca62cc8e11003a7865", DBEventType.BOOK_CHANGED);
+        Book b = realm.where(Book.class)
+                .equalTo("id", "560b0818d11bab11001b855c")
+                .findFirst();
+        outputTextView.setText(b.getRentedTo());
     }
 
     public void createCrowdOnClick(View v){
         Crowd crowd = new Crowd();
         crowd.setName("kekass");
         crowd.setOwner("5603b4a4e4c6851100a24381");
-        NetworkController.createCrowd(crowd, DBEventType.CROWD_CHANGED);
+        NetworkController.createCrowd(crowd, DBEventType.CROWD_CREATED);
     }
 
     public void createUserOnClick(View v){
@@ -120,17 +121,20 @@ public class TestingActivity extends AppCompatActivity {
         user.setName("jayson gason");
         user.setUsername("jayson");
         user.setEmail("jayson@gmail.com");
-        NetworkController.createUser(user, DBEventType.USER_CHANGED);
+        NetworkController.createUser(user, DBEventType.USER_CREATED);
     }
 
     public void createBookOnClick(View v){
+        /*
         Book book = new Book();
         book.setOwner("5603b4a4e4c6851100a24381");
         book.setIsbn("9780552128484");
-        NetworkController.createBook(book, DBEventType.BOOK_CHANGED);
+        NetworkController.createBook(book, DBEventType.BOOK_CREATED);
+        */
+        Log.i("TestingActivity", "createBookOnClick");
+        NetworkController.addRenter("560b0818d11bab11001b855c", "5603b4a4e4c6851100a24381", null);
     }
 
-    */
     @Override
     public void onDestroy() {
         realm.close();

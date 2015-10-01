@@ -166,22 +166,30 @@ public class MainController {
     }
 
     public static void addRenter(String bookId, String userId, DBEventType dbEventType) {
+        // It should not be necessary to update the book object locally. It should be retrieved from
+        // server then put into the database and overwrite the old one.
+        /*
         realm.beginTransaction();
         Book book = realm.where(Book.class)
                 .equalTo("id", bookId)
                 .findFirst();
         book.setRentedTo(userId);
         realm.commitTransaction();
+        */
         NetworkController.addRenter(bookId, userId, dbEventType);
     }
 
     public static void removeRenter(String bookId, String userId, DBEventType dbEventType) {
+        // It should not be necessary to update the book object locally. It should be retrieved from
+        // server then put into the database and overwrite the old one.
+        /*
         realm.beginTransaction();
         Book book = realm.where(Book.class)
                 .equalTo("id", bookId)
                 .findFirst();
         book.setRentedTo("");
         realm.commitTransaction();
+        */
         NetworkController.removeRenter(bookId, userId, dbEventType);
     }
 
