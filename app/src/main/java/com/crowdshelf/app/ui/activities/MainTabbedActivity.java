@@ -60,22 +60,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private String lastScannedBookIsbn;
 
     private static String mainUserId; //= "5602a211a0913f110092352a";
-    private List<BookInfo> userBookInfos;
-    private List<Book> userBooks;
-    private List<Crowd> userCrowds;
-    private List<Book> userCrowdBooks;
-
-    public static Bus getBus() {
-        return bus;
-    }
-
-    public static String getMainUserId() {
-        return mainUserId;
-    }
-
-    public static String getProjectToken() {
-        return projectToken;
-    }
+    private static List<BookInfo> userBookInfos;
+    private static List<Book> userBooks;
+    private static List<Crowd> userCrowds;
+    private static List<Book> userCrowdBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +105,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_testing);
-        item.setVisible(false);
+        item.setVisible(true);
         super.onPrepareOptionsMenu(menu);
         return true;
     }
@@ -221,7 +209,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     continue;
                 } else {
                     /*
-                    PS! todo: this may add duplicates
+                    todo: PS! This may add duplicates
                      */
                     userCrowdBooksTemp.addAll(
                             realm.where(Book.class)
@@ -467,4 +455,33 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     }
 
+
+    public static Bus getBus() {
+        return bus;
+    }
+
+    public static String getMainUserId() {
+        return mainUserId;
+    }
+
+    public static List<BookInfo> getUserBookInfos() {
+        return userBookInfos;
+    }
+
+    public static List<Book> getUserBooks() {
+        return userBooks;
+    }
+
+    public static List<Crowd> getUserCrowds() {
+        return userCrowds;
+    }
+
+    public static List<Book> getUserCrowdBooks() {
+        return userCrowdBooks;
+    }
+
+
+    public static String getProjectToken() {
+        return projectToken;
+    }
 }
