@@ -25,8 +25,6 @@ import io.realm.RealmResults;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class NetworkAndDBInstrumentationTest {
-    private Realm realm;
-    private Bus bus;
     //use the following annotation and declare an ActivityTestRule for your activity under test
     @Rule
     public ActivityTestRule<MainTabbedActivity> mActivityRule = new ActivityTestRule(MainTabbedActivity.class);
@@ -34,25 +32,10 @@ public class NetworkAndDBInstrumentationTest {
     //use @Before to setup your test fixture
     @Before
     public void setUp() {
-        realm = Realm.getDefaultInstance();
-        bus = MainTabbedActivity.getBus();
-        bus.register(this);
     }
 
-    @Subscribe
-    public void handleGetCrowd(DBEvent e) {
-        Log.d("NETDBTEST", "handleGetCrowd");
-        realm = Realm.getDefaultInstance();
-        realm.refresh();
-        RealmResults<Crowd> results = realm.allObjects(Crowd.class);
-        Log.d("NETDBTEST", "Number of results: " + String.valueOf(results.size()) );
-        for (Crowd c : results) {
-            Log.d("NETDBTEST", "Crowd name" + c.getName());
-        }
-        Assert.assertEquals(1, 1);
-    }
 
     //release resources by using
     @After
-    public void tearDown() { realm.close(); }
+    public void tearDown() {  }
 }

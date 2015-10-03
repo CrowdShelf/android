@@ -90,7 +90,9 @@ public class GetBookInfoAsyncTask {
         realm.copyToRealmOrUpdate(bookInfo);
         realm.commitTransaction();
         realm.close();
-        MainTabbedActivity.getBus().post(new DBEvent(dbEventType, bookInfo.getIsbn()));
+        if (dbEventType != null) {
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, bookInfo.getIsbn()));
+        }
     }
 
     public static String getAuthorsAsString(String[] authors) {

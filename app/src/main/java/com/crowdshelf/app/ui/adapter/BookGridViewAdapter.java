@@ -36,7 +36,6 @@ public class BookGridViewAdapter extends BaseAdapter {
     public BookGridViewAdapter(Context context, List<Book> items) {
         mContext = context;
         mItems = items;
-        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -74,11 +73,11 @@ public class BookGridViewAdapter extends BaseAdapter {
         }
 
         Book book = mItems.get(position);
-
+        realm = Realm.getDefaultInstance();
         BookInfo bookInfo = realm.where(BookInfo.class)
                 .equalTo("isbn", book.getIsbn())
                 .findFirst();
-
+        realm.close();
         if (bookInfo == null) {
             viewHolder.bookCoverImageView.setImageResource(R.mipmap.icon);
             viewHolder.bookTitleTextView.setText("Bookinfo not found");

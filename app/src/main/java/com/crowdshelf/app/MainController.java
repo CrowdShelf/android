@@ -261,6 +261,7 @@ public class MainController {
     }
 
     public void onDestroy() {
+        Log.i("MainController", "onDestroy: bus, realm");
         MainTabbedActivity.getBus().unregister(this);
         realm.close();
     }
