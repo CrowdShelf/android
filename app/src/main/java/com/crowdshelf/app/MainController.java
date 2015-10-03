@@ -44,19 +44,24 @@ public class MainController {
                 then retrieve all the books of the members of these crowds
                 (including the books of the main user)
                  */
+                MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
                         .findAll();
                 for (Crowd crowd : crowds) {
                     for (MemberId memberId : crowd.getMembers()) {
                         if (memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
                             for (MemberId memberId2 : crowd.getMembers()) {
-                                NetworkController.getBooksOwnedAndRented(memberId2.getId(), null);
+                                NetworkController.getBooksOwnedAndRented(memberId2.getId(), DBEventType.ON_START_USER_CROWD_BOOKS_READY);
                             }
                             break;
                         }
                     }
                 }
                 break;
+            case ON_START_USER_CROWD_BOOKS_READY:
+                MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_BOOKS_CHANGED, "all"));
+                MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_CROWD_BOOKS_CHANGED, "all"));
+                GetBookInfoAsyncTask.getBookInfo(dbEvent.getDbObjectId(), null);
         }
     }
 

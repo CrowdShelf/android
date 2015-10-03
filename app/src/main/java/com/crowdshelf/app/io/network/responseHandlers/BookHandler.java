@@ -32,7 +32,9 @@ public class BookHandler implements ResponseHandler {
             if (b.getId().equals("")) {
                 Log.w(TAG, "Received book does not have an id");
             }
-            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, b.getId()));
+            if (dbEventType != null) {
+                MainTabbedActivity.getBus().post(new DBEvent(dbEventType, b.getId()));
+            }
         } catch (JsonSyntaxException e) {
             Log.w(TAG, "something wrong with JSON data" + e.getMessage());
         } catch (RuntimeException e) {
