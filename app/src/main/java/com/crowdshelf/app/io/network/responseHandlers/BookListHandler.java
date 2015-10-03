@@ -32,7 +32,7 @@ public class BookListHandler implements ResponseHandler {
             JSONArray jsonArray = jsonObject.getJSONArray("books");
             BookHandler bh = new BookHandler();
             for (int i = 0; i < jsonArray.length(); i++) {
-                bh.handleJsonResponse(jsonArray.getString(i), null);
+                bh.handleJsonResponse(jsonArray.getString(i), DBEventType.NONE);
             }
             MainTabbedActivity.getBus().post(new DBEvent(dbEventType, "all"));
         } catch (JSONException e){

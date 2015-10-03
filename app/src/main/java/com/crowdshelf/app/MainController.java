@@ -59,9 +59,17 @@ public class MainController {
                 }
                 break;
             case ON_START_USER_CROWD_BOOKS_READY:
+                /*
+                Get BookInfo for all User Books and User Crowd Books
+                 */
                 MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_BOOKS_CHANGED, "all"));
                 MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_CROWD_BOOKS_CHANGED, "all"));
-                GetBookInfoAsyncTask.getBookInfo(dbEvent.getDbObjectId(), null);
+                // Todo: Only get bookInfo for the appropriate books
+                List<Book> books = realm.where(Book.class)
+                        .findAll();
+                for (Book b : books) {
+                    getBookInfo(b.getIsbn(), DBEventType.NONE);
+                }
         }
     }
 

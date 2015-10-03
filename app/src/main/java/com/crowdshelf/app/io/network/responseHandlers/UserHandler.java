@@ -29,9 +29,7 @@ public class UserHandler implements ResponseHandler {
             if (u.getId().equals("")) {
                 Log.w(TAG, "Received user does not have an id!");
             }
-            if (dbEventType != null) {
-                MainTabbedActivity.getBus().post(new DBEvent(dbEventType, u.getId()));
-            }
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, u.getId()));
         } catch (JsonSyntaxException e) {
             Log.w(TAG, "CrowdHandler something wrong with JSON data" + e.getMessage());;
         } catch (RuntimeException e) {

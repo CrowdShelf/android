@@ -32,7 +32,7 @@ public class CrowdListHandler implements ResponseHandler {
             JSONArray jsonArray = jsonObject.getJSONArray("crowds");
             CrowdHandler ch = new CrowdHandler();
             for (int i = 0; i < jsonArray.length(); i++) {
-                ch.handleJsonResponse(jsonArray.getString(i), null);
+                ch.handleJsonResponse(jsonArray.getString(i), DBEventType.NONE);
             }
             MainTabbedActivity.getBus().post(new DBEvent(dbEventType, "all"));
         } catch (JSONException e){

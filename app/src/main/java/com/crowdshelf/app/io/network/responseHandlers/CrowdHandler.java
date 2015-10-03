@@ -34,9 +34,7 @@ public class CrowdHandler implements ResponseHandler {
             if (c.getId().equals("")) {
                 Log.w(TAG, "Received crowd does not have an id!");
             }
-            if (dbEventType != null) {
-                MainTabbedActivity.getBus().post(new DBEvent(dbEventType, c.getId()));
-            }
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, c.getId()));
         } catch (JsonSyntaxException e) {
             Log.w(TAG, "something wrong with JSON data" +  e.getMessage());
         } catch (RuntimeException e) {
