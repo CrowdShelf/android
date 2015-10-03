@@ -32,18 +32,9 @@ public class BookListHandler implements ResponseHandler {
             JSONArray jsonArray = jsonObject.getJSONArray("books");
             BookHandler bh = new BookHandler();
             for (int i = 0; i < jsonArray.length(); i++) {
-                bh.handleJsonResponse(jsonArray.getString(i), dbEventType);
+                bh.handleJsonResponse(jsonArray.getString(i), DBEventType.NONE);
             }
-            /*
-            Just for verification:
-             */
-
-            /*Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            RealmResults<Book> results = realm.allObjects(Book.class);
-            Log.i("BookListHandler", "added " + String.valueOf(results.size()) + " books to the database");
-            realm.commitTransaction();
-            realm.close();*/
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, "all"));
         } catch (JSONException e){
             Log.w("BookListHandler", "something wrong with JSON data" + e.getMessage());
         }

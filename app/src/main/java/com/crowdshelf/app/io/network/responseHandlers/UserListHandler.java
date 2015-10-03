@@ -2,9 +2,11 @@ package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
+import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -29,17 +31,9 @@ public class UserListHandler implements ResponseHandler {
             JSONArray jsonArray = jsonObject.getJSONArray("users");
             UserHandler uh = new UserHandler();
             for (int i = 0; i < jsonArray.length(); i++) {
-                uh.handleJsonResponse(jsonArray.getString(i), dbEventType);
+                uh.handleJsonResponse(jsonArray.getString(i), DBEventType.NONE);
             }
-            /*
-            Just for verification:
-             */
-            /*Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            RealmResults<User> results = realm.allObjects(User.class);
-            Log.i("UserHandler", "UserListHandler added " + String.valueOf(results.size()) + " users to the database");
-            realm.commitTransaction();
-            realm.close();*/
+            MainTabbedActivity.getBus().post(new DBEvent(dbEventType, "all"));
         } catch (JSONException e){
             Log.w("UserListHandler", "something wrong with JSON data" + e.getMessage());
         }

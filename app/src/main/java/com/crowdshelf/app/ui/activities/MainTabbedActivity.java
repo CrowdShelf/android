@@ -113,7 +113,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Subscribe
     public void handleDBEvents(DBEvent event) {
         realm.refresh();
-        Log.i(TAG, "handleViewBook - event: " + event.getDbEventType());
+        Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case USER_BOOKS_CHANGED:
                 updateUserBooks();

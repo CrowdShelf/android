@@ -29,6 +29,7 @@ public class TestingActivity extends AppCompatActivity {
     public TextView outputTextView;
     public EditText inputEditText;
     private Realm realm;
+    private static final String TAG = "TestingActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +105,14 @@ public class TestingActivity extends AppCompatActivity {
 
     public void getBookOnClick(View v){
         Book b = realm.where(Book.class)
-                .equalTo("id", "560b0818d11bab11001b855c")
+                .equalTo("id", "560ef2f221557c1100c1b076")
                 .findFirst();
-        outputTextView.setText(b.getRentedTo());
+        outputTextView.setText(b.getIsbn());
     }
 
+    /*
+    TODO: Not working. Backend error?
+     */
     public void createCrowdOnClick(View v){
         Crowd crowd = new Crowd();
         crowd.setName("kekass");
@@ -125,18 +129,24 @@ public class TestingActivity extends AppCompatActivity {
     }
 
     public void createBookOnClick(View v){
-        /*
+
         Book book = new Book();
         book.setOwner("5603b4a4e4c6851100a24381");
         book.setIsbn("9780552128484");
         NetworkController.createBook(book, DBEventType.BOOK_CREATED);
-        */
-        Log.i("TestingActivity", "createBookOnClick");
+    }
+
+    public void addRenterOnClick(View v){
         NetworkController.addRenter("560b0818d11bab11001b855c", "5603b4a4e4c6851100a24381", null);
+    }
+
+    public void removeRenterOnClick(View v){
+        NetworkController.removeRenter("560b0818d11bab11001b855c", "5603b4a4e4c6851100a24381", null);
     }
 
     @Override
     public void onDestroy() {
+        Log.i("TestingActivity", "onDestroy: realm, super");
         realm.close();
         super.onDestroy();
     }
