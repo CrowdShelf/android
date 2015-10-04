@@ -8,7 +8,7 @@
         android:id="@+id/scannerscreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Scanner screen" />
+        android:text="HOLD UP BOOK BARCODE" />
 
     <fragment
     android:layout_width="284dp"
@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
         android:onClick="fakeScan"
-        android:text="Lean" />
+        android:text="Lean"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/button4"
@@ -31,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|top"
         android:onClick="fakeScan2"
-        android:text="Bro" />
+        android:text="Bro"
+        android:visibility="gone" />
 
 </FrameLayout>
