@@ -94,11 +94,14 @@ public class NetworkHelper {
                 builder.append(line).append("\n");
             }
             String jsonString = builder.toString();
-            JsonElement jsonElement = new JsonParser().parse(jsonString);
 
-            //Log.i(TAG, "Received JSON: " + gson.toJson(jsonElement));
-            if (responseHandler != null) {
-                responseHandler.handleJsonResponse(jsonString, dbEventType);
+            if (jsonString.length() > 0) {
+                Log.i(TAG, "Received JSON: " + jsonString);
+                if (responseHandler != null) {
+                    responseHandler.handleJsonResponse(jsonString, dbEventType);
+                }
+            } else {
+                Log.d(TAG, "Did not receive data from server");
             }
             iReader.close();
             bReader.close();

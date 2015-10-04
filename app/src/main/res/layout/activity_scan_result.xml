@@ -1,74 +1,83 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.crowdshelf.app.ui.activities.ScannerActivity">
+    android:layout_width="match_parent"
+    tools:context="com.crowdshelf.app.ui.activities.ScannerActivity"
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        />
+    android:columnCount="3"
+    android:rowCount="10">
+
+
+
 
     <TextView
         android:id="@+id/titleView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@id/imageView"
-        android:textSize="20sp"/>
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:textSize="20sp"
+        android:layout_row="0"
+        android:layout_column="1"
+        android:layout_columnSpan="2"
+        android:layout_rowSpan="1" />
 
     <TextView
         android:id="@+id/infoView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/addButton"
-        android:layout_below="@+id/titleView"
-        android:layout_toRightOf="@id/imageView"
-        android:maxLines="8" />
+        android:layout_height="100dp"
+        android:maxLines="8"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:layout_columnSpan="2" />
 
-    <Button
-        android:id="@+id/borrowButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/returnButton"
-        android:layout_centerHorizontal="true"
-        android:onClick="borrowButtonClick"
-        android:text="@string/borrowButton"
-        android:visibility="invisible" />
-
-    <Button
-        android:id="@+id/returnButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/addButton"
-        android:layout_centerVertical="true"
-        android:onClick="returnButtonClick"
-        android:text="@string/returnButton"
-        android:visibility="invisible" />
-
-    <Button
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/removeButton"
-        android:layout_centerHorizontal="true"
-        android:onClick="addButtonClick"
-        android:text="@string/addButton" />
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageView"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_rowSpan="4"
+        android:layout_columnSpan="1" />
 
     <Button
         android:id="@+id/removeButton"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/addButton"
         android:onClick="removeButtonClick"
-        android:text="@string/removeButton" />
+        android:text="@string/removeButton"
+        android:layout_row="6"
+        android:layout_column="0"
+        android:layout_columnSpan="3" />
 
+    <Button
+        android:id="@+id/returnButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="returnButtonClick"
+        android:text="@string/returnButton"
+        android:visibility="visible"
+        android:layout_row="7"
+        android:layout_column="0"
+        android:layout_columnSpan="3" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="addButtonClick"
+        android:text="@string/addButton"
+        android:layout_row="8"
+        android:layout_column="0"
+        android:layout_columnSpan="3" />
+
+    <Button
+        android:id="@+id/borrowButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="borrowButtonClick"
+        android:text="@string/borrowButton"
+        android:layout_row="9"
+        android:layout_column="0"
+        android:layout_columnSpan="3" />
+
+</GridLayout>
+

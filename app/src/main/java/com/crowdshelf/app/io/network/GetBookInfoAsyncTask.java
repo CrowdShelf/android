@@ -27,6 +27,7 @@ import io.realm.Realm;
  */
 public class GetBookInfoAsyncTask {
     private static String googleBooksAPIUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
+    private static final String TAG = "GetBookInfoAsyncTask";
 
     public static void getBookInfo(final String isbn, final DBEventType dbEventType) {
         new AsyncTask<Void, Void, BookInfo>() {
@@ -69,10 +70,11 @@ public class GetBookInfoAsyncTask {
                         return new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray, description);
                     } else {
                         //TODO: Do something if books does not exist in google books
+                        Log.w(TAG, "BookInfo not retrieved from Google Books");
                         return new BookInfo(isbn, "not found", "not found", "not found", "not found", "not found", null, "not found");
                     }
                 } catch (Exception e) {
-                    Log.w("GetBookInfoAsyncTask", e.getMessage());
+                    Log.w(TAG, e.getMessage());
                 }
                 return null;
             }
@@ -91,6 +93,7 @@ public class GetBookInfoAsyncTask {
         realm.commitTransaction();
         realm.close();
         MainTabbedActivity.getBus().post(new DBEvent(dbEventType, bookInfo.getIsbn()));
+        Log.i(TAG, "Added BookInfo for ISBN: " + bookInfo.getIsbn());
     }
 
     public static String getAuthorsAsString(String[] authors) {

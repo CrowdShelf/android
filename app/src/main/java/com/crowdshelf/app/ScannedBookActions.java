@@ -11,7 +11,7 @@ public enum ScannedBookActions {
     IS_RENTING_BOOK(4),
     NOT_OWNING_OR_RENTING(5),
     REMOVE_BUTTON_CLICKED(6),
-    UNKNOWN(10);
+    UNKNOWN(10), BOOK_BORROWED(7);
 
     public final int value;
 

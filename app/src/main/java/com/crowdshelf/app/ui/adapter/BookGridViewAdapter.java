@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crowdshelf.app.MainController;
@@ -36,8 +37,6 @@ public class BookGridViewAdapter extends BaseAdapter {
     public BookGridViewAdapter(Context context, List<Book> items) {
         mContext = context;
         mItems = items;
-        realm = Realm.getDefaultInstance();
-        MainTabbedActivity.getBus().register(this);
     }
 
     @Override
@@ -68,6 +67,7 @@ public class BookGridViewAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.bookCoverImageView = (ImageView) convertView.findViewById(R.id.book_cover_imageView);
             viewHolder.bookTitleTextView = (TextView) convertView.findViewById(R.id.book_title_TextView);
+            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
             convertView.setTag(viewHolder);
         } else {
             // recycle the already inflated view
@@ -75,45 +75,32 @@ public class BookGridViewAdapter extends BaseAdapter {
         }
 
         Book book = mItems.get(position);
-
-        MainController.getBookInfo(book.getIsbn(), DBEventType.BOOKINFO_CHANGED);
-
+        realm = Realm.getDefaultInstance();
         BookInfo bookInfo = realm.where(BookInfo.class)
                 .equalTo("isbn", book.getIsbn())
                 .findFirst();
-
+        realm.close();
         if (bookInfo == null) {
-            viewHolder.bookCoverImageView.setImageResource(R.mipmap.icon);
-            viewHolder.bookTitleTextView.setText("Bookinfo not found");
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+            viewHolder.bookCoverImageView.setVisibility(View.INVISIBLE);
+            viewHolder.bookTitleTextView.setVisibility(View.INVISIBLE);
         } else {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
             viewHolder.bookCoverImageView.setImageBitmap(bitmap);
+            viewHolder.progressBar.setVisibility(View.INVISIBLE);
+            viewHolder.bookCoverImageView.setVisibility(View.VISIBLE);
             viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
-        }
+            viewHolder.bookTitleTextView.setVisibility(View.VISIBLE);
 
+        }
 
         return convertView;
     }
 
-    @Subscribe
-    public void handleGetBookInfo(DBEvent event) {
-        realm.refresh();
-        Log.i(TAG, "handleGetBookInfo - event: " + event.getDbEventType());
-        switch (event.getDbEventType()) {
-            case BOOKINFO_CHANGED:
-
-                break;
-        }
-    }
 
     private static class ViewHolder {
         ImageView bookCoverImageView;
         TextView bookTitleTextView;
-    }
-
-    public void onDestroy() {
-        Log.i(TAG, "onDestroy: realm, bus");
-        realm.close();
-        MainTabbedActivity.getBus().unregister(this);
+        ProgressBar progressBar;
     }
 }

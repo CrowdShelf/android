@@ -84,19 +84,19 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     }
 
     public void updateBookShelf(List<Book> userBooks) {
-        Log.i(TAG, "updateBookShelf");
+        Log.i(TAG, "updateBookShelf, userbooks: " + userBooks);
         bookGridViewFragment.setmItems(userBooks);
     }
 
 
     @Override
-    public void itemInBookGridViewClicked(String isbn) {
+    public void itemInBookGridViewClicked(String bookID) {
 
-        mListener.itemInUserShelfClicked(isbn);
+        mListener.itemInUserShelfClicked(bookID);
     }
 
     public interface OnUserScreenFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void itemInUserShelfClicked(String isbn);
+        public void itemInUserShelfClicked(String bookID);
     }
 }

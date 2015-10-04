@@ -55,7 +55,6 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy: mAdapter, super");
-        mAdapter.onDestroy();
         super.onDestroy();
     }
 
@@ -95,11 +94,11 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
         // retrieve the GridView item
         Book item = mItems.get(position);
 
-        mListener.itemInBookGridViewClicked(item.getIsbn());
+        mListener.itemInBookGridViewClicked(item.getId());
     }
 
 
     public interface OnBookGridViewFragmentInteractionListener {
-        public void itemInBookGridViewClicked(String isbn);
+        public void itemInBookGridViewClicked(String bookID);
     }
 }

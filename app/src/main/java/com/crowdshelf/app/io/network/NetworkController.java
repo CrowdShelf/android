@@ -113,14 +113,14 @@ public class NetworkController {
     public static void addRenter(String bookId, String userId, DBEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HTTPRequestMethod.PUT, "/books/" + bookId +  "/renter/" + userId,
-                null, null,
+                null, bookHandler,
                 dbEventType);
     }
 
     public static void removeRenter(String bookId, String userId, DBEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HTTPRequestMethod.DELETE, "/books/" + bookId + "/renter/" + userId,
-                null, null,
+                null, bookHandler,
                 dbEventType);
     }
 
@@ -145,6 +145,13 @@ public class NetworkController {
     public static void getCrowds(DBEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HTTPRequestMethod.GET, "/crowds",
+                null, crowdListHandler,
+                dbEventType);
+    }
+
+    public static void getCrowdsByMember(String userId, DBEventType dbEventType) {
+        NetworkHelper.sendRequest(
+                HTTPRequestMethod.GET, "/crowds?member=" + userId,
                 null, crowdListHandler,
                 dbEventType);
     }
