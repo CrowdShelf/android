@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- the parent view -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -9,21 +9,30 @@
 
     <!-- the ImageView for the icon -->
     <ImageView android:id="@+id/book_cover_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="100dp"
         android:padding="1dp"
-        android:contentDescription="book_cover_imageView contentDescription"
         android:scaleType="fitXY"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_column="0"
+        android:layout_row="0" />
 
     <!--  the TextView for the title -->
     <TextView android:id="@+id/book_title_TextView"
-        android:layout_below="@id/book_cover_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lines="1"
         android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="@android:style/TextAppearance.Medium" />
-</RelativeLayout>
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:layout_column="0"
+        android:layout_row="1" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:layout_rowSpan="1"
+        android:layout_gravity="center" />
+</GridLayout>

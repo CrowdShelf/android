@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crowdshelf.app.MainController;
@@ -66,6 +67,7 @@ public class BookGridViewAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.bookCoverImageView = (ImageView) convertView.findViewById(R.id.book_cover_imageView);
             viewHolder.bookTitleTextView = (TextView) convertView.findViewById(R.id.book_title_TextView);
+            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
             convertView.setTag(viewHolder);
         } else {
             // recycle the already inflated view
@@ -79,12 +81,17 @@ public class BookGridViewAdapter extends BaseAdapter {
                 .findFirst();
         realm.close();
         if (bookInfo == null) {
-            viewHolder.bookCoverImageView.setImageResource(R.mipmap.icon);
-            viewHolder.bookTitleTextView.setText("Bookinfo not found");
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+            viewHolder.bookCoverImageView.setVisibility(View.INVISIBLE);
+            viewHolder.bookTitleTextView.setVisibility(View.INVISIBLE);
         } else {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
             viewHolder.bookCoverImageView.setImageBitmap(bitmap);
+            viewHolder.progressBar.setVisibility(View.INVISIBLE);
+            viewHolder.bookCoverImageView.setVisibility(View.VISIBLE);
             viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
+            viewHolder.bookTitleTextView.setVisibility(View.VISIBLE);
+
         }
 
         return convertView;
@@ -94,5 +101,6 @@ public class BookGridViewAdapter extends BaseAdapter {
     private static class ViewHolder {
         ImageView bookCoverImageView;
         TextView bookTitleTextView;
+        ProgressBar progressBar;
     }
 }

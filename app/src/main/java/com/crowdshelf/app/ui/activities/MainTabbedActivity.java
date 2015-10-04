@@ -150,11 +150,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 break;
 
             case CREATE_BOOK_AFTER_ADD:
-                Book newlyCreatedBook = realm.where(Book.class)
-                        .equalTo("id", event.getDbObjectId())
-                        .findFirst();
-                userBooks.add(newlyCreatedBook);
-                userScreenFragment.updateBookShelf(userBooks);
+                updateUserBooks();
                 break;
 
             case GET_BOOK_AFTER_ADD:
@@ -165,15 +161,16 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 break;
 
             case BOOK_INFO_RECEIVED_ADD_TO_USERSHELF:
-                Log.i(TAG, "Should add to user shelf");
-                Book bookToAdd = realm.where(Book.class)
-                        .equalTo("isbn", event.getDbObjectId())
-                        .equalTo("owner", getMainUserId())
-                        .findFirst();
-                if (bookToAdd != null){
-                    userBooks.add(bookToAdd);
-                    userScreenFragment.updateBookShelf(userBooks);
-                }
+                updateUserBooks();
+//                Log.i(TAG, "Should add to user shelf");
+//                Book bookToAdd = realm.where(Book.class)
+//                        .equalTo("isbn", event.getDbObjectId())
+//                        .equalTo("owner", getMainUserId())
+//                        .findFirst();
+//                if (bookToAdd != null){
+//                    userBooks.add(bookToAdd);
+//                    userScreenFragment.updateBookShelf(userBooks);
+//                }
                 break;
             case BOOK_REMOVED:
         }
@@ -185,6 +182,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 .or()
                 .equalTo("rentedTo", mainUserId)
                 .findAll();
+        userScreenFragment.updateBookShelf(userBooks);
     }
 
     public void updateUserCrowds() {
@@ -272,12 +270,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                             for (Book b : userBooks) {
                                 if (b.getId().equals(bookID)) {
                                     Log.i(TAG, "Book deleted: " + b.getId());
-                                    Book bookStoredOnServer = realm.where(Book.class)
-                                            .equalTo("isbn", b.getIsbn())
-                                            .findFirst();
-                                    userBooks.remove(b);
-                                    userScreenFragment.updateBookShelf(userBooks);
                                     MainController.removeBook(b.getId(), DBEventType.BOOK_REMOVED);
+                                    updateUserBooks();
                                     break;
                                 }
                             }
@@ -310,6 +304,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     public void fakeScan(View v) {
         isbnReceived("9780670921607");
+    }
+
+    public void fakeScan2(View v) {
+        isbnReceived("1847399304");
     }
 
     @Override

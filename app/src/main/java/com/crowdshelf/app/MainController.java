@@ -62,14 +62,14 @@ public class MainController {
                 /*
                 Get BookInfo for all User Books and User Crowd Books
                  */
-                MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_BOOKS_CHANGED, "all"));
-                MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_CROWD_BOOKS_CHANGED, "all"));
                 // Todo: Only get bookInfo for the appropriate books
                 List<Book> books = realm.where(Book.class)
                         .findAll();
                 for (Book b : books) {
-                    getBookInfo(b.getIsbn(), DBEventType.NONE);
+                    getBookInfo(b.getIsbn(), DBEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
                 }
+                MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_BOOKS_CHANGED, "all"));
+                MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_CROWD_BOOKS_CHANGED, "all"));
         }
     }
 

@@ -20,6 +20,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import ntnu.stud.markul.crowdshelf.R;
 
 /**
@@ -31,6 +32,9 @@ public class ViewBookActivity extends Activity {
     private Realm realm;
     private BookInfo bookInfo;
     private List<Book> books;
+    private String ISBN;
+    private String bookID;
+    private Book book;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,20 +43,25 @@ public class ViewBookActivity extends Activity {
         realm = Realm.getDefaultInstance();
 
         Intent intent = getIntent();
-        String ISBN = intent.getStringExtra("ISBN");
+        ISBN = intent.getStringExtra("ISBN");
+        bookID = intent.getStringExtra("bookID");
 
-        if (ISBN == null){
+        if (ISBN != null){
             if (ISBN.equals("")) {
                 Log.w(TAG, "Got called without ISBN!");
             }
-        }
-        bookInfo = realm.where(BookInfo.class)
-                .equalTo("isbn", ISBN)
-                .findFirst();
-
-        books = realm.where(Book.class)
+            bookInfo = realm.where(BookInfo.class)
                     .equalTo("isbn", ISBN)
-                    .findAll();
+                    .findFirst();
+        }else if (bookID != null){
+            book = realm.where(Book.class)
+                    .equalTo("id", bookID)
+                    .findFirst();
+            bookInfo = realm.where(BookInfo.class)
+                    .equalTo("isbn", book.getIsbn())
+                    .findFirst();
+        }
+
 
         drawBookInfoUI(bookInfo);
 
@@ -143,7 +152,9 @@ public class ViewBookActivity extends Activity {
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", ScannedBookActions.REMOVE_BUTTON_CLICKED.value);
-        //returnIntent.putExtra("bookID", book.getId());
+        if (book != null){
+            returnIntent.putExtra("bookID", book.getId());
+        }
         setResult(RESULT_OK, returnIntent);
         finish();
     }
