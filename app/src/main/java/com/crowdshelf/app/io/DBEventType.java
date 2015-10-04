@@ -27,5 +27,5 @@ public enum DBEventType {
     ON_START_USER_CROWDS_READY,
     ON_START_USER_CROWD_BOOKS_READY,
 
-    NONE // To be used instead of null when you want to call a method which requires a DBEventType but you don't to handle the response
+    UserListActivity_USER_READY, NONE // To be used instead of null when you want to call a method which requires a DBEventType but you don't to handle the response
 }

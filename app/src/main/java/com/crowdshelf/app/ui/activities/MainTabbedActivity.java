@@ -63,7 +63,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private static List<BookInfo> userBookInfos;
     private static List<Book> userBooks;
     private static List<Crowd> userCrowds;
-    private static List<Book> userCrowdBooks;
+    public static List<Book> userCrowdBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mViewPager.addOnPageChangeListener(this);
 
         userScreenFragment = UserScreenFragment.newInstance();
-        userBookInfos = new ArrayList<BookInfo>();
+        userBookInfos = new ArrayList<>();
 
     }
 
@@ -176,6 +176,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
         }
     }
 
+    public void refreshUserBooks(View v){
+        updateUserBooks();
+    }
+
     public void updateUserBooks() {
         userBooks = realm.where(Book.class)
                 .equalTo("owner", mainUserId)
@@ -233,6 +237,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         Log.i(TAG, "onActivityResult");
         switch (requestCode) {
             case SCANNED_BOOK_ACTION:
+                updateUserBooks(); //TODO: Do this better
                 if (resultCode == RESULT_OK) {
                     int enumInt = data.getIntExtra("result", 0);
                     ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
@@ -255,6 +260,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 }
                 break;
             case GET_BOOK_CLICKED_ACTION:
+                updateUserBooks(); //TODO: Do this better
+
                 Log.i(TAG, "onActivityResult  - GET_BOOK_CLICKED_ACTION");
 
                 if (resultCode == RESULT_OK) {
@@ -298,6 +305,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("SCANNEDBOOKACTION", scannedBookAction.value);
         intent.putExtra("ISBN", ISBN);
+        intent.putExtra("userID", getMainUserId());
         lastScannedBookIsbn = ISBN;
         startActivityForResult(intent, SCANNED_BOOK_ACTION);
     }
@@ -324,8 +332,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public void itemInBookGridViewClicked(String bookID) {
         Log.i(TAG, "bookID clicked: " + bookID);
+        Book b = realm.where(Book.class).equalTo("id", bookID).findFirst();
+
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("bookID", bookID);
+        intent.putExtra("bookOwnerID", b.getOwner());
+
         startActivityForResult(intent, GET_BOOK_CLICKED_ACTION);
     }
 
