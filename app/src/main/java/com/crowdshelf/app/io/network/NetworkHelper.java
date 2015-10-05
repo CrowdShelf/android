@@ -23,7 +23,7 @@ import java.net.URL;
  */
 public class NetworkHelper {
     private final static String TAG = "NetworkHelper";
-    private static String host = "http://crowdshelf-dev.herokuapp.com";
+    private static String host = "http://crowdshelf.herokuapp.com";
     // For converting json into java objects using GSON and custom deserializers for each class
     private static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
