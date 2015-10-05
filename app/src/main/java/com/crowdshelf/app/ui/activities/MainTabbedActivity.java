@@ -47,7 +47,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private static final int GET_BOOK_CLICKED_ACTION = 2;
     // projectToken for dev: 93ef1952b96d0faa696176aadc2fbed4
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
-    private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
+    private static String projectToken = "9f321d1662e631f2995d9b8f050c4b44"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
     private static Bus bus = new Bus(ThreadEnforcer.ANY); // ThreadEnforcer.ANY lets any thread post to the bus (but only main thread can subscribe)
     public final int SCANNED_BOOK_ACTION = 1;
     public final int LOGIN = 3;
@@ -65,12 +65,18 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private static List<Crowd> userCrowds;
     public static List<Book> userCrowdBooks;
 
+    public static MixpanelAPI getMixpanel() {
+        return mixpanel;
+    }
+
+    private static MixpanelAPI mixpanel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbed);
 
-        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
+        mixpanel = MixpanelAPI.getInstance(this, projectToken);
         mixpanel.track("AppLaunched");
 
         // Set up database
@@ -183,6 +189,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     public void updateUserBooks() {
         userBooks = realm.where(Book.class)
                 .equalTo("owner", mainUserId)
+                .equalTo("rentedTo", "")
                 .or()
                 .equalTo("rentedTo", mainUserId)
                 .findAll();
@@ -217,7 +224,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                             realm.where(Book.class)
                                     .equalTo("owner", memberId.getId())
                                     .or()
-                                    .equalTo("rentedTo" , memberId.getId())
+                                    .equalTo("rentedTo", memberId.getId())
                                     .findAll()
                     );
                 }
@@ -296,6 +303,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
                     MainController.getMainUserData(mainUserId);
                     Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
+                    getMixpanel().identify(u.getId());
                 }
                 break;
         }
@@ -399,6 +407,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         switch (position) {
             case 0:
                 Log.i(TAG, "onPageSelected position: " + position);
+                updateUserBooks();
                 break;
             case 1:
                 Log.i(TAG, "onPageSelected position: " + position);
@@ -410,7 +419,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 Log.i(TAG, "onPageSelected positiondefault: " + position);
                 break;
         }
-
     }
 
     @Override

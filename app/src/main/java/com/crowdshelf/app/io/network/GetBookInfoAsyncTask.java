@@ -87,6 +87,9 @@ public class GetBookInfoAsyncTask {
     }
 
     private static void putBookInfoInDatabase(BookInfo bookInfo, DBEventType dbEventType) {
+        if (bookInfo == null){
+            return;
+        }
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(bookInfo);

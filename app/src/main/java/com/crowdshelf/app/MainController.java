@@ -143,6 +143,7 @@ public class MainController {
         // This book is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
         NetworkController.createBook(book, dbEventType);
+        MainTabbedActivity.getMixpanel().track("BookAdded");
     }
 
     public static void removeBook(String bookId, DBEventType dbEventType) {
@@ -153,6 +154,7 @@ public class MainController {
         book.removeFromRealm();
         realm.commitTransaction();
         NetworkController.removeBook(bookId, dbEventType);
+        MainTabbedActivity.getMixpanel().track("BookRemoved");
     }
 
     public static Book getBook(String bookId, DBEventType dbEventType) {
@@ -190,6 +192,8 @@ public class MainController {
         realm.commitTransaction();
         */
         NetworkController.addRenter(bookId, userId, dbEventType);
+        MainTabbedActivity.getMixpanel().track("BorrowBook");
+
     }
 
     public static void removeRenter(String bookId, String userId, DBEventType dbEventType) {
@@ -204,6 +208,8 @@ public class MainController {
         realm.commitTransaction();
         */
         NetworkController.removeRenter(bookId, userId, dbEventType);
+        MainTabbedActivity.getMixpanel().track("ReturnBook");
+
     }
 
     /*

@@ -47,6 +47,7 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         Intent intent = getIntent();
         ISBN = intent.getStringExtra("ISBN");
         userID = MainTabbedActivity.getMainUserId();
+        Log.i(TAG, "ISBN: " + ISBN);
 
         usersWithBook = new ArrayList<>();
 
@@ -105,17 +106,16 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         User u = usersWithBook.get(position);
-        for (Book crowdBook : MainTabbedActivity.userCrowdBooks){
-            if (crowdBook.getOwner().equals(u.getId()) || crowdBook.getIsbn().equals(ISBN)){
-                MainController.addRenter(crowdBook.getId(), userID, DBEventType.NONE);
+        Book bookToRent = realm.where(Book.class)
+                .equalTo("owner", u.getId())
+                .equalTo("isbn", ISBN)
+                .findFirst();
 
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("userName", u.getName());
-                setResult(RESULT_OK, returnIntent);
-                finish();
+        MainController.addRenter(bookToRent.getId(), userID, DBEventType.NONE);
 
-                break;
-            }
-        }
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("userName", u.getName());
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 }

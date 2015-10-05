@@ -121,8 +121,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(getActivity().getApplicationContext(), notification);
             r.play();
-            MixpanelAPI mixpanel = MixpanelAPI.getInstance(getActivity(), MainTabbedActivity.getProjectToken());
-            mixpanel.track("BookScanned");
+            MainTabbedActivity.getMixpanel().track("BookScanned");
         } catch (Exception e) {
         }
         mListener.isbnReceived(rawResult.getText());

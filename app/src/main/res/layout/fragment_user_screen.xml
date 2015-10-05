@@ -50,7 +50,7 @@
             android:layout_rowSpan="1"
             android:layout_weight="1"
             android:layout_gravity="right"
-            android:text="Refresh books"
+            android:text="Refresh your shelf"
             android:onClick="refreshUserBooks"
             android:visibility="visible"/>
 

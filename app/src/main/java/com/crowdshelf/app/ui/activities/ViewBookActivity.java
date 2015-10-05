@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +40,7 @@ public class ViewBookActivity extends Activity {
     private String bookOwnerID;
     private Button removeBookButton;
     private Button returnBookButton;
+    private TextView infoTextView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,9 @@ public class ViewBookActivity extends Activity {
 
         removeBookButton = (Button)findViewById(R.id.removeButton);
         returnBookButton = (Button)findViewById(R.id.returnButton);
+        infoTextView = (TextView)findViewById(R.id.infoView);
+        infoTextView.setMovementMethod(new ScrollingMovementMethod());
+
 
         realm = Realm.getDefaultInstance();
 
@@ -155,7 +160,7 @@ public class ViewBookActivity extends Activity {
         // Return a book you borrow to its owner
         // Get the book object WHERE rentedTo = mainUser AND isbn = ISBN
         Toast.makeText(ViewBookActivity.this, "Returned book: " + bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
-        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DBEventType.NONE);
+        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DBEventType.USER_BOOKS_CHANGED);
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();
