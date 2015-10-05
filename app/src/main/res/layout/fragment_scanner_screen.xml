@@ -7,8 +7,11 @@
     <TextView
         android:id="@+id/scannerscreen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HOLD UP BOOK BARCODE" />
+        android:layout_height="63dp"
+        android:text="SCAN BOOK BARCODE"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:gravity="center_vertical|center_horizontal" />
 
     <fragment
     android:layout_width="284dp"
