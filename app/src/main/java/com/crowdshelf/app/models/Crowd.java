@@ -16,7 +16,7 @@ public class Crowd extends RealmObject {
     private String id; // Unique identifier
     @Index
     private String name;
-    private String owner; // _id of member
+    private String owner; // _id of owner
     private RealmList<MemberId> members; // _id of member
 
     public String getId() {
@@ -40,7 +40,7 @@ public class Crowd extends RealmObject {
     }
 
     public void setOwner(String userId) {
-        this.owner = owner;
+        this.owner = userId;
     }
 
     public RealmList<MemberId> getMembers() {

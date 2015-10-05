@@ -3,27 +3,38 @@ package com.crowdshelf.app.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DBEvent;
+import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
 /**
  * Created by markuslund92 on 19.09.15.
  */
 public class BookGridViewAdapter extends BaseAdapter {
+    private static final String TAG = "BookGridViewAdapter";
     private Context mContext;
-    private List<BookInfo> mItems;
+    private List<Book> mItems;
+    private Realm realm;
 
-    public BookGridViewAdapter(Context context, List<BookInfo> items) {
+    public BookGridViewAdapter(Context context, List<Book> items) {
         mContext = context;
         mItems = items;
     }
@@ -56,24 +67,40 @@ public class BookGridViewAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.bookCoverImageView = (ImageView) convertView.findViewById(R.id.book_cover_imageView);
             viewHolder.bookTitleTextView = (TextView) convertView.findViewById(R.id.book_title_TextView);
+            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
             convertView.setTag(viewHolder);
         } else {
             // recycle the already inflated view
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // update the item view
-        BookInfo bookInfo = mItems.get(position);
-//        BookInfo bookInfo = item.getBookInfo();
-        //TODO: Wait until bookInfo is initialized async
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
-        viewHolder.bookCoverImageView.setImageBitmap(bitmap);
-        viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
+        Book book = mItems.get(position);
+        realm = Realm.getDefaultInstance();
+        BookInfo bookInfo = realm.where(BookInfo.class)
+                .equalTo("isbn", book.getIsbn())
+                .findFirst();
+        realm.close();
+        if (bookInfo == null) {
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+            viewHolder.bookCoverImageView.setVisibility(View.INVISIBLE);
+            viewHolder.bookTitleTextView.setVisibility(View.INVISIBLE);
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
+            viewHolder.bookCoverImageView.setImageBitmap(bitmap);
+            viewHolder.progressBar.setVisibility(View.INVISIBLE);
+            viewHolder.bookCoverImageView.setVisibility(View.VISIBLE);
+            viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
+            viewHolder.bookTitleTextView.setVisibility(View.VISIBLE);
+
+        }
+
         return convertView;
     }
+
 
     private static class ViewHolder {
         ImageView bookCoverImageView;
         TextView bookTitleTextView;
+        ProgressBar progressBar;
     }
 }

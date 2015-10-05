@@ -3,14 +3,14 @@ package com.crowdshelf.app.ui.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.adapter.BookGridViewAdapter;
 
 import java.util.ArrayList;
@@ -22,16 +22,16 @@ import ntnu.stud.markul.crowdshelf.R;
  * Created by markuslund92 on 19.09.15.
  */
 public class BookGridViewFragment extends Fragment implements AdapterView.OnItemClickListener {
-
+    private static final String TAG = "BookGridViewFragment";
     private OnBookGridViewFragmentInteractionListener mListener;
-    private List<BookInfo> mItems;    // GridView items list
+    private List<Book> mItems;    // GridView items list
     private BookGridViewAdapter mAdapter;    // GridView adapter
 
-    public List<BookInfo> getmItems() {
+    public List<Book> getmItems() {
         return mItems;
     }
 
-    public void setmItems(List<BookInfo> newmItems) {
+    public void setmItems(List<Book> newmItems) {
         this.mItems.clear();
         this.mItems.addAll(newmItems);
         this.mAdapter.notifyDataSetChanged();
@@ -50,6 +50,12 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
             throw new ClassCastException(activity.toString()
                     + " must implement OnBookGridViewFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy: mAdapter, super");
+        super.onDestroy();
     }
 
     @Override
@@ -86,13 +92,13 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // retrieve the GridView item
-        BookInfo item = mItems.get(position);
+        Book item = mItems.get(position);
 
-        mListener.itemInBookGridViewClicked(item.getIsbn());
+        mListener.itemInBookGridViewClicked(item.getId());
     }
 
 
     public interface OnBookGridViewFragmentInteractionListener {
-        public void itemInBookGridViewClicked(String isbn);
+        public void itemInBookGridViewClicked(String bookID);
     }
 }

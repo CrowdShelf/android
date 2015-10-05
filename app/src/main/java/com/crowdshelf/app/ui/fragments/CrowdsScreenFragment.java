@@ -67,31 +67,6 @@ public class CrowdsScreenFragment extends Fragment {
         return fragment;
     }
 
-    @Subscribe
-    public void handleViewBook(DBEvent event) {
-        realm.refresh();
-        Log.i(TAG, " handleViewBook " + event.getDbEventType().toString());
-        switch (event.getDbEventType()) {
-            case CROWD_BOOKS_CHANGED:
-                String crowdId = event.getDbObjectId();
-
-                if (crowdId.equals(crowdToShowId)) {
-                    Crowd c = realm.where(Crowd.class)
-                            .equalTo("id", crowdId)
-                            .findFirst();
-                    List<Book> books = new ArrayList<Book>();
-                    for (MemberId memberId: c.getMembers()) {
-                        // todo: we might want to get another subset of books, but this will work for now
-                        books.addAll(realm.where(Book.class)
-                            .equalTo("owner", memberId.getId())
-                            .findAll());
-                    }
-                    // todo: show these books
-                }
-                break;
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +88,7 @@ public class CrowdsScreenFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy: realm, bus, super");
         realm.close();
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();

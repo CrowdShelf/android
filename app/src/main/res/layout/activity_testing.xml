@@ -10,39 +10,38 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GetCrowd"
+        android:text="Get Crowd"
         android:id="@+id/getcrowd"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:onClick="crowdOnClick"/>
+        android:onClick="getCrowdOnClick"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GetUSer"
+        android:text="Get User"
         android:id="@+id/getuser"
         android:layout_below="@+id/getcrowd"
         android:layout_alignParentStart="true"
-        android:onClick="userOnClick"/>
+        android:onClick="getUserOnClick"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Getbook"
+        android:text="Get Book"
         android:id="@+id/getbook"
         android:layout_below="@+id/getuser"
         android:layout_alignParentStart="true"
-        android:onClick="bookOnClick"/>
+        android:onClick="getBookOnClick"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/resultTextView"
-        android:layout_below="@+id/getbook"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
 
     <EditText
         android:layout_width="200dp"
@@ -54,4 +53,31 @@
         android:layout_below="@+id/getcrowd"
         android:layout_toEndOf="@+id/getcrowd"
         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CREATE BOOK"
+        android:id="@+id/createbook"
+        android:onClick="createBookOnClick"
+        android:layout_below="@+id/createuser"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create User"
+        android:id="@+id/createuser"
+        android:onClick="createUserOnClick"
+        android:layout_below="@+id/createcrowd"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Crowd"
+        android:id="@+id/createcrowd"
+        android:onClick="createCrowdOnClick"
+        android:layout_below="@+id/getbook"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

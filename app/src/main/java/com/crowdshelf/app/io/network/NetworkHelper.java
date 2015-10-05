@@ -23,7 +23,7 @@ import java.net.URL;
  */
 public class NetworkHelper {
     private final static String TAG = "NetworkHelper";
-    private static String host = "http://crowdshelf-dev.herokuapp.com";
+    private static String host = "http://crowdshelf.herokuapp.com";
     // For converting json into java objects using GSON and custom deserializers for each class
     private static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -86,8 +86,6 @@ public class NetworkHelper {
 
     public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DBEventType dbEventType) {
         try {
-            Log.i(TAG, "handleResponse");
-
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();
             String line = null;
@@ -96,12 +94,14 @@ public class NetworkHelper {
                 builder.append(line).append("\n");
             }
             String jsonString = builder.toString();
-            JsonElement jsonElement = new JsonParser().parse(jsonString);
 
-            //System.out.print("Received JSON-data in NetworkHelper: \n");
-            Log.i(TAG, "Received JSON: " + gson.toJson(jsonElement));
-            if (responseHandler != null) {
-                responseHandler.handleJsonResponse(jsonString, dbEventType);
+            if (jsonString.length() > 0) {
+                Log.i(TAG, "Received JSON: " + jsonString);
+                if (responseHandler != null) {
+                    responseHandler.handleJsonResponse(jsonString, dbEventType);
+                }
+            } else {
+                Log.d(TAG, "Did not receive data from server");
             }
             iReader.close();
             bReader.close();

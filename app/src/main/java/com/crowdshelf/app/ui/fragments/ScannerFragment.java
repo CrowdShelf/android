@@ -30,7 +30,7 @@ import ntnu.stud.markul.crowdshelf.R;
  * Created by markuslund92 on 14.09.15.
  */
 public class ScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
-    private static final String TAG = "ScannerFragmet";
+    private static final String TAG = "ScannerFragment";
     private static final String FLASH_STATE = "FLASH_STATE";
     private static final String AUTO_FOCUS_STATE = "AUTO_FOCUS_STATE";
     private static final String SELECTED_FORMATS = "SELECTED_FORMATS";
@@ -121,8 +121,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(getActivity().getApplicationContext(), notification);
             r.play();
-            MixpanelAPI mixpanel = MixpanelAPI.getInstance(getActivity(), MainTabbedActivity.getProjectToken());
-            mixpanel.track("BookScanned");
+            MainTabbedActivity.getMixpanel().track("BookScanned");
         } catch (Exception e) {
         }
         mListener.isbnReceived(rawResult.getText());

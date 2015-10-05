@@ -18,9 +18,12 @@ public class BookHandler implements ResponseHandler {
     @Override
     public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
+            /*
+            TODO: Only send bus event if the object is new or updated??
+             */
             Log.i(TAG, "Json-string: " + jsonString);
             Book b = gson.fromJson(jsonString, Book.class);
-            Log.i(TAG, "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent" + String.valueOf(b.getAvailableForRent()));
+            Log.i(TAG, "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent " + String.valueOf(b.getAvailableForRent()));
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(b);

@@ -7,11 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.squareup.otto.Subscribe;
 
@@ -35,24 +33,6 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     public static UserScreenFragment newInstance() {
         UserScreenFragment fragment = new UserScreenFragment();
         return fragment;
-    }
-
-    @Subscribe
-    public void handleViewUser(DBEvent event) {
-        realm.refresh();
-        Log.i(TAG, "handleViewUser" +  event.getDbEventType().toString());
-        switch (event.getDbEventType()) {
-            case USER_BOOKS_CHANGED:
-                String userId = event.getDbObjectId();
-
-                if (userId.equals(MainTabbedActivity.getMainUserId())) {
-                    List<Book> books = realm.where(Book.class)
-                            .equalTo("owner", userId)
-                            .findAll();
-                    // todo: show these books
-                }
-                break;
-        }
     }
 
     @Override
@@ -97,25 +77,26 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
 
     @Override
     public void onDestroy() {
+        //bookGridViewFragment.onDestroy();
+        Log.i(TAG, "onDestroy: realm, super");
         realm.close();
-        MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
 
-    public void updateBookShelf(List<BookInfo> userBooks) {
-        Log.i(TAG, "updateBookShelf");
+    public void updateBookShelf(List<Book> userBooks) {
+        Log.i(TAG, "updateBookShelf, userbooks: " + userBooks);
         bookGridViewFragment.setmItems(userBooks);
     }
 
 
     @Override
-    public void itemInBookGridViewClicked(String isbn) {
+    public void itemInBookGridViewClicked(String bookID) {
 
-        mListener.itemInUserShelfClicked(isbn);
+        mListener.itemInUserShelfClicked(bookID);
     }
 
     public interface OnUserScreenFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void itemInUserShelfClicked(String isbn);
+        public void itemInUserShelfClicked(String bookID);
     }
 }

@@ -20,7 +20,7 @@ public class UserHandler implements ResponseHandler {
     public void handleJsonResponse(String jsonString, DBEventType dbEventType) {
         try {
             User u = gson.fromJson(jsonString, User.class);
-            Log.i(TAG, "User added _id " + u.getId() + " username" + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
+            Log.i(TAG, "User added _id " + u.getId() + " username " + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(u);
