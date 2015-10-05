@@ -27,9 +27,6 @@ public class MainController {
     private static Realm realm;
     private static final String TAG = "MainController";
 
-    //todo  get the user of this app
-    private static User mainUser = new User();
-
     public void onCreate() {
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
@@ -42,7 +39,7 @@ public class MainController {
                 /*
                 Get all crowds which the main user is a member of,
                 then retrieve all the books of the members of these crowds
-                (including the books of the main user)
+                (which will include the books of the main user)
                  */
                 MainTabbedActivity.getBus().post(new DBEvent(DBEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
@@ -126,6 +123,14 @@ public class MainController {
             Log.d(TAG, "Tried to get crowd with id: " + crowdId + " but it was not found in the database!");
         }
         return crowd;
+    }
+
+    public static void addCrowdMember(String crowdId, String userId, DBEventType dbEventType){
+        NetworkController.addCrowdMember(crowdId, userId, dbEventType);
+    }
+
+    public static void removeCrowdMember(String crowdId, String userId, DBEventType dbEventType){
+        NetworkController.removeCrowdMember(crowdId, userId, dbEventType);
     }
 
     /*
