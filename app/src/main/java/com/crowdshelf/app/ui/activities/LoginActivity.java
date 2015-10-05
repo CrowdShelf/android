@@ -14,6 +14,7 @@ import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.User;
 import com.squareup.otto.Subscribe;
 
@@ -74,7 +75,6 @@ public class LoginActivity extends AppCompatActivity {
         user.setEmail(email);
 
         MainController.createUser(user, DBEventType.USER_CREATED);
-
     }
 
     public void login(View view) {
@@ -106,6 +106,12 @@ public class LoginActivity extends AppCompatActivity {
                 break;
                 */
             case USER_CREATED:
+                /*
+                HACK: Put all new users in a default crowd:
+                 */
+                Log.i(TAG, "User created, id:" + event.getDbObjectId());
+                NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DBEventType.NONE);
+
                 // log in with new user
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
