@@ -117,13 +117,9 @@ public class LoginActivity extends AppCompatActivity {
                  */
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
                 NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DBEventType.NONE);
-
+                MainController.login(username, DBEventType.LOGIN);
                 // log in with new user
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
-                returnIntent = new Intent();
-                returnIntent.putExtra("username",username);
-                setResult(RESULT_OK,returnIntent);
-                finish();
                 break;
         }
     }
