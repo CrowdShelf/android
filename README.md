@@ -1,4 +1,18 @@
 # CrowdShelf for Android
+
+###Git branching
+
+####Scenario: Vi er ferdig med versjon 0.3 og skal begynne på versjon 0.4.
+
+1. Når versjon 0.3 er ferdig merger vi denne inn i master(gjerne med en pull request). 
+2. Deretter lager vi en ny branch fra master(som nå inneholder versjon 0.3), kalt 0.4
+3. Det er nå 3 nye features som skal lages for versjon 0.4. Hvis jeg da skal progge «feature1» så lager jeg en ny branch ut fra 0.4 kalt «feature1». 
+4. Samtidig skal kanskje Morten lage feature2 og lager derfor også en branch ut fra 0.4 som heter «feature2»
+5. Når jeg er ferdig med å implementere «feature1» lager jeg en pull request på denne på github slik at dere kan se hva jeg har gjort, og eventuelt kommentere på dette. 
+6. Da kan man merge «feature1»-branchen inn i 0.4 branchen.
+7. Hvis jeg nå skal implementere «feature3» lager jeg en ny branch fra 0.4 kalt «feature3»
+8. Når 0.4 har alle features lanserer vi til Google Play og merger 0.4 inn i master.
+
 ### Unit testing
 ####Robolectric
 Robolectric lets us test some classes and methods in the app without running the Android Emulator.
