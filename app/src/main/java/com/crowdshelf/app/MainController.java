@@ -12,7 +12,6 @@ import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
