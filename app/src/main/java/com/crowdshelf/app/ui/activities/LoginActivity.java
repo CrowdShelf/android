@@ -1,6 +1,7 @@
 package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,7 +58,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
     public void register(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
@@ -111,13 +117,9 @@ public class LoginActivity extends AppCompatActivity {
                  */
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
                 NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DBEventType.NONE);
-
+                MainController.login(username, DBEventType.LOGIN);
                 // log in with new user
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
-                returnIntent = new Intent();
-                returnIntent.putExtra("username",username);
-                setResult(RESULT_OK,returnIntent);
-                finish();
                 break;
         }
     }
