@@ -1,6 +1,9 @@
 package com.crowdshelf.app.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -472,6 +475,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         }
 
     }
+
 
 
     public static Bus getBus() {

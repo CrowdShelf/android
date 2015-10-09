@@ -1,6 +1,9 @@
 package com.crowdshelf.app.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,13 +83,24 @@ public class LoginActivity extends AppCompatActivity {
         user.setName(name);
         user.setEmail(email);
 
-        MainController.createUser(user, DBEventType.USER_CREATED);
+        if(internetConnection()) {
+            MainController.createUser(user, DBEventType.USER_CREATED);
+        }
+        else {
+            Toast.makeText(this, "Need internet connection to register", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void login(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         username = usernameTextfield.getText().toString();
-        MainController.login(username, DBEventType.LOGIN);
+
+        if(internetConnection()) {
+            MainController.login(username, DBEventType.LOGIN);
+        }
+        else {
+            Toast.makeText(this, "Need internet connection to log in", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Subscribe
@@ -155,5 +169,19 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
         findViewById(R.id.registerLayout).setVisibility(View.VISIBLE);
         findViewById(R.id.cancelLayout).setVisibility(View.INVISIBLE);
+    }
+
+    public boolean internetConnection(){
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            connected = true;
+        }
+        else {
+            connected = false;
+        }
+        return connected;
     }
 }
