@@ -51,7 +51,6 @@ public class ViewBookActivity extends Activity {
         infoTextView = (TextView)findViewById(R.id.infoView);
         infoTextView.setMovementMethod(new ScrollingMovementMethod());
 
-
         realm = Realm.getDefaultInstance();
 
         Intent intent = getIntent();
@@ -59,9 +58,7 @@ public class ViewBookActivity extends Activity {
         bookID = intent.getStringExtra("bookID");
         bookOwnerID = intent.getStringExtra("bookOwnerID");
 
-
-
-        if (ISBN != null){
+        if (ISBN != null) {
             if (ISBN.equals("")) {
                 Log.w(TAG, "Got called without ISBN!");
             }
@@ -71,7 +68,7 @@ public class ViewBookActivity extends Activity {
             bookInfo = realm.where(BookInfo.class)
                     .equalTo("isbn", ISBN)
                     .findFirst();
-        }else if (bookID != null){
+        } else if (bookID != null) {
             book = realm.where(Book.class)
                     .equalTo("id", bookID)
                     .findFirst();
@@ -88,29 +85,17 @@ public class ViewBookActivity extends Activity {
             }
 
         }
-
-
         drawBookInfoUI(bookInfo);
 
-        ScannedBookActions scannedBookAction = ScannedBookActions.fromValue(intent.getIntExtra("SCANNEDBOOKACTION", ScannedBookActions.UNKNOWN.value));
-//        //TODO: Hide useless buttons
-//        switch (scannedBookAction) {
-//            case IS_OWNER:
-//                break;
-//            case IS_RENTING_BOOK:
-//                break;
-//            case NOT_OWNING_OR_RENTING:
-//                break;
-//        }
 
         /*
         Buttons to show and when to show them:
-        -Borrow (borrow book from another user) - always
-        -Take in return  - if you own the book and another user borrows a copy
-        Lend out - if you own the book and have available copies
-        -Add to shelf - if you don't own the book
-        -Return - you borrow the book from someone else
-        -Remove book (from your own shelf - how do we select specific copy if the owner has many?) - WAIT WITH IMPLEMENTATION
+        - Borrow (borrow book from another user): always
+        - Take in return: if you own the book and another user borrows a copy
+        - Lend out: if you own the book and have available copies
+        - Add to shelf: if you don't own the book
+        - Return: you borrow the book from someone else
+        - Remove book (from your own shelf - how do we select specific copy if the owner has many?): WAIT WITH IMPLEMENTATION
          */
     }
 
@@ -119,9 +104,9 @@ public class ViewBookActivity extends Activity {
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
         TextView infoTextView = (TextView)findViewById(R.id.infoView);
         titleTextView.setText(bookInfo.getTitle());
+        infoTextView.setText(bookInfo.getDescription());
         Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
         imageView.setImageBitmap(bitmap);
-        infoTextView.setText(bookInfo.getDescription());
     }
 
     public void addButtonClick(View view) {
