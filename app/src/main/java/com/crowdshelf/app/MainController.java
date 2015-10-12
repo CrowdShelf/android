@@ -124,11 +124,11 @@ public class MainController {
         return crowd;
     }
 
-    public static void addCrowdMember(String crowdId, String userId, DBEventType dbEventType){
+    public static void addCrowdMember(String crowdId, String userId, DbEventType dbEventType){
         NetworkController.addCrowdMember(crowdId, userId, dbEventType);
     }
 
-    public static void removeCrowdMember(String crowdId, String userId, DBEventType dbEventType){
+    public static void removeCrowdMember(String crowdId, String userId, DbEventType dbEventType){
         NetworkController.removeCrowdMember(crowdId, userId, dbEventType);
     }
 
