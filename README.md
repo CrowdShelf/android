@@ -1,4 +1,13 @@
 # CrowdShelf for Android
+
+###Git branching
+
+- Master inneholder alltid siste "stable" release. v0.2, v0.3 etc. 
+- Branchen "dev" merges inn i master når en ny versjon er ferdig.
+- Feature branch ut av "dev" når ny feature skal implementeres eller bug skal fikses. 
+- Lage pull request på feature branch inn i dev når man er ferdig med feature/bug.
+
+
 ### Unit testing
 ####Robolectric
 Robolectric lets us test some classes and methods in the app without running the Android Emulator.
