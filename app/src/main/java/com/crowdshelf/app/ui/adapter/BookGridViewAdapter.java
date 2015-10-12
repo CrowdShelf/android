@@ -3,7 +3,6 @@ package com.crowdshelf.app.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DBEvent;
-import com.crowdshelf.app.io.DBEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.ui.activities.MainTabbedActivity;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 

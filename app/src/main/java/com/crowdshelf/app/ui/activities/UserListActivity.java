@@ -9,18 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DBEvent;
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.adapter.UserListAdapter;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
 
@@ -59,13 +55,13 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
 
         for (Book crowdBook : MainTabbedActivity.userCrowdBooks){
             if (crowdBook.getIsbn().equals(ISBN)){
-                MainController.getUser(crowdBook.getOwner(), DBEventType.UserListActivity_USER_READY);
+                MainController.getUser(crowdBook.getOwner(), DbEventType.UserListActivity_USER_READY);
             }
         }
     }
 
     @Subscribe
-    public void handleDBEvents(DBEvent event) {
+    public void handleDBEvents(DbEvent event) {
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
@@ -111,7 +107,7 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
                 .equalTo("isbn", ISBN)
                 .findFirst();
 
-        MainController.addRenter(bookToRent.getId(), userID, DBEventType.NONE);
+        MainController.addRenter(bookToRent.getId(), userID, DbEventType.NONE);
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("userName", u.getName());

@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crowdshelf.app.io.DBEvent;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 

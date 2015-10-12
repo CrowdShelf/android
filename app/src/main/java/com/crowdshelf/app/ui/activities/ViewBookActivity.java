@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -160,7 +160,7 @@ public class ViewBookActivity extends Activity {
         // Return a book you borrow to its owner
         // Get the book object WHERE rentedTo = mainUser AND isbn = ISBN
         Toast.makeText(ViewBookActivity.this, "Returned book: " + bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
-        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DBEventType.USER_BOOKS_CHANGED);
+        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DbEventType.USER_BOOKS_CHANGED);
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();

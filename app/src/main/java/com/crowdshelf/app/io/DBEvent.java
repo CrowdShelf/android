@@ -3,16 +3,16 @@ package com.crowdshelf.app.io;
 /**
  * Created by Torstein on 21.09.2015.
  */
-public class DBEvent {
-    private DBEventType dbEventType;
+public class DbEvent {
+    private DbEventType dbEventType;
     private String dbObjectId;
 
-    public DBEvent(DBEventType dbEventType, String dbObjectId) {
+    public DbEvent(DbEventType dbEventType, String dbObjectId) {
         this.dbEventType = dbEventType;
         this.dbObjectId = dbObjectId;
     }
 
-    public DBEventType getDbEventType() {
+    public DbEventType getDbEventType() {
         return dbEventType;
     }
 

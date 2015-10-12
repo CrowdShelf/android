@@ -9,19 +9,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.crowdshelf.app.io.DBEvent;
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-import com.squareup.otto.ThreadEnforcer;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class TestingActivity extends AppCompatActivity {
@@ -66,7 +62,7 @@ public class TestingActivity extends AppCompatActivity {
 
 
     @Subscribe
-    public void handleTestResult(DBEvent event) {
+    public void handleTestResult(DbEvent event) {
         realm.refresh();
         switch (event.getDbEventType()) {
             case CROWD_CREATED:
@@ -117,7 +113,7 @@ public class TestingActivity extends AppCompatActivity {
         Crowd crowd = new Crowd();
         crowd.setName("kekass");
         crowd.setOwner("5603b4a4e4c6851100a24381");
-        NetworkController.createCrowd(crowd, DBEventType.CROWD_CREATED);
+        NetworkController.createCrowd(crowd, DbEventType.CROWD_CREATED);
     }
 
     public void createUserOnClick(View v){
@@ -125,7 +121,7 @@ public class TestingActivity extends AppCompatActivity {
         user.setName("jayson gason");
         user.setUsername("jayson");
         user.setEmail("jayson@gmail.com");
-        NetworkController.createUser(user, DBEventType.USER_CREATED);
+        NetworkController.createUser(user, DbEventType.USER_CREATED);
     }
 
     public void createBookOnClick(View v){
@@ -133,7 +129,7 @@ public class TestingActivity extends AppCompatActivity {
         Book book = new Book();
         book.setOwner("5603b4a4e4c6851100a24381");
         book.setIsbn("9780552128484");
-        NetworkController.createBook(book, DBEventType.BOOK_CREATED);
+        NetworkController.createBook(book, DbEventType.BOOK_CREATED);
     }
 
     public void addRenterOnClick(View v){

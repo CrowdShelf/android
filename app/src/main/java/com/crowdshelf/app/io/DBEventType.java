@@ -3,7 +3,7 @@ package com.crowdshelf.app.io;
 /**
  * Created by Torstein on 21.09.2015.
  */
-public enum DBEventType {
+public enum DbEventType {
     BOOKINFO_CHANGED,
     USER_BOOKS_CHANGED,
     USER_CROWDS_CHANGED,

@@ -1,7 +1,6 @@
 package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,14 +11,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DBEvent;
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.User;
 import com.squareup.otto.Subscribe;
 
-import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -80,17 +77,17 @@ public class LoginActivity extends AppCompatActivity {
         user.setName(name);
         user.setEmail(email);
 
-        MainController.createUser(user, DBEventType.USER_CREATED);
+        MainController.createUser(user, DbEventType.USER_CREATED);
     }
 
     public void login(View view) {
         EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
         username = usernameTextfield.getText().toString();
-        MainController.login(username, DBEventType.LOGIN);
+        MainController.login(username, DbEventType.LOGIN);
     }
 
     @Subscribe
-    public void handleLogin(DBEvent event) {
+    public void handleLogin(DbEvent event) {
         Intent returnIntent;
         Log.i(TAG, "handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
@@ -116,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                 HACK: Put all new users in a default crowd:
                  */
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
-                NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DBEventType.NONE);
+                NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
 
                 // log in with new user
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();

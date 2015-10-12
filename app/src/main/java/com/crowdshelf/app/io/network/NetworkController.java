@@ -1,6 +1,6 @@
 package com.crowdshelf.app.io.network;
 
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.BookHandler;
 import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdHandler;
@@ -45,81 +45,81 @@ public class NetworkController {
      */
 
     // Add book to database
-    public static void createBook(Book book, DBEventType dbEventType) {
+    public static void createBook(Book book, DbEventType dbEventType) {
         String jsonData = gson.toJson(book, Book.class);
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.POST, "/books",
+                HttpRequestMethod.POST, "/books",
                 jsonData, bookHandler,
                 dbEventType);
     }
 
     // Remove book to database
-    public static void removeBook(String bookId, DBEventType dbEventType) {
+    public static void removeBook(String bookId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.DELETE, "/books/" + bookId,
+                HttpRequestMethod.DELETE, "/books/" + bookId,
                 null, null,
                 null);
     }
 
-    public static void getBook(String id, DBEventType dbEventType) {
+    public static void getBook(String id, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/books/" + id,
+                HttpRequestMethod.GET, "/books/" + id,
                 null, bookHandler,
                 dbEventType);
     }
 
-    public static void getBooks(DBEventType dbEventType) {
+    public static void getBooks(DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/books",
+                HttpRequestMethod.GET, "/books",
                 null, bookListHandler,
                 dbEventType);
     }
 
-    public static void getBooksByIsbn(String isbn, DBEventType dbEventType) {
+    public static void getBooksByIsbn(String isbn, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/books?isbn=" + isbn,
+                HttpRequestMethod.GET, "/books?isbn=" + isbn,
                 null, bookListHandler,
                 dbEventType);
     }
 
-    public static void getBooksByIsbnOwner(String isbn, String userId, DBEventType dbEventType) {
+    public static void getBooksByIsbnOwner(String isbn, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/books?isbn=" + isbn + "&?owner=" + userId,
+                HttpRequestMethod.GET, "/books?isbn=" + isbn + "&?owner=" + userId,
                 null, bookListHandler,
                 dbEventType);
     }
 
-    public static void getBooksOwned(String userId, DBEventType dbEventType) {
+    public static void getBooksOwned(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/books?owner=" + userId,
+                HttpRequestMethod.GET, "/books?owner=" + userId,
                 null, bookListHandler,
                 dbEventType);
     }
 
-    public static void getBooksRented(String userId, DBEventType dbEventType) {
+    public static void getBooksRented(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/books?rentedTo=" + userId,
+                HttpRequestMethod.GET, "/books?rentedTo=" + userId,
                 null, bookListHandler,
                 dbEventType);
     }
 
-    public static void getBooksOwnedAndRented(String userId, DBEventType dbEventType) {
+    public static void getBooksOwnedAndRented(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/books?owner=" + userId + "&?rentedTo=" + userId,
+                HttpRequestMethod.GET, "/books?owner=" + userId + "&?rentedTo=" + userId,
                 null, bookListHandler,
                 dbEventType);
     }
 
-    public static void addRenter(String bookId, String userId, DBEventType dbEventType) {
+    public static void addRenter(String bookId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.PUT, "/books/" + bookId +  "/renter/" + userId,
+                HttpRequestMethod.PUT, "/books/" + bookId +  "/renter/" + userId,
                 null, bookHandler,
                 dbEventType);
     }
 
-    public static void removeRenter(String bookId, String userId, DBEventType dbEventType) {
+    public static void removeRenter(String bookId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.DELETE, "/books/" + bookId + "/renter/" + userId,
+                HttpRequestMethod.DELETE, "/books/" + bookId + "/renter/" + userId,
                 null, bookHandler,
                 dbEventType);
     }
@@ -128,44 +128,44 @@ public class NetworkController {
     Crowds
      */
 
-    public static void createCrowd(Crowd crowd, DBEventType dbEventType) {
+    public static void createCrowd(Crowd crowd, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.POST, "/crowds",
+                HttpRequestMethod.POST, "/crowds",
                 gson.toJson(crowd, Crowd.class), crowdHandler,
                 dbEventType);
     }
 
-    public static void getCrowd(String crowdId, DBEventType dbEventType) {
+    public static void getCrowd(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/crowds/" + crowdId,
+                HttpRequestMethod.GET, "/crowds/" + crowdId,
                 null, crowdHandler,
                 dbEventType);
     }
 
-    public static void getCrowds(DBEventType dbEventType) {
+    public static void getCrowds(DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/crowds",
+                HttpRequestMethod.GET, "/crowds",
                 null, crowdListHandler,
                 dbEventType);
     }
 
-    public static void getCrowdsByMember(String userId, DBEventType dbEventType) {
+    public static void getCrowdsByMember(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/crowds?member=" + userId,
+                HttpRequestMethod.GET, "/crowds?member=" + userId,
                 null, crowdListHandler,
                 dbEventType);
     }
 
-    public static void addCrowdMember(String crowdId, String userId, DBEventType dbEventType) {
+    public static void addCrowdMember(String crowdId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.PUT, "/crowds/" + crowdId + "/members/" + userId,
+                HttpRequestMethod.PUT, "/crowds/" + crowdId + "/members/" + userId,
                 null, null,
                 dbEventType);
     }
 
-    public static void removeCrowdMember(String crowdId, String userId, DBEventType dbEventType) {
+    public static void removeCrowdMember(String crowdId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.DELETE, "/crowds/" + crowdId + "/members/" + userId,
+                HttpRequestMethod.DELETE, "/crowds/" + crowdId + "/members/" + userId,
                 null, null,
                 dbEventType);
     }
@@ -174,25 +174,25 @@ public class NetworkController {
     Users
      */
 
-    public static void createUser(User user, DBEventType dbEventType) {
+    public static void createUser(User user, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.POST, "/users",
+                HttpRequestMethod.POST, "/users",
                 gson.toJson(user, User.class), userHandler,
                 dbEventType);
     }
 
-    public static void getUser(String userId, DBEventType dbEventType){
+    public static void getUser(String userId, DbEventType dbEventType){
         NetworkHelper.sendRequest(
-                HTTPRequestMethod.GET, "/users/" + userId,
+                HttpRequestMethod.GET, "/users/" + userId,
                 null, userHandler,
                 dbEventType);
     }
 
-    public static void login(String username, DBEventType dbEventType) {
+    public static void login(String username, DbEventType dbEventType) {
         JsonObject object = new JsonObject();
         object.addProperty("username", username);
         String jsonData = object.toString();
-        NetworkHelper.sendRequest(HTTPRequestMethod.POST,
+        NetworkHelper.sendRequest(HttpRequestMethod.POST,
                 "/login/", jsonData,
                 userHandler, dbEventType);
     }
