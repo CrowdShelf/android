@@ -68,6 +68,7 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
             case UserListActivity_USER_READY:
                 User user = realm.where(User.class)
                         .equalTo("id", event.getDbObjectId())
+                        .notEqualTo("id", MainTabbedActivity.getMainUserId())
                         .findFirst();
                 if (!usersWithBook.contains(user)) {
                     usersWithBook.add(user);
