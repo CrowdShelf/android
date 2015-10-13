@@ -9,15 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crowdshelf.app.io.DBEvent;
-import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.Crowd;
-import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
-import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;

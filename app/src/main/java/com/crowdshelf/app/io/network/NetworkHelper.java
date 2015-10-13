@@ -3,13 +3,10 @@ package com.crowdshelf.app.io.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
-import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,14 +20,14 @@ import java.net.URL;
  */
 public class NetworkHelper {
     private final static String TAG = "NetworkHelper";
-    private static String host = "http://crowdshelf.herokuapp.com";
+    private static String host = "http://crowdshelf-dev.herokuapp.com";
     // For converting json into java objects using GSON and custom deserializers for each class
     private static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .create();
 
-    public static void sendRequest(final HTTPRequestMethod requestMethod, final String route, final String jsonData,
-                                   final ResponseHandler responseHandler, final DBEventType dbEventType)
+    public static void sendRequest(final HttpRequestMethod requestMethod, final String route, final String jsonData,
+                                   final ResponseHandler responseHandler, final DbEventType dbEventType)
     {
         new AsyncTask<Void, Void, InputStreamReader>() {
             @Override
@@ -84,7 +81,7 @@ public class NetworkHelper {
         }.execute();
     }
 
-    public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DBEventType dbEventType) {
+    public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DbEventType dbEventType) {
         try {
             BufferedReader bReader = new BufferedReader(iReader);
             StringBuilder builder = new StringBuilder();

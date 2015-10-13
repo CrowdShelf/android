@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -34,7 +34,7 @@ public class ViewBookActivity extends Activity {
     private Realm realm;
     private BookInfo bookInfo;
     private List<Book> books;
-    private String ISBN;
+    private String isbn;
     private String bookID;
     private Book book;
     private String bookOwnerID;
@@ -54,19 +54,19 @@ public class ViewBookActivity extends Activity {
         realm = Realm.getDefaultInstance();
 
         Intent intent = getIntent();
-        ISBN = intent.getStringExtra("ISBN");
+        isbn = intent.getStringExtra("isbn");
         bookID = intent.getStringExtra("bookID");
         bookOwnerID = intent.getStringExtra("bookOwnerID");
 
-        if (ISBN != null) {
-            if (ISBN.equals("")) {
-                Log.w(TAG, "Got called without ISBN!");
+        if (isbn != null) {
+            if (isbn.equals("")) {
+                Log.w(TAG, "Got called without isbn!");
             }
             returnBookButton.setVisibility(View.GONE);
             removeBookButton.setVisibility(View.GONE);
 
             bookInfo = realm.where(BookInfo.class)
-                    .equalTo("isbn", ISBN)
+                    .equalTo("isbn", isbn)
                     .findFirst();
         } else if (bookID != null) {
             book = realm.where(Book.class)
@@ -130,7 +130,7 @@ public class ViewBookActivity extends Activity {
         Toast.makeText(ViewBookActivity.this, "Borrow book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, UserListActivity.class);
-        intent.putExtra("ISBN", bookInfo.getIsbn());
+        intent.putExtra("isbn", bookInfo.getIsbn());
         startActivityForResult(intent, BORROW_BOOK_ACTION);
 
 //        Intent returnIntent = new Intent();
@@ -143,9 +143,9 @@ public class ViewBookActivity extends Activity {
 
     public void returnButtonClick(View view) {
         // Return a book you borrow to its owner
-        // Get the book object WHERE rentedTo = mainUser AND isbn = ISBN
+        // Get the book object WHERE rentedTo = mainUser AND isbn = isbn
         Toast.makeText(ViewBookActivity.this, "Returned book: " + bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
-        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DBEventType.USER_BOOKS_CHANGED);
+        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DbEventType.USER_BOOKS_CHANGED);
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();

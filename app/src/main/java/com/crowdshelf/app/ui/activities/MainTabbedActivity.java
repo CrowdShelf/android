@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DBEvent;
-import com.crowdshelf.app.io.DBEventType;
+import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.Crowd;
@@ -117,7 +117,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     @Subscribe
-    public void handleDBEvents(DBEvent event) {
+    public void handleDBEvents(DbEvent event) {
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
@@ -152,7 +152,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 Book book = realm.where(Book.class)
                         .equalTo("id", event.getDbObjectId())
                         .findFirst();
-                MainController.getBookInfo(book.getIsbn(), DBEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
+                MainController.getBookInfo(book.getIsbn(), DbEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
                 break;
 
             case CREATE_BOOK_AFTER_ADD:
@@ -163,7 +163,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 Book bookAdded = realm.where(Book.class)
                         .equalTo("id", event.getDbObjectId())
                         .findFirst();
-                MainController.getBookInfo(bookAdded.getIsbn(), DBEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
+                MainController.getBookInfo(bookAdded.getIsbn(), DbEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
                 break;
 
             case BOOK_INFO_RECEIVED_ADD_TO_USERSHELF:
@@ -261,7 +261,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
                             //MainController.getBookInfo(lastScannedBookIsbn, DBEventType.CREATE_BOOK_AFTER_ADD);
                             Log.i(TAG, "onActivityResult createBook");
-                            MainController.createBook(b1, DBEventType.CREATE_BOOK_AFTER_ADD);
+                            MainController.createBook(b1, DbEventType.CREATE_BOOK_AFTER_ADD);
                             Log.i(TAG, "onActivityResult createdBook");
                     }
                 }
@@ -284,7 +284,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                             for (Book b : userBooks) {
                                 if (b.getId().equals(bookID)) {
                                     Log.i(TAG, "Book deleted: " + b.getId());
-                                    MainController.removeBook(b.getId(), DBEventType.BOOK_REMOVED);
+                                    MainController.removeBook(b.getId(), DbEventType.BOOK_REMOVED);
                                     updateUserBooks();
                                     break;
                                 }
@@ -328,7 +328,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public void isbnReceived(String isbn) {
-        MainController.getBookInfo(isbn, DBEventType.SCAN_COMPLETE_GET_BOOKINFO);
+        MainController.getBookInfo(isbn, DbEventType.SCAN_COMPLETE_GET_BOOKINFO);
     }
 
 

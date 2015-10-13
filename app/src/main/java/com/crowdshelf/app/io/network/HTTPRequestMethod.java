@@ -3,7 +3,7 @@ package com.crowdshelf.app.io.network;
 /**
  * Created by Torstein on 08.09.2015.
  */
-public enum HTTPRequestMethod {
+public enum HttpRequestMethod {
     POST("POST"),
     PUT("PUT"),
     GET("GET"),
@@ -11,7 +11,7 @@ public enum HTTPRequestMethod {
 
     private final String requestMethod;
 
-    HTTPRequestMethod(String requestMethod) {
+    HttpRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
     }
 

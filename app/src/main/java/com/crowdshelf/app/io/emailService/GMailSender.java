@@ -23,17 +23,17 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class GMailSender extends javax.mail.Authenticator {
+public class GmailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
     private String user;
     private String password;
     private Session session;
 
     static {
-        Security.addProvider(new JSSEProvider());
+        Security.addProvider(new JsseProvider());
     }
 
-    public GMailSender(String user, String password) {
+    public GmailSender(String user, String password) {
         this.user = user;
         this.password = password;
 
