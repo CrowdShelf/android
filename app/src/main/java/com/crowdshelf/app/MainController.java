@@ -184,6 +184,7 @@ public class MainController {
             BookInfo bookInfo1 = new BookInfo();
             bookInfo1.setIsbn(isbn);
             realm.copyToRealm(bookInfo1);
+            realm.commitTransaction();
             GetBookInfoAsyncTask.getBookInfo(isbn, dbEventType);
         } else {
             MainTabbedActivity.getBus().post(new DbEvent(dbEventType, isbn));
