@@ -2,6 +2,7 @@ package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -81,7 +82,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.deleteRealm(realmConfiguration); // Clean slate
+//        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         mainController = new MainController();
         mainController.onCreate();
@@ -102,6 +103,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
         userScreenFragment = UserScreenFragment.newInstance();
         userBookInfos = new ArrayList<>();

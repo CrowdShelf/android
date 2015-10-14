@@ -29,4 +29,6 @@
     <string name="registrationButtonText">Register user</string>
     <string name="loginButtonText">Login</string>
     <string name="title_activity_user_list">UserListActivity</string>
+    <string name="title_activity_remove">remove</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

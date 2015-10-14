@@ -21,7 +21,8 @@
         <activity
             android:name="com.crowdshelf.app.ui.activities.MainTabbedActivity"
             android:label="@string/title_activity_main_tabbed"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
