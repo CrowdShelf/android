@@ -309,12 +309,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
         }
     }//onActivityResult
 
-    public void startViewBook(ScannedBookActions scannedBookAction, String ISBN) {
+    public void startViewBook(ScannedBookActions scannedBookAction, String isbn) {
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("SCANNEDBOOKACTION", scannedBookAction.value);
-        intent.putExtra("ISBN", ISBN);
+        intent.putExtra("isbn", isbn);
         intent.putExtra("userID", getMainUserId());
-        lastScannedBookIsbn = ISBN;
+        lastScannedBookIsbn = isbn;
         startActivityForResult(intent, SCANNED_BOOK_ACTION);
     }
 
