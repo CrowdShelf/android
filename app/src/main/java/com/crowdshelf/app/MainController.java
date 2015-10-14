@@ -70,18 +70,26 @@ public class MainController {
                     }
                 }
                 break;
-            case ON_START_USER_CROWD_BOOKS_READY:
-                /*
-                Get BookInfo for all User Books and User Crowd Books
-                 */
-                // Todo: Only get bookInfo for the appropriate books
+            case ON_START_USER_BOOKS_READY:
                 List<Book> books = realm.where(Book.class)
                         .findAll();
                 for (Book b : books) {
                     getBookInfo(b.getIsbn(), DbEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
                 }
                 MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_BOOKS_CHANGED, "all"));
+                break;
+            case ON_START_USER_CROWD_BOOKS_READY:
+                /*
+                Get BookInfo for all User Books and User Crowd Books
+                 */
+                // Todo: Only get bookInfo for the appropriate books
+                List<Book> books2 = realm.where(Book.class)
+                        .findAll();
+                for (Book b : books2) {
+                    getBookInfo(b.getIsbn(), DbEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
+                }
                 MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWD_BOOKS_CHANGED, "all"));
+                break;
         }
     }
 
@@ -293,6 +301,7 @@ public class MainController {
     The books of the members of the above crowds
      */
     public static void getMainUserData(String userId) {
+        getBooks(userId, DbEventType.ON_START_USER_BOOKS_READY);
         NetworkController.getCrowdsByMember(userId, DbEventType.ON_START_USER_CROWDS_READY);
     }
 
