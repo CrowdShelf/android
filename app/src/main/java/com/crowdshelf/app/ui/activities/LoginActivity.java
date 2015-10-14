@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
                 Log.v("AndroidEnterKeyActivity","Enter Key Pressed!");
                 switch (view.getId()) {
                     case R.id.usernameTextfield:
-//                        login(view);  TODO::make this bug free
+                        login(view);
                         break;
                     case R.id.nameTextfield:
                         register(view);
