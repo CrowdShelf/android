@@ -170,6 +170,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
                         break;
                     case R.id.nameTextfield:
                         register(view);
+                        break;
                     }
                 return true;
                 }
