@@ -1,4 +1,4 @@
-package com.crowdshelf.app.bookInfo;
+package com.crowdshelf.app.models.googleBookInfo;
 
 /**
  * Created by markuslund92 on 01.09.15.

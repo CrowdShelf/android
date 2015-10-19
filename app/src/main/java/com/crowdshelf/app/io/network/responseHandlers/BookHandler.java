@@ -2,6 +2,7 @@ package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
@@ -21,9 +22,10 @@ public class BookHandler implements ResponseHandler {
             /*
             TODO: Only send bus event if the object is new or updated??
              */
-            Log.i(TAG, "Json-string: " + jsonString);
+            //Log.i(TAG, "Json-string: " + jsonString);
             Book b = gson.fromJson(jsonString, Book.class);
             Log.i(TAG, "added _id " + b.getId() + " isbn " + b.getIsbn() + " owner " + b.getOwner() + " rentedTo " + b.getRentedTo() + " availableForRent " + String.valueOf(b.getAvailableForRent()));
+            MainController.getBookInfo(b.getIsbn(), DbEventType.NONE);
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(b);

@@ -94,8 +94,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
     @Subscribe
     public void handleLogin(DbEvent event) {
         Intent returnIntent;
-        Log.i(TAG, "handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
+            // @todo: Handle unsuccessful login attempts (username not found)
             case LOGIN:
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
@@ -103,16 +103,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
                 setResult(RESULT_OK,returnIntent);
                 finish();
                 break;
-                /*
-                if (event.getDbObjectId().equals("True")) {
-                    // login succesful
-
-                } else if (event.getDbObjectId().equals("False")) {
-                    // login failed
-                    Toast.makeText(this, "User " + username + " not registrated", Toast.LENGTH_SHORT).show();
-                }
-                break;
-                */
             case USER_CREATED:
                 /*
                 HACK: Put all new users in a default crowd:

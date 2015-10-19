@@ -97,10 +97,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, LOGIN);
-
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -117,6 +113,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
         userScreenFragment = UserScreenFragment.newInstance();
         userBookInfos = new ArrayList<>();
 
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, LOGIN);
     }
 
     public void showAllOwnedBooksButtonPressed(View v){
@@ -147,6 +145,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Subscribe
     public void handleDBEvents(DbEvent event) {
+        if (event.getDbEventType().equals(DbEventType.NONE)) return;
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
@@ -273,7 +272,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
             case LOGIN:
                 if (resultCode == RESULT_OK) {
                     String username = data.getStringExtra("username");
-                    Log.i(TAG, "Username: " + username);
                     User u = realm.where(User.class)
                             .equalTo("username", username)
                             .findFirst();

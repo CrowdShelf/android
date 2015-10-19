@@ -56,39 +56,14 @@ public class MainController {
                 then retrieve all the books of the members of these crowds
                 (which will include the books of the main user)
                  */
-                MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
+                //MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
                         .findAll();
                 for (Crowd c : crowds) {
                     for (MemberId memberId : c.getMembers()) {
-                        if (memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
-                            for (MemberId memberId2 : c.getMembers()) {
-                                NetworkController.getBooksOwnedAndRented(memberId2.getId(), DbEventType.ON_START_USER_CROWD_BOOKS_READY);
-                            }
-                            break;
-                        }
+                        NetworkController.getBooksOwnedAndRented(memberId.getId(), DbEventType.ON_START_USER_CROWD_BOOKS_READY);
                     }
                 }
-                break;
-            case ON_START_USER_BOOKS_READY:
-                List<Book> books = realm.where(Book.class)
-                        .findAll();
-                for (Book b : books) {
-                    getBookInfo(b.getIsbn(), DbEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
-                }
-                MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_BOOKS_CHANGED, "all"));
-                break;
-            case ON_START_USER_CROWD_BOOKS_READY:
-                /*
-                Get BookInfo for all User Books and User Crowd Books
-                 */
-                // Todo: Only get bookInfo for the appropriate books
-                List<Book> books2 = realm.where(Book.class)
-                        .findAll();
-                for (Book b : books2) {
-                    getBookInfo(b.getIsbn(), DbEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
-                }
-                MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWD_BOOKS_CHANGED, "all"));
                 break;
         }
     }
@@ -108,16 +83,8 @@ public class MainController {
         NetworkController.createUser(user, dbEventType);
     }
 
-    public static User getUser(String userId, DbEventType dbEventType) {
-        User user = realm.where(User.class)
-                .equalTo("id", userId)
-                .findFirst();
+    public static void getUser(String userId, DbEventType dbEventType) {
         NetworkController.getUser(userId, dbEventType);
-
-        if (user == null) {
-            Log.d(TAG, "Tried to get user with id: " + userId + " but it was not found in the database!");
-        }
-        return user;
     }
 
     /*
@@ -140,16 +107,8 @@ public class MainController {
         NetworkController.createCrowd(crowd, dbEventType);
     }
 
-    public static Crowd getCrowd(String crowdId, DbEventType dbEventType) {
-        Crowd crowd = realm.where(Crowd.class)
-                .equalTo("id", crowdId)
-                .findFirst();
+    public static void getCrowd(String crowdId, DbEventType dbEventType) {
         NetworkController.getCrowd(crowdId, dbEventType);
-
-        if (crowd == null) {
-            Log.d(TAG, "Tried to get crowd with id: " + crowdId + " but it was not found in the database!");
-        }
-        return crowd;
     }
 
     public static void addCrowdMember(String crowdId, String userId, DbEventType dbEventType){
@@ -195,16 +154,8 @@ public class MainController {
     /*
     Get a book by id
      */
-    public static Book getBook(String bookId, DbEventType dbEventType) {
-        Book book = realm.where(Book.class)
-                .equalTo("id", bookId)
-                .findFirst();
+    public static void getBook(String bookId, DbEventType dbEventType) {
         NetworkController.getBook(bookId, dbEventType);
-
-        if (book == null) {
-            Log.d(TAG, "Tried to get book with id: " + bookId + " but it was not found in the database!");
-        }
-        return book;
     }
 
     /*
@@ -253,33 +204,15 @@ public class MainController {
     /*
     Get books owned by and rented to a given user
      */
-    public static List<Book> getBooks(String userId, DbEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("owner", userId)
-                .or()
-                .equalTo("rentedTo", userId)
-                .findAll();
+    public static void getBooks(String userId, DbEventType dbEventType) {
         NetworkController.getBooksOwnedAndRented(userId, dbEventType);
-
-        if (books == null || books.size() == 0) {
-            Log.d(TAG, "Tried to get books owned and rented by given user id: " + userId + " but no books was not found in the database!");
-        }
-        return books;
     }
 
     /*
     Get books owned by a given user
      */
-    public static List<Book> getBooksOwned(String userId, DbEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("owner", userId)
-                .findAll();
+    public static void getBooksOwned(String userId, DbEventType dbEventType) {
         NetworkController.getBooksOwned(userId, dbEventType);
-
-        if (books == null || books.size() == 0) {
-            Log.d(TAG, "Tried to get books owned given user id: " + userId + " but no books was not found in the database!");
-        }
-        return books;
     }
 
     /*
@@ -305,7 +238,7 @@ public class MainController {
     The books of the members of the above crowds
      */
     public static void getMainUserData(String userId) {
-        getBooks(userId, DbEventType.ON_START_USER_BOOKS_READY);
+        getBooks(userId, DbEventType.USER_BOOKS_CHANGED);
         NetworkController.getCrowdsByMember(userId, DbEventType.ON_START_USER_CROWDS_READY);
     }
 
