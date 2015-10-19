@@ -44,6 +44,8 @@
         </activity>
         <activity android:name="com.crowdshelf.app.ui.activities.CreateCrowdActivity" >
         </activity>
+        <activity android:name="com.crowdshelf.app.ui.activities.EditCrowdActivity" >
+        </activity>
     </application>
 
 </manifest>
