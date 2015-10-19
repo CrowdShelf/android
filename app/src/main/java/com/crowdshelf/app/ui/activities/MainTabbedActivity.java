@@ -436,6 +436,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     }
 
+    public void createCrowdClicked(View view) {
+        Intent intent = new Intent(this, CreateCrowdActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
