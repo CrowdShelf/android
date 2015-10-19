@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -29,6 +30,8 @@ public class CreateCrowdActivity extends AppCompatActivity {
 //        Uncomment when getUserIDByUsername is created
 //        members.add(getUserIDByUsername(username));
         Toast.makeText(this, "Add " + username + " to member list.", Toast.LENGTH_SHORT).show();
+        TextView membersTextView = (TextView) findViewById(R.id.membersTextView);
+        membersTextView.setText(membersTextView.getText() + username + "\n");
         usernameEditText.setText("");
     }
 
