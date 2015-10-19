@@ -36,7 +36,6 @@ public class CreateCrowdActivity extends AppCompatActivity {
         EditText crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
         String crowdName = crowdNameEditText.getText().toString();
         members.add(MainTabbedActivity.getMainUserId());
-//        Uncomment when createCrowd takes String as inout instead of MemberId
-//        MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), members, DbEventType.CROWD_CREATED);
+        MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), members, DbEventType.CROWD_CREATED);
     }
 }
