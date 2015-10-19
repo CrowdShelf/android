@@ -91,12 +91,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
         realmConfiguration = new RealmConfiguration.Builder(this).build();
 //        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
+        realm = Realm.getDefaultInstance();
         mainController = new MainController();
         mainController.onCreate();
 
-
         MainTabbedActivity.getBus().register(this);
-        realm = Realm.getDefaultInstance();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

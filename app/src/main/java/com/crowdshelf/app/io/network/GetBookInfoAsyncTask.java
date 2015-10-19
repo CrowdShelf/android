@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -28,8 +30,14 @@ import io.realm.Realm;
 public class GetBookInfoAsyncTask {
     private static String googleBooksAPIUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
     private static final String TAG = "GetBookInfoAsyncTask";
+    private static List<String> isbnsDownloaded = new ArrayList<>();
 
     public static void getBookInfo(final String isbn, final DbEventType dbEventType) {
+        for (String s: isbnsDownloaded) {
+            if (s.equals(isbn)) {
+                return;
+            }
+        }
         new AsyncTask<Void, Void, BookInfo>() {
             @Override
             protected BookInfo doInBackground(Void... params) {
@@ -95,6 +103,7 @@ public class GetBookInfoAsyncTask {
         realm.copyToRealmOrUpdate(bookInfo);
         realm.commitTransaction();
         realm.close();
+        isbnsDownloaded.add(bookInfo.getIsbn());
         MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookInfo.getIsbn()));
         Log.i(TAG, "Added BookInfo for ISBN: " + bookInfo.getIsbn());
     }

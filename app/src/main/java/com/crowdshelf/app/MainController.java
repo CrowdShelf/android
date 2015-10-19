@@ -166,6 +166,7 @@ public class MainController {
                 .equalTo("isbn", isbn)
                 .findFirst();
         if (bookInfo == null) {
+            /*
             // Add a blank BookInfo to be updated when the BookInfo is downloaded, to avoid running
             // multiple threads for getting BookInfo for the same book
             realm.beginTransaction();
@@ -173,6 +174,7 @@ public class MainController {
             bookInfo1.setIsbn(isbn);
             realm.copyToRealm(bookInfo1);
             realm.commitTransaction();
+            */
             GetBookInfoAsyncTask.getBookInfo(isbn, dbEventType);
         } else {
             MainTabbedActivity.getBus().post(new DbEvent(dbEventType, isbn));

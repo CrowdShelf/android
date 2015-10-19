@@ -77,7 +77,7 @@ public class BookGridViewAdapter extends BaseAdapter {
                 .equalTo("isbn", book.getIsbn())
                 .findFirst();
         realm.close();
-        if (bookInfo.getTitle() == null) {
+        if (bookInfo == null || bookInfo.getTitle() == null) {
             viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.bookCoverImageView.setVisibility(View.INVISIBLE);
             viewHolder.bookTitleTextView.setVisibility(View.INVISIBLE);

@@ -58,7 +58,7 @@ public class NetworkController {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.DELETE, "/books/" + bookId,
                 null, null,
-                null);
+                dbEventType);
     }
 
     public static void getBook(String id, DbEventType dbEventType) {
