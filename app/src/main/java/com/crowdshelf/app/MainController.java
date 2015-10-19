@@ -124,14 +124,18 @@ public class MainController {
     Crowds
      */
 
-    public static void createCrowd(String name, String ownerId, List<MemberId> members, DbEventType dbEventType){
+    public static void createCrowd(String name, String ownerId, List<String> members, DbEventType dbEventType){
         // This crowd is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
         Crowd crowd = new Crowd();
         crowd.setName(name);
         crowd.setOwner(ownerId);
         RealmList<MemberId> memberIds = new RealmList<MemberId>();
-        memberIds.addAll(members);
+        for (String id: members) {
+            MemberId memberId = new MemberId();
+            memberId.setId(id);
+            memberIds.add(memberId);
+        }
         crowd.setMembers(memberIds);
         NetworkController.createCrowd(crowd, dbEventType);
     }
