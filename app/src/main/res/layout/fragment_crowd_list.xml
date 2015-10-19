@@ -1,13 +1,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.crowdshelf.app.ui.fragments.CrowdsScreenFragment">
+    tools:context="com.crowdshelf.app.ui.fragments.CrowdListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <fragment
+    <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/crowdListFragment"
-        android:name="com.crowdshelf.app.ui.fragments.CrowdListFragment"/>
+        android:id="@+id/crowdListFragmentListView" />
+
 </FrameLayout>

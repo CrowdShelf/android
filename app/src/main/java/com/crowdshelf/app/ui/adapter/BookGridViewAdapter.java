@@ -35,16 +35,19 @@ public class BookGridViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+
         return mItems.size();
     }
 
     @Override
     public Object getItem(int position) {
+
         return mItems.get(position);
     }
 
     @Override
     public long getItemId(int position) {
+
         return position;
     }
 

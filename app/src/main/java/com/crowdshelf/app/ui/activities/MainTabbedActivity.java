@@ -71,6 +71,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private static List<Book> borrowedBooks;
     private static List<Book> lentedBooks;
     private int updateUserBooksRan = 0;
+    private CrowdsScreenFragment crowdScreenFragment;
 
     public static MixpanelAPI getMixpanel() {
         return mixpanel;
@@ -97,10 +98,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, LOGIN);
-
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -115,7 +112,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
         tabLayout.setupWithViewPager(mViewPager);
 
         userScreenFragment = UserScreenFragment.newInstance();
+        crowdScreenFragment = CrowdsScreenFragment.newInstance();
         userBookInfos = new ArrayList<>();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, LOGIN);
 
     }
 
@@ -235,6 +236,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
             }
         }
         userCrowds = userCrowdsTemp;
+        crowdScreenFragment.updateCrowdList(userCrowds);
+
     }
 
     public void updateUserCrowdBooks() {
@@ -272,6 +275,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         switch (requestCode) {
             case LOGIN:
                 if (resultCode == RESULT_OK) {
+//                    updateUserBooks();
                     String username = data.getStringExtra("username");
                     Log.i(TAG, "Username: " + username);
                     User u = realm.where(User.class)
@@ -424,7 +428,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 case 0:
                     return userScreenFragment;
                 case 1:
-                    return CrowdsScreenFragment.newInstance(null, null);
+                    return crowdScreenFragment;
                 case 2:
                     return ScannerScreenFragment.newInstance();
                 default:
