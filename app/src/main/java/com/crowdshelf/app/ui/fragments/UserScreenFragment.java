@@ -81,11 +81,16 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         super.onDestroy();
     }
 
-    public void updateBookShelf(List<Book> userBooks) {
-        Log.i(TAG, "updateBookShelf, userbooks: " + userBooks);
+    public void updateOwnedBookShelf(List<Book> userBooks) {
         ownedBooksGridViewFragment.setmItems(userBooks);
-        lentedBooksGridViewFragment.setmItems(userBooks);
+    }
+
+    public void updateBorrowedBookShelf(List<Book> userBooks) {
         borrowedBooksGridViewFragment.setmItems(userBooks);
+    }
+
+    public void updateLentedBooks(List<Book> userBooks) {
+        lentedBooksGridViewFragment.setmItems(userBooks);
     }
 
 
