@@ -19,6 +19,7 @@ import com.squareup.otto.Subscribe;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -28,7 +29,7 @@ import ntnu.stud.markul.crowdshelf.R;
 public class EditCrowdActivity extends AppCompatActivity {
     private Realm realm;
     private String TAG = "EditCrowdActivity";
-    private List<String> usernames;
+    private List<String> usernames = new ArrayList<>();
     TextView membersTextView;
     String textViewString = "Usernames:\n";
 
@@ -58,11 +59,14 @@ public class EditCrowdActivity extends AppCompatActivity {
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
             case EditCrowdActivity_ADD_USERS:
-//                TextView membersTextView = (TextView) findViewById(R.id.membersTextView);
                 User user = realm.where(User.class)
                         .equalTo("id", event.getDbObjectId())
                         .notEqualTo("id", MainTabbedActivity.getMainUserId())
                         .findFirst();
+
+
+                usernames.add(user.getUsername());
+                // TODO:: display list instead of textView
                 membersTextView.setText(membersTextView.getText() + user.getUsername() + "\n");
 
                 break;

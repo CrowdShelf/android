@@ -10,13 +10,14 @@ import android.widget.Toast;
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEventType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class CreateCrowdActivity extends AppCompatActivity {
-    private List<String> members;
+    private List<String> members = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,8 @@ public class CreateCrowdActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString();
 //        Uncomment when getUserIDByUsername is created
 //        members.add(getUserIDByUsername(username));
-        Toast.makeText(this, "Add " + username + " to member list.", Toast.LENGTH_SHORT).show();
+
+        members.add(username);
         TextView membersTextView = (TextView) findViewById(R.id.membersTextView);
         membersTextView.setText(membersTextView.getText() + username + "\n");
         usernameEditText.setText("");
