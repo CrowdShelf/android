@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -19,7 +22,7 @@ import com.squareup.otto.Subscribe;
 
 import ntnu.stud.markul.crowdshelf.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnKeyListener {
     private static final String TAG = "LoginActivity";
     private String username;
     private String email;
@@ -30,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         MainTabbedActivity.getBus().register(this);
+        EditText usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
+        usernameTextField.setOnKeyListener(this);
     }
 
     @Override
@@ -113,10 +118,9 @@ public class LoginActivity extends AppCompatActivity {
                 HACK: Put all new users in a default crowd:
                  */
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
-                NetworkController.addCrowdMember("5690113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
+                NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
                 MainController.login(username, DbEventType.LOGIN);
-      
-                // log in with new user
+
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -150,4 +154,27 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.registerLayout).setVisibility(View.VISIBLE);
         findViewById(R.id.cancelLayout).setVisibility(View.INVISIBLE);
     }
+
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent event) {
+        EditText login = (EditText) view;
+        if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+        keyCode == EditorInfo.IME_ACTION_DONE ||
+        event.getAction() == KeyEvent.ACTION_DOWN &&
+        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            if (!event.isShiftPressed()) {
+                Log.v("AndroidEnterKeyActivity","Enter Key Pressed!");
+                switch (view.getId()) {
+                    case R.id.usernameTextfield:
+                        login(view);
+                        break;
+                    case R.id.nameTextfield:
+                        register(view);
+                        break;
+                    }
+                return true;
+                }
+            }
+        return false; // pass on to other listeners.
+        }
 }
