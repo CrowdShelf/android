@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crowdshelf.app.bookInfo.GoogleBooksMain;
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
+import com.crowdshelf.app.models.googleBookInfo.GoogleBooksMain;
+import com.crowdshelf.app.models.googleBookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.BookInfo;

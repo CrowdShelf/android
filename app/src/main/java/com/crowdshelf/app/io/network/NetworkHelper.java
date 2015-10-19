@@ -38,7 +38,7 @@ public class NetworkHelper {
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoOutput(false); // must be false for GET. WHY?
                     connection.setDoInput(true);
-                    // todo decide setDoOutput and DoInput
+                    // todo: Maybe it will become necessary to use other values for setDoOutput and setDoInput
                     if (jsonData != null) {
                     }
                     if (responseHandler != null) {
@@ -48,7 +48,7 @@ public class NetworkHelper {
                     connection.setConnectTimeout(12000);
                     connection.setReadTimeout(12000);
                     connection.connect();
-                    Log.i(TAG, "NetworkHelper DoOutput: " + connection.getDoOutput() + "DoInput: " + connection.getDoInput());
+                    //Log.i(TAG, "NetworkHelper DoOutput: " + connection.getDoOutput() + "DoInput: " + connection.getDoInput());
                     if (jsonData != null) {
                         Log.i(TAG, "Sending JsonData: " + jsonData);
                         OutputStreamWriter writer = new OutputStreamWriter(
@@ -56,13 +56,12 @@ public class NetworkHelper {
                         writer.write(jsonData);
                         writer.close();
                     }
-                    Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
-                            " ResponseMessage: " + connection.getResponseMessage());
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         return new InputStreamReader(connection.getInputStream());
                     } else {
-                        // todo How should this be handled?
+                        Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
+                                " ResponseMessage: " + connection.getResponseMessage());
                     }
                 } catch (java.net.MalformedURLException e) {
                     Log.w(TAG, "SendRequest MalformedURLException" + e.toString());
@@ -73,9 +72,10 @@ public class NetworkHelper {
             }
 
             protected void onPostExecute(InputStreamReader reader) {
-                Log.i(TAG, "onPostExecute - InputStreamReader: " + reader);
                 if (reader != null) {
                     handleResponse(reader, responseHandler, dbEventType);
+                } else {
+                    Log.i(TAG, "onPostExecute - InputStreamReader is null");
                 }
             }
         }.execute();
