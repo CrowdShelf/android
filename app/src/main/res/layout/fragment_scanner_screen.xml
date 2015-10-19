@@ -27,7 +27,7 @@
         android:layout_gravity="center_horizontal|top"
         android:onClick="fakeScan"
         android:text="Lean"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/button4"
@@ -36,6 +36,6 @@
         android:layout_gravity="right|top"
         android:onClick="fakeScan2"
         android:text="Bro"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </FrameLayout>

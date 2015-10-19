@@ -15,10 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.ScannerEvent;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        MainTabbedActivity.getBus().register(this);
         mScannerView = new ZXingScannerView(getActivity());
         if (state != null) {
             mFlash = state.getBoolean(FLASH_STATE, false);
@@ -66,7 +70,34 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         setHasOptionsMenu(false);
     }
 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    @Subscribe
+    public void handleScannerEvents(ScannerEvent event) {
+        Log.i(TAG, "Handle Scanner Event: " + event.getScannerEventType());
+        switch (event.getScannerEventType()) {
+            case TURN_SCANNER_OFF:
+//                try{
+//                    mScannerView.stopCamera();
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+
+
+                break;
+            case TURN_SCANNER_ON:
+//                try{
+////                    mScannerView.setResultHandler(this);
+//                    mScannerView.startCamera(mCameraId);
+////                    mScannerView.setFlash(mFlash);
+////                    mScannerView.setAutoFocus(mAutoFocus);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+
+                break;
+        }
+    }
+
+                public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         MenuItem menuItem;
@@ -150,6 +181,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     @Override
     public void onPause() {
         super.onPause();
+        Log.i(TAG, "onPause");
         mScannerView.stopCamera();
     }
 

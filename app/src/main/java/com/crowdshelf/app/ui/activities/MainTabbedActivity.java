@@ -18,12 +18,15 @@ import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
+import com.crowdshelf.app.io.ScannerEvent;
+import com.crowdshelf.app.io.ScannerEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
+import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
 import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
 import com.crowdshelf.app.ui.fragments.UserScreenFragment;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -103,6 +106,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
+        mViewPager.setOffscreenPageLimit(2);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -412,9 +416,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
             case 0:
                 Log.i(TAG, "onPageSelected position: " + position);
                 updateUserBooks();
+                MainTabbedActivity.getBus().post(new ScannerEvent(ScannerEventType.TURN_SCANNER_OFF, null));
                 break;
             case 1:
                 Log.i(TAG, "onPageSelected position: " + position);
+                MainTabbedActivity.getBus().post(new ScannerEvent(ScannerEventType.TURN_SCANNER_ON, null));
                 break;
             case 2:
                 Log.i(TAG, "onPageSelected position: " + position);
@@ -448,9 +454,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 case 0:
                     return userScreenFragment;
                 case 1:
+                    return CrowdsScreenFragment.newInstance(null, null);
+                case 2:
                     return ScannerScreenFragment.newInstance();
-//                case 2:
-//                    return CrowdsScreenFragment.newInstance(null, null);
                 default:
                     return null;
             }
@@ -458,7 +464,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            return 2;
+
+            return 3;
         }
 
         @Override
@@ -468,9 +475,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 case 0:
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
+                case 2:
+                    return getString(R.string.title_section2).toUpperCase(l);
             }
             return null;
         }
