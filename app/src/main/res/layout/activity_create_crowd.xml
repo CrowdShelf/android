@@ -35,22 +35,34 @@
         android:layout_below="@+id/crowdMember"
         android:onClick="addUserToCrowdClicked"/>
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/membersTextView"
+        android:layout_height="200dp"
+        android:id="@+id/memberListView"
         android:layout_below="@+id/addUserButton"
-        android:text="Added members:\n"/>
+        android:layout_alignParentStart="true" />
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create"
         android:id="@+id/createCrowdButton"
-        android:layout_below="@+id/membersTextView"
+        android:layout_below="@+id/memberListView"
         android:layout_centerHorizontal="true"
         android:padding="20dp"
         android:onClick="createNewCrowd"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:id="@+id/updateCrowdButton"
+        android:padding="20dp"
+        android:onClick="updateCrowd"
+        android:visibility="invisible"
+        android:layout_below="@+id/memberListView"
+        android:layout_alignStart="@+id/createCrowdButton" />
 
 
 </RelativeLayout>

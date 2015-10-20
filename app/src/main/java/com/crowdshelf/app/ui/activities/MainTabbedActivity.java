@@ -437,7 +437,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     public void createCrowdClicked(View view) {
-        Intent intent = new Intent(this, CreateCrowdActivity.class);
+        Intent intent = new Intent(this, EditCrowdActivity.class);
+        intent.putExtra("crowdID", "");
         startActivity(intent);
     }
 
