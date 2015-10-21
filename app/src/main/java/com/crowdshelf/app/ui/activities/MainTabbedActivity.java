@@ -313,6 +313,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
         MainController.getBookInfo(isbn, DbEventType.SCAN_COMPLETE_GET_BOOKINFO);
     }
 
+    public void addCrowdFabClicked(View v){
+        //TODO: Create new crowd
+        Log.i(TAG, "addCrowdFabClicked");
+    }
+
 
     @Override
     public void itemInUserShelfClicked(String bookID) {
