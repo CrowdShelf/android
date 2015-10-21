@@ -13,6 +13,7 @@ import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 
 import java.util.List;
+import java.util.Set;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -81,19 +82,19 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         super.onDestroy();
     }
 
-    public void updateOwnedBookShelf(List<Book> ownedBooks) {
+    public void updateOwnedBookShelf(Set<Book> ownedBooks) {
         if (ownedBooksGridViewFragment != null) {
             ownedBooksGridViewFragment.setmItems(ownedBooks);
         }
     }
 
-    public void updateBorrowedBookShelf(List<Book> borrowedBooks) {
+    public void updateBorrowedBookShelf(Set<Book> borrowedBooks) {
         if (borrowedBooksGridViewFragment != null) {
             borrowedBooksGridViewFragment.setmItems(borrowedBooks);
         }
     }
 
-    public void updateLentedBooks(List<Book> lentedBooks) {
+    public void updateLentedBooks(Set<Book> lentedBooks) {
         if (lentedBooksGridViewFragment != null) {
             lentedBooksGridViewFragment.setmItems(lentedBooks);
         }

@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -28,27 +30,27 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
         realm = Realm.getDefaultInstance();
         BookGridViewFragment gridViewFragment = (BookGridViewFragment) getSupportFragmentManager().findFragmentById(R.id.bookGridViewActivityFragment);
 
-        List<Book> books = new ArrayList<>();
+        Set<Book> books = new HashSet<>();
         switch (shelf) {
             case "RentedOut":
                 setTitle("Rented out Books");
-                books = realm.where(Book.class)
+                books.addAll(realm.where(Book.class)
                         .equalTo("owner", MainTabbedActivity.getMainUserId())
                         .notEqualTo("rentedTo", "")
-                        .findAll();
+                        .findAll());
                 break;
             case "Borrowed":
                 setTitle("Borrowed Books");
-                books = realm.where(Book.class)
+                books.addAll(realm.where(Book.class)
                         .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
-                        .findAll();
+                        .findAll());
 
                 break;
             case "Owned":
                 setTitle("Owned Books");
-                books = realm.where(Book.class)
+                books.addAll(realm.where(Book.class)
                         .equalTo("owner", MainTabbedActivity.getMainUserId())
-                        .findAll();
+                        .findAll());
 
                 break;
         }

@@ -35,8 +35,10 @@ import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -64,11 +66,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private String lastScannedBookIsbn;
 
     private static String mainUserId; //= "5602a211a0913f110092352a";
-    private static List<Crowd> userCrowds;
-    public static List<Book> userCrowdBooks;
-    private static List<Book> ownedBooks;
-    private static List<Book> borrowedBooks;
-    private static List<Book> lentedBooks;
+    private static Set<Crowd> userCrowds = new HashSet<>();
+    public static Set<Book> userCrowdBooks = new HashSet<>();
+    private static Set<Book> ownedBooks = new HashSet<>();
+    private static Set<Book> borrowedBooks = new HashSet<>();
+    private static Set<Book> lentedBooks = new HashSet<>();
     private int updateUserBooksRan = 0;
     private CrowdsScreenFragment crowdScreenFragment;
 
@@ -204,23 +206,30 @@ public class MainTabbedActivity extends AppCompatActivity implements
         if (mainUserId != null) { //TODO: Should not be necessary
             updateUserBooksRan += 1;
             Log.i(TAG, "updateUserBooksRan: " + updateUserBooksRan);
-            ownedBooks = realm.where(Book.class)
+            List<Book> ownedBooksTemp = realm.where(Book.class)
                     .equalTo("owner", mainUserId)
+                    .equalTo("rentedTo", "")
                     .findAll();
-            if (ownedBooks != null) {
+            if (ownedBooksTemp != null) {
+                ownedBooks.clear();
+                ownedBooks.addAll(ownedBooksTemp);
                 userScreenFragment.updateOwnedBookShelf(ownedBooks);
             }
-            lentedBooks = realm.where(Book.class)
+            List<Book> lentedBooksTemp = realm.where(Book.class)
                     .equalTo("owner", mainUserId)
                     .notEqualTo("rentedTo", "")
                     .findAll();
-            if (lentedBooks != null) {
+            if (lentedBooksTemp != null) {
+                lentedBooks.clear();
+                lentedBooks.addAll(lentedBooksTemp);
                 userScreenFragment.updateLentedBooks(lentedBooks);
             }
-            borrowedBooks = realm.where(Book.class)
+            List<Book> borrowedBooksTemp = realm.where(Book.class)
                     .equalTo("rentedTo", mainUserId)
                     .findAll();
-            if (borrowedBooks != null) {
+            if (borrowedBooksTemp != null) {
+                borrowedBooks.clear();
+                borrowedBooks.addAll(borrowedBooksTemp);
                 userScreenFragment.updateBorrowedBookShelf(borrowedBooks);
             }
         }
@@ -237,9 +246,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 }
             }
         }
-        userCrowds = userCrowdsTemp;
-        crowdScreenFragment.updateCrowdList(userCrowds);
-
+        if (userCrowdsTemp != null) {
+            userCrowds.clear();
+            userCrowds.addAll(userCrowdsTemp);
+            crowdScreenFragment.updateCrowdList(userCrowds);
+        }
     }
 
     public void updateUserCrowdBooks() {
@@ -262,7 +273,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 }
             }
         }
-        userCrowdBooks = userCrowdBooksTemp;
+        if (userCrowdBooksTemp != null) {
+            userCrowdBooks.clear();
+            userCrowdBooks.addAll(userCrowdBooksTemp);
+        }
     }
 
     private void loginUser(String username) {
@@ -468,11 +482,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
         return mainUserId;
     }
 
-    public static List<Crowd> getUserCrowds() {
+    public static Set<Crowd> getUserCrowds() {
         return userCrowds;
     }
 
-    public static List<Book> getUserCrowdBooks() {
+    public static Set<Book> getUserCrowdBooks() {
         return userCrowdBooks;
     }
 

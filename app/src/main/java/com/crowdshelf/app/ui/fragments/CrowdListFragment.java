@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import ntnu.stud.markul.crowdshelf.R;
 
@@ -23,7 +24,7 @@ public class CrowdListFragment extends Fragment implements AdapterView.OnItemCli
     private CrowdListAdapter mAdapter;
     private List<Crowd> mItems;
 
-    public void setmItems(List<Crowd> newmItems) {
+    public void setmItems(Set<Crowd> newmItems) {
         this.mItems.clear();
         this.mItems.addAll(newmItems);
         this.mAdapter.notifyDataSetChanged();

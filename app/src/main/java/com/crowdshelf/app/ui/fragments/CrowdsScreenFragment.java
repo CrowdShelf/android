@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+import java.util.Set;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -60,7 +61,7 @@ public class CrowdsScreenFragment extends Fragment {
         return null;
     }
 
-    public void updateCrowdList(List<Crowd> crowds) {
+    public void updateCrowdList(Set<Crowd> crowds) {
         if (crowdListFragment != null){
             crowdListFragment.setmItems(crowds);
         }

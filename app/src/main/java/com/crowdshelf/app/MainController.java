@@ -41,14 +41,16 @@ public class MainController {
                 /*
                 When all the crowds for the main user is retrieved,
                 retrieve all the books of the members of these crowds
-                (which will include the books of the main user)
+                (not including the books of the main user)
                  */
                 MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
                         .findAll();
                 for (Crowd c : crowds) {
                     for (MemberId memberId : c.getMembers()) {
-                        NetworkController.getBooksOwnedAndRented(memberId.getId(), DbEventType.USER_CROWD_BOOKS_CHANGED);
+                        if (!memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
+                            getBooks(memberId.getId(), DbEventType.USER_CROWD_BOOKS_CHANGED);
+                        }
                     }
                 }
                 break;
@@ -139,6 +141,7 @@ public class MainController {
         book.removeFromRealm();
         realm.commitTransaction();
         NetworkController.removeBook(bookId, dbEventType);
+        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookId));
         MainTabbedActivity.getMixpanel().track("BookRemoved");
     }
 
