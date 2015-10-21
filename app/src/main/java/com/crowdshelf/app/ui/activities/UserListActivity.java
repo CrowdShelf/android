@@ -40,6 +40,8 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         realm = Realm.getDefaultInstance();
         MainTabbedActivity.getBus().register(this);
 
+        setTitle("Tap to borrow from user");
+
         Intent intent = getIntent();
         ISBN = intent.getStringExtra("isbn");
         userID = MainTabbedActivity.getMainUserId();

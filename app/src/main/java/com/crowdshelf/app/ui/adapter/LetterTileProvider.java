@@ -81,6 +81,9 @@ public class LetterTileProvider {
     }
 
     private static boolean isEnglishLetterOrDigit(char c) {
+        if (c == 'æ' || c == 'Æ' || c == 'ø' || c == 'Ø' || c == 'Å' || c == 'Å'){
+            return true;
+        }
         return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '0' <= c && c <= '9';
     }
 

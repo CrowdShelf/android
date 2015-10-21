@@ -48,6 +48,8 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         crowdMembers = new ArrayList<>();
         listAdapter = new UserListAdapter(this, crowdMembers);
 
+        setTitle("Create Crowd");
+
         ListView lv = (ListView) findViewById(R.id.memberListView);
         crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
         usernameEditText = (EditText) findViewById(R.id.crowdMember);
@@ -61,6 +63,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         if (!crowdID.isEmpty()) {
             findViewById(R.id.createCrowdButton).setVisibility(View.INVISIBLE);
             findViewById(R.id.updateCrowdButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.deleteCrowdButton).setVisibility(View.VISIBLE);
             Crowd crowd = realm.where(Crowd.class).equalTo("id", crowdID).findFirst();
             crowdNameEditText.setText(crowd.getName());
             RealmList<MemberId> members = crowd.getMembers();
@@ -172,6 +175,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 //        members.add(getUserIDByUsername(username));
         if (!username.isEmpty()) {
             MainController.getUserByUsername(username, DbEventType.EditCrowdActivity_USERNAME_RECEIVED);
+            usernameEditText.setText("");
         }
     }
 
