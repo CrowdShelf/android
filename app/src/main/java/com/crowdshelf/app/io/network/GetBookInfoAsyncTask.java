@@ -33,15 +33,15 @@ public class GetBookInfoAsyncTask {
     private static List<String> isbnsDownloaded = new ArrayList<>();
 
     public static void getBookInfo(final String isbn, final DbEventType dbEventType) {
-        for (String s: isbnsDownloaded) {
-            if (s.equals(isbn)) {
-                return;
-            }
+        if (isbnsDownloaded.contains(isbn)) {
+            return;
         }
+
         new AsyncTask<Void, Void, BookInfo>() {
             @Override
             protected BookInfo doInBackground(Void... params) {
                 try {
+                    isbnsDownloaded.add(isbn);
                     URL url = new URL(googleBooksAPIUrl + isbn);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -103,7 +103,7 @@ public class GetBookInfoAsyncTask {
         realm.copyToRealmOrUpdate(bookInfo);
         realm.commitTransaction();
         realm.close();
-        isbnsDownloaded.add(bookInfo.getIsbn());
+
         MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookInfo.getIsbn()));
         Log.i(TAG, "Added BookInfo for ISBN: " + bookInfo.getIsbn());
     }

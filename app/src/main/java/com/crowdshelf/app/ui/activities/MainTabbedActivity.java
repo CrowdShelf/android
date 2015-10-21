@@ -64,7 +64,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private String lastScannedBookIsbn;
 
     private static String mainUserId; //= "5602a211a0913f110092352a";
-    private static List<BookInfo> userBookInfos;
     private static List<Crowd> userCrowds;
     public static List<Book> userCrowdBooks;
     private static List<Book> ownedBooks;
@@ -112,7 +111,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         userScreenFragment = UserScreenFragment.newInstance();
         crowdScreenFragment = CrowdsScreenFragment.newInstance();
-        userBookInfos = new ArrayList<>();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, LOGIN);
@@ -209,18 +207,22 @@ public class MainTabbedActivity extends AppCompatActivity implements
             ownedBooks = realm.where(Book.class)
                     .equalTo("owner", mainUserId)
                     .findAll();
-            userScreenFragment.updateOwnedBookShelf(ownedBooks);
-
+            if (ownedBooks != null) {
+                userScreenFragment.updateOwnedBookShelf(ownedBooks);
+            }
             lentedBooks = realm.where(Book.class)
                     .equalTo("owner", mainUserId)
                     .notEqualTo("rentedTo", "")
                     .findAll();
-            userScreenFragment.updateLentedBooks(lentedBooks);
-
+            if (lentedBooks != null) {
+                userScreenFragment.updateLentedBooks(lentedBooks);
+            }
             borrowedBooks = realm.where(Book.class)
                     .equalTo("rentedTo", mainUserId)
                     .findAll();
-            userScreenFragment.updateBorrowedBookShelf(borrowedBooks);
+            if (borrowedBooks != null) {
+                userScreenFragment.updateBorrowedBookShelf(borrowedBooks);
+            }
         }
     }
 
@@ -477,5 +479,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     public static String getProjectToken() {
         return projectToken;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

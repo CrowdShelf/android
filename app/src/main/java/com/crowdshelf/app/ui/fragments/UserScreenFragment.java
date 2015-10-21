@@ -82,7 +82,9 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     }
 
     public void updateOwnedBookShelf(List<Book> userBooks) {
-        ownedBooksGridViewFragment.setmItems(userBooks);
+        if (ownedBooksGridViewFragment != null) {
+            ownedBooksGridViewFragment.setmItems(userBooks);
+        }
     }
 
     public void updateBorrowedBookShelf(List<Book> userBooks) {

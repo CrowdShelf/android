@@ -37,31 +37,18 @@ public class MainController {
     @Subscribe
     public void dbEventListener(DbEvent dbEvent) {
         switch (dbEvent.getDbEventType()) {
-            case CROWD_READY_GET_BOOKS:
-                Crowd crowd = realm.where(Crowd.class)
-                        .equalTo("id", dbEvent.getDbObjectId())
-                        .findFirst();
-                for (MemberId memberId : crowd.getMembers()) {
-                    if (memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
-                        for (MemberId memberId2 : crowd.getMembers()) {
-                            NetworkController.getBooksOwnedAndRented(memberId2.getId(), DbEventType.ON_START_USER_CROWD_BOOKS_READY);
-                        }
-                        break;
-                    }
-                }
-                break;
             case ON_START_USER_CROWDS_READY:
                 /*
-                Get all crowds which the main user is a member of,
-                then retrieve all the books of the members of these crowds
+                When all the crowds for the main user is retrieved,
+                retrieve all the books of the members of these crowds
                 (which will include the books of the main user)
                  */
-                //MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
+                MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
                         .findAll();
                 for (Crowd c : crowds) {
                     for (MemberId memberId : c.getMembers()) {
-                        NetworkController.getBooksOwnedAndRented(memberId.getId(), DbEventType.ON_START_USER_CROWD_BOOKS_READY);
+                        NetworkController.getBooksOwnedAndRented(memberId.getId(), DbEventType.USER_CROWD_BOOKS_CHANGED);
                     }
                 }
                 break;
