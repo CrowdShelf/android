@@ -28,7 +28,7 @@ public class CrowdListHandler implements ResponseHandler {
             }
             MainTabbedActivity.getBus().post(new DbEvent(dbEventType, "all"));
         } catch (JSONException e){
-            Log.w("UserHandler", "something wrong with JSON data" + e.getMessage());
+            Log.w("CrowdListHandler", "something wrong with JSON data" + e.getMessage());
         }
     }
 }

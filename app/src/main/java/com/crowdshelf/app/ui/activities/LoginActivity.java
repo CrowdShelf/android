@@ -99,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
             case LOGIN:
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
+                Log.i(TAG, "DbEvent Login with username: " + username);
                 returnIntent.putExtra("username",username);
                 setResult(RESULT_OK,returnIntent);
                 finish();

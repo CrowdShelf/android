@@ -6,6 +6,7 @@ import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.UserHandler;
+import com.crowdshelf.app.io.network.responseHandlers.UserListHandler;
 import com.crowdshelf.app.io.network.serializers.BookSerializer;
 import com.crowdshelf.app.io.network.serializers.CrowdSerializer;
 import com.crowdshelf.app.io.network.serializers.UserSerializer;
@@ -25,6 +26,7 @@ import java.lang.reflect.Type;
 public class NetworkController {
     private static BookListHandler bookListHandler = new BookListHandler();
     private static CrowdListHandler crowdListHandler = new CrowdListHandler();
+    private static UserListHandler userListHandler = new UserListHandler();
     private static CrowdHandler crowdHandler = new CrowdHandler();
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
@@ -192,6 +194,13 @@ public class NetworkController {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.GET, "/users/" + userId,
                 null, userHandler,
+                dbEventType);
+    }
+
+    public static void getUserByUsername(String username, DbEventType dbEventType){
+        NetworkHelper.sendRequest(
+                HttpRequestMethod.GET, "/users?username=" + username,
+                null, userListHandler,
                 dbEventType);
     }
 
