@@ -87,6 +87,9 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                         .findFirst();
                 // Apparently need to delay the implementation
                 String delay = user.getId();
+                if (delay.isEmpty()) {
+                Toast.makeText(EditCrowdActivity.this, "Username does not excist", Toast.LENGTH_SHORT).show();
+            }
                 if (!crowdMembers.contains(user)) {
                     crowdMembers.add(user);
                     listAdapter.notifyDataSetChanged();
