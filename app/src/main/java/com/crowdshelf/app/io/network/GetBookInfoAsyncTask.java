@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crowdshelf.app.bookInfo.GoogleBooksMain;
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
+import com.crowdshelf.app.models.googleBookInfo.GoogleBooksMain;
+import com.crowdshelf.app.models.googleBookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.BookInfo;
@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 
@@ -28,12 +30,18 @@ import io.realm.Realm;
 public class GetBookInfoAsyncTask {
     private static String googleBooksAPIUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
     private static final String TAG = "GetBookInfoAsyncTask";
+    private static List<String> isbnsDownloaded = new ArrayList<>();
 
     public static void getBookInfo(final String isbn, final DbEventType dbEventType) {
+        if (isbnsDownloaded.contains(isbn)) {
+            return;
+        }
+
         new AsyncTask<Void, Void, BookInfo>() {
             @Override
             protected BookInfo doInBackground(Void... params) {
                 try {
+                    isbnsDownloaded.add(isbn);
                     URL url = new URL(googleBooksAPIUrl + isbn);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -95,6 +103,7 @@ public class GetBookInfoAsyncTask {
         realm.copyToRealmOrUpdate(bookInfo);
         realm.commitTransaction();
         realm.close();
+
         MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookInfo.getIsbn()));
         Log.i(TAG, "Added BookInfo for ISBN: " + bookInfo.getIsbn());
     }

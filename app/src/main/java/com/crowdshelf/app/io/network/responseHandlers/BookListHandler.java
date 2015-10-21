@@ -18,7 +18,6 @@ public class BookListHandler implements ResponseHandler {
 
     @Override
     public void handleJsonResponse(String jsonString, DbEventType dbEventType) {
-        JsonParser jsonParser = new JsonParser();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("books");

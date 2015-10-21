@@ -64,7 +64,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private String lastScannedBookIsbn;
 
     private static String mainUserId; //= "5602a211a0913f110092352a";
-    private static List<BookInfo> userBookInfos;
     private static List<Crowd> userCrowds;
     public static List<Book> userCrowdBooks;
     private static List<Book> ownedBooks;
@@ -91,12 +90,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
         realmConfiguration = new RealmConfiguration.Builder(this).build();
 //        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
+        realm = Realm.getDefaultInstance();
         mainController = new MainController();
         mainController.onCreate();
 
-
         MainTabbedActivity.getBus().register(this);
-        realm = Realm.getDefaultInstance();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -113,7 +111,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         userScreenFragment = UserScreenFragment.newInstance();
         crowdScreenFragment = CrowdsScreenFragment.newInstance();
-        userBookInfos = new ArrayList<>();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, LOGIN);
@@ -148,6 +145,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Subscribe
     public void handleDBEvents(DbEvent event) {
+        if (event.getDbEventType().equals(DbEventType.NONE)) return;
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
@@ -209,18 +207,22 @@ public class MainTabbedActivity extends AppCompatActivity implements
             ownedBooks = realm.where(Book.class)
                     .equalTo("owner", mainUserId)
                     .findAll();
-            userScreenFragment.updateOwnedBookShelf(ownedBooks);
-
+            if (ownedBooks != null) {
+                userScreenFragment.updateOwnedBookShelf(ownedBooks);
+            }
             lentedBooks = realm.where(Book.class)
                     .equalTo("owner", mainUserId)
                     .notEqualTo("rentedTo", "")
                     .findAll();
-            userScreenFragment.updateLentedBooks(lentedBooks);
-
+            if (lentedBooks != null) {
+                userScreenFragment.updateLentedBooks(lentedBooks);
+            }
             borrowedBooks = realm.where(Book.class)
                     .equalTo("rentedTo", mainUserId)
                     .findAll();
-            userScreenFragment.updateBorrowedBookShelf(borrowedBooks);
+            if (borrowedBooks != null) {
+                userScreenFragment.updateBorrowedBookShelf(borrowedBooks);
+            }
         }
     }
 
@@ -277,7 +279,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 if (resultCode == RESULT_OK) {
 //                    updateUserBooks();
                     String username = data.getStringExtra("username");
-                    Log.i(TAG, "Username: " + username);
                     User u = realm.where(User.class)
                             .equalTo("username", username)
                             .findFirst();
@@ -495,5 +496,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     public static String getProjectToken() {
         return projectToken;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

@@ -30,7 +30,7 @@ public class UserHandler implements ResponseHandler {
             }
             MainTabbedActivity.getBus().post(new DbEvent(dbEventType, u.getId()));
         } catch (JsonSyntaxException e) {
-            Log.w(TAG, "CrowdHandler something wrong with JSON data" + e.getMessage());;
+            Log.w(TAG, "something wrong with JSON data" + e.getMessage());;
         } catch (RuntimeException e) {
             Log.w(TAG, e.getMessage());
         }

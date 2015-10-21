@@ -62,7 +62,7 @@ public class CrowdsScreenFragment extends Fragment {
     }
 
     public void updateCrowdList(List<Crowd> crowds) {
-        if (crowdListFragment != null) {
+        if (crowdListFragment != null){
             crowdListFragment.setmItems(crowds);
         }
     }

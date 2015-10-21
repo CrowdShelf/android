@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 
@@ -80,16 +81,22 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         super.onDestroy();
     }
 
-    public void updateOwnedBookShelf(List<Book> userBooks) {
-        ownedBooksGridViewFragment.setmItems(userBooks);
+    public void updateOwnedBookShelf(List<Book> ownedBooks) {
+        if (ownedBooksGridViewFragment != null) {
+            ownedBooksGridViewFragment.setmItems(ownedBooks);
+        }
     }
 
-    public void updateBorrowedBookShelf(List<Book> userBooks) {
-        borrowedBooksGridViewFragment.setmItems(userBooks);
+    public void updateBorrowedBookShelf(List<Book> borrowedBooks) {
+        if (borrowedBooksGridViewFragment != null) {
+            borrowedBooksGridViewFragment.setmItems(borrowedBooks);
+        }
     }
 
-    public void updateLentedBooks(List<Book> userBooks) {
-        lentedBooksGridViewFragment.setmItems(userBooks);
+    public void updateLentedBooks(List<Book> lentedBooks) {
+        if (lentedBooksGridViewFragment != null) {
+            lentedBooksGridViewFragment.setmItems(lentedBooks);
+        }
     }
 
 
