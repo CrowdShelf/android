@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Login");
         setContentView(R.layout.activity_login);
         MainTabbedActivity.getBus().register(this);
         EditText usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
@@ -148,7 +149,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent event) {
-        EditText login = (EditText) view;
         if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
         keyCode == EditorInfo.IME_ACTION_DONE ||
         event.getAction() == KeyEvent.ACTION_DOWN &&

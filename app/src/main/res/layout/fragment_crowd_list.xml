@@ -6,6 +6,7 @@
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/crowdListFragmentListView" />
+        android:id="@+id/crowdListFragmentListView"
+        android:background="@color/material_grey_300" />
 
 </FrameLayout>

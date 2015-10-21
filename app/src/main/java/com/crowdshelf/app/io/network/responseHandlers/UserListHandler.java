@@ -22,7 +22,7 @@ public class UserListHandler implements ResponseHandler {
             JSONArray jsonArray = jsonObject.getJSONArray("users");
             UserHandler uh = new UserHandler();
             for (int i = 0; i < jsonArray.length(); i++) {
-                uh.handleJsonResponse(jsonArray.getString(i), DbEventType.NONE);
+                uh.handleJsonResponse(jsonArray.getString(i), dbEventType);
             }
             MainTabbedActivity.getBus().post(new DbEvent(dbEventType, "all"));
         } catch (JSONException e){

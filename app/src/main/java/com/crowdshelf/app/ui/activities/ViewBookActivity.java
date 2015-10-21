@@ -122,7 +122,7 @@ public class ViewBookActivity extends Activity {
     }
 
     public void borrowButtonClick(View view) {
-        Toast.makeText(ViewBookActivity.this, "Borrow book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(ViewBookActivity.this, "Borrow book: " + bookInfo.getIsbn(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, UserListActivity.class);
         intent.putExtra("isbn", bookInfo.getIsbn());
         startActivityForResult(intent, BORROW_BOOK_ACTION);

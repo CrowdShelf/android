@@ -59,6 +59,7 @@ public class CrowdsScreenFragment extends Fragment {
             e.printStackTrace();
         }
         return null;
+
     }
 
     public void updateCrowdList(Set<Crowd> crowds) {

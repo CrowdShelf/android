@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+tools:context="com.crowdshelf.app.ui.activities.EditCrowdActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Crowd name"
+        android:id="@+id/crowdNameEditText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Username of crowd member"
+        android:id="@+id/crowdMember"
+        android:layout_below="@id/crowdNameEditText"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add user"
+        android:id="@+id/addUserButton"
+        android:layout_below="@+id/crowdMember"
+        android:onClick="addUserToCrowdClicked"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="262dp"
+        android:id="@+id/memberListView"
+        android:layout_below="@+id/addUserButton"
+        android:layout_alignParentStart="true" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:id="@+id/createCrowdButton"
+        android:layout_alignParentRight="true"
+        android:padding="20dp"
+        android:onClick="updateCrowd"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:id="@+id/updateCrowdButton"
+        android:padding="20dp"
+        android:onClick="updateCrowd"
+        android:visibility="invisible"
+        android:layout_alignParentRight="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Crowd"
+        android:id="@+id/deleteCrowdButton"
+        android:onClick="deleteCrowdButtonClick"
+        android:layout_below="@+id/memberListView"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible" />
+
+
+</RelativeLayout>

@@ -10,4 +10,16 @@
         android:layout_height="fill_parent"
         android:id="@+id/crowdListFragment"
         android:name="com.crowdshelf.app.ui.fragments.CrowdListFragment"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/view"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="14dp"
+        android:elevation="@dimen/fab_elevation"
+        android:src="@drawable/ic_add"
+        android:tint="@android:color/white"
+        android:onClick="createCrowdClicked"/>
+
 </FrameLayout>
