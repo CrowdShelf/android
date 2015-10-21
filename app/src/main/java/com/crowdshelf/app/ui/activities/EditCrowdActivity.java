@@ -1,5 +1,7 @@
 package com.crowdshelf.app.ui.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,8 +35,6 @@ import ntnu.stud.markul.crowdshelf.R;
 public class EditCrowdActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     private Realm realm;
     private String TAG = "EditCrowdActivity";
-    private List<String> usernames = new ArrayList<>();
-    private List<String> members = new ArrayList<>();
     private ArrayList<User> crowdMembers;
     private UserListAdapter listAdapter;
 
@@ -85,9 +85,8 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                         .equalTo("id", event.getDbObjectId())
                         .notEqualTo("id", MainTabbedActivity.getMainUserId())
                         .findFirst();
-                usernames.add(user.getUsername());
-                // TODO:: display list instead of textView
-//                membersTextView.setText(membersTextView.getText() + user.getUsername() + "\n");
+                // Apparently need to delay the implementation
+                String delay = user.getId();
                 if (!crowdMembers.contains(user)) {
                     crowdMembers.add(user);
                     listAdapter.notifyDataSetChanged();
@@ -97,10 +96,25 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     }
 
     @Override
-    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        Toast.makeText(this, "Pressed someone", Toast.LENGTH_SHORT).show();
-        crowdMembers.remove(position);
-        listAdapter.notifyDataSetChanged();
+    public void onItemClick(AdapterView<?> a, View v, final int position, long id) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete entry")
+                .setMessage("Are you sure you want to remove this entry?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        Toast.makeText(EditCrowdActivity.this, "Removed", Toast.LENGTH_SHORT).show();
+                        crowdMembers.remove(position);
+                        listAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override
@@ -116,6 +130,8 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 //        Uncomment when getUserIDByUsername is created
 //        String userID = getUserIDByUsername(username);
 //        members.add(getUserIDByUsername(username));
-//        MainController.getUser(userID, DbEventType.EditCrowdActivity_ADD_USERS);
+        if (username.length() > 0) {
+            MainController.getUser(username, DbEventType.EditCrowdActivity_ADD_USERS);
+        }
     }
 }
