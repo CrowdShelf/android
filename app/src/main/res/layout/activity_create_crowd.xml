@@ -51,7 +51,7 @@ tools:context="com.crowdshelf.app.ui.activities.EditCrowdActivity">
         android:layout_below="@+id/memberListView"
         android:layout_centerHorizontal="true"
         android:padding="20dp"
-        android:onClick="createNewCrowd"/>
+        android:onClick="updateCrowd"/>
 
     <Button
         android:layout_width="wrap_content"

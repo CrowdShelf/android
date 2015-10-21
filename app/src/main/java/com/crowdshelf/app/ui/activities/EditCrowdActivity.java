@@ -36,6 +36,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     private Realm realm;
     private String TAG = "EditCrowdActivity";
     private ArrayList<User> crowdMembers;
+    private ArrayList<String> membersStrings;
     private UserListAdapter listAdapter;
 
     @Override
@@ -71,8 +72,12 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         EditText crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
         String crowdName = crowdNameEditText.getText().toString();
         Toast.makeText(this,crowdName,Toast.LENGTH_SHORT).show();
-//        members.add(MainTabbedActivity.getMainUserId());
-//        MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), members, DbEventType.CROWD_CREATED);
+        membersStrings = new ArrayList<>();
+        membersStrings.add(MainTabbedActivity.getMainUserId());
+        for (User u : crowdMembers){
+            membersStrings.add(u.getId());
+        }
+        MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), membersStrings, DbEventType.USER_CROWDS_CHANGED);
     }
 
     @Subscribe
