@@ -415,6 +415,18 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     }
 
+    public void createCrowdClicked(View view) {
+        Intent intent = new Intent(this, EditCrowdActivity.class);
+        intent.putExtra("crowdID", "");
+        startActivity(intent);
+    }
+
+    public void editCrowdClicked(View view) {
+        Intent intent = new Intent(this, EditCrowdActivity.class);
+        intent.putExtra("crowdID", userCrowds.get(0).getId());
+        startActivity(intent);
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.

@@ -1,9 +1,11 @@
 package com.crowdshelf.app.ui.fragments;
 
 import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.ui.activities.EditCrowdActivity;
 import com.crowdshelf.app.ui.adapter.CrowdListAdapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -74,6 +76,9 @@ public class CrowdListFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Crowd crowd = mItems.get(position);
+        Intent intent = new Intent(getContext(), EditCrowdActivity.class);
+        intent.putExtra("crowdID", crowd.getId());
+        startActivity(intent);
         Toast.makeText(getContext(), "Clicked on: " + crowd.getName(), Toast.LENGTH_LONG).show();
     }
 

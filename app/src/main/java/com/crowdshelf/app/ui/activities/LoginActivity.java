@@ -157,7 +157,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent event) {
-        EditText login = (EditText) view;
         if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
         keyCode == EditorInfo.IME_ACTION_DONE ||
         event.getAction() == KeyEvent.ACTION_DOWN &&

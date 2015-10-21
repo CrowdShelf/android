@@ -28,7 +28,7 @@ public class CrowdSerializer implements JsonSerializer<Crowd> {
             object.addProperty("_id", crowd.getId());
         }
 
-        object.addProperty("isbn", crowd.getName());
+        object.addProperty("name", crowd.getName());
         object.addProperty("owner", crowd.getOwner());
 
         if (crowd.getMembers() == null || crowd.getMembers().isEmpty()) {
