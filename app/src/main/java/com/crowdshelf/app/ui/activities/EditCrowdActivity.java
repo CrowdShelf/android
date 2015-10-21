@@ -92,18 +92,25 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
             case EditCrowdActivity_ADD_USERS:
                 User user = realm.where(User.class)
                         .equalTo("id", event.getDbObjectId())
-                        .notEqualTo("id", MainTabbedActivity.getMainUserId())
                         .findFirst();
                 // Apparently need to delay the implementation
                 String delay = user.getId();
                 if (delay.isEmpty()) {
-                Toast.makeText(EditCrowdActivity.this, "Username does not excist", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditCrowdActivity.this, "Username does not exist", Toast.LENGTH_SHORT).show();
             }
                 if (!crowdMembers.contains(user)) {
                     crowdMembers.add(user);
                     listAdapter.notifyDataSetChanged();
                 }
                 break;
+            case LOGIN:
+                User user2 = realm.where(User.class)
+                        .equalTo("id", event.getDbObjectId())
+                        .findFirst();
+                if (!crowdMembers.contains(user2)) {
+                    crowdMembers.add(user2);
+                    listAdapter.notifyDataSetChanged();
+                }
         }
     }
 
@@ -142,8 +149,8 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 //        Uncomment when getUserIDByUsername is created
 //        String userID = getUserIDByUsername(username);
 //        members.add(getUserIDByUsername(username));
-        if (username.length() > 0) {
-            MainController.getUser(username, DbEventType.EditCrowdActivity_ADD_USERS);
+        if (!username.isEmpty()) {
+            MainController.login(username,DbEventType.LOGIN);
         }
     }
 
