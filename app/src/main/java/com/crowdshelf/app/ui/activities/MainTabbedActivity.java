@@ -1,5 +1,24 @@
 package com.crowdshelf.app.ui.activities;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.ScannedBookActions;
+import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventType;
+import com.crowdshelf.app.io.ScannerEvent;
+import com.crowdshelf.app.io.ScannerEventType;
+import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.MemberId;
+import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
+import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
+import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
+import com.crowdshelf.app.ui.fragments.UserScreenFragment;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+import com.squareup.otto.ThreadEnforcer;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,26 +32,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DbEvent;
-import com.crowdshelf.app.io.DbEventType;
-import com.crowdshelf.app.io.ScannerEvent;
-import com.crowdshelf.app.io.ScannerEventType;
-import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.models.Crowd;
-import com.crowdshelf.app.models.MemberId;
-import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
-import com.crowdshelf.app.ui.fragments.CrowdsScreenFragment;
-import com.crowdshelf.app.ui.fragments.ScannerScreenFragment;
-import com.crowdshelf.app.ui.fragments.UserScreenFragment;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +87,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         realmConfiguration = new RealmConfiguration.Builder(this).build();
-//        Realm.deleteRealm(realmConfiguration); // Clean slate
+        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         realm = Realm.getDefaultInstance();
         mainController = new MainController();
@@ -118,10 +117,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     public void showAllOwnedBooksButtonPressed(View v){
+
         openShowAllBooksActivity("Owned");
     }
 
     public void showAllBorrowedBooksButtonPressed(View v){
+
         openShowAllBooksActivity("Borrowed");
     }
 

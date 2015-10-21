@@ -10,10 +10,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -25,21 +23,20 @@ import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.adapter.UserListAdapter;
 import com.squareup.otto.Subscribe;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
-public class EditCrowdActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnKeyListener{
+public class EditCrowdActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnKeyListener {
     private Realm realm;
     private String TAG = "EditCrowdActivity";
     private ArrayList<User> crowdMembers;
     private ArrayList<String> membersStrings;
     private UserListAdapter listAdapter;
+    private EditText usernameEditText;
+    private EditText crowdNameEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +47,17 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         crowdMembers = new ArrayList<>();
         listAdapter = new UserListAdapter(this, crowdMembers);
 
-        ListView lv = (ListView)findViewById(R.id.memberListView);
+        ListView lv = (ListView) findViewById(R.id.memberListView);
+        crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
+        usernameEditText = (EditText) findViewById(R.id.crowdMember);
+
         lv.setAdapter(listAdapter);
         lv.setOnItemClickListener(this);
         Intent intent = getIntent();
         String crowdID = intent.getStringExtra("crowdID");
-        EditText crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
         crowdNameEditText.setOnKeyListener(this);
         findViewById(R.id.crowdMember).setOnKeyListener(this);
-        if (!crowdID.isEmpty()){
+        if (!crowdID.isEmpty()) {
             findViewById(R.id.createCrowdButton).setVisibility(View.INVISIBLE);
             findViewById(R.id.updateCrowdButton).setVisibility(View.VISIBLE);
             Crowd crowd = realm.where(Crowd.class).equalTo("id", crowdID).findFirst();
@@ -71,17 +70,16 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     }
 
 
-
     public void updateCrowd(View view) {
-        EditText crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
         String crowdName = crowdNameEditText.getText().toString();
-        Toast.makeText(this,crowdName,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, crowdName, Toast.LENGTH_SHORT).show();
         membersStrings = new ArrayList<>();
         membersStrings.add(MainTabbedActivity.getMainUserId());
-        for (User u : crowdMembers){
+        for (User u : crowdMembers) {
             membersStrings.add(u.getId());
         }
         MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), membersStrings, DbEventType.USER_CROWDS_CHANGED);
+        finish();
     }
 
     @Subscribe
@@ -96,20 +94,22 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                 // Apparently need to delay the implementation
                 String delay = user.getId();
                 if (delay.isEmpty()) {
-                Toast.makeText(EditCrowdActivity.this, "Username does not exist", Toast.LENGTH_SHORT).show();
-            }
+                    Toast.makeText(EditCrowdActivity.this, "Username does not exist", Toast.LENGTH_SHORT).show();
+                }
                 if (!crowdMembers.contains(user)) {
                     crowdMembers.add(user);
                     listAdapter.notifyDataSetChanged();
                 }
                 break;
-            case LOGIN:
-                User user2 = realm.where(User.class)
-                        .equalTo("id", event.getDbObjectId())
-                        .findFirst();
-                if (!crowdMembers.contains(user2)) {
-                    crowdMembers.add(user2);
-                    listAdapter.notifyDataSetChanged();
+            case EditCrowdActivity_USERNAME_RECEIVED:
+                if (!event.getDbObjectId().equals("all")) {
+                    User user2 = realm.where(User.class)
+                            .equalTo("id", event.getDbObjectId())
+                            .findFirst();
+                    if (!crowdMembers.contains(user2)) {
+                        crowdMembers.add(user2);
+                        listAdapter.notifyDataSetChanged();
+                    }
                 }
         }
     }
@@ -144,13 +144,13 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     }
 
     public void addUserToCrowdClicked(View view) {
-        EditText usernameEditText = (EditText) findViewById(R.id.crowdMember);
+
         String username = usernameEditText.getText().toString();
 //        Uncomment when getUserIDByUsername is created
 //        String userID = getUserIDByUsername(username);
 //        members.add(getUserIDByUsername(username));
         if (!username.isEmpty()) {
-            MainController.login(username,DbEventType.LOGIN);
+            MainController.getUserByUsername(username, DbEventType.EditCrowdActivity_USERNAME_RECEIVED);
         }
     }
 
@@ -161,7 +161,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                 event.getAction() == KeyEvent.ACTION_DOWN &&
                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             if (!event.isShiftPressed()) {
-                Log.v("AndroidEnterKeyActivity","Enter Key Pressed!");
+                Log.v("AndroidEnterKeyActivity", "Enter Key Pressed!");
                 switch (view.getId()) {
                     case R.id.crowdNameEditText:
                         findViewById(R.id.crowdNameEditText).clearFocus();

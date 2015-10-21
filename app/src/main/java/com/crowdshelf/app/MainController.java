@@ -139,6 +139,7 @@ public class MainController {
         book.removeFromRealm();
         realm.commitTransaction();
         NetworkController.removeBook(bookId, dbEventType);
+        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookId));
         MainTabbedActivity.getMixpanel().track("BookRemoved");
     }
 
