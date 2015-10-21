@@ -98,9 +98,11 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         String crowdName = crowdNameEditText.getText().toString();
         Toast.makeText(this, crowdName, Toast.LENGTH_SHORT).show();
         membersStrings = new ArrayList<>();
-        membersStrings.add(MainTabbedActivity.getMainUserId());
         for (User u : crowdMembers) {
             membersStrings.add(u.getId());
+        }
+        if (!crowdID.isEmpty()) {
+            MainController.deleteCrowd(crowdID, DbEventType.USER_CROWDS_CHANGED);
         }
         MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), membersStrings, DbEventType.USER_CROWDS_CHANGED);
         finish();
@@ -199,5 +201,11 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
             }
         }
         return false; // pass on to other listeners.
+    }
+
+    public void leaveCrowdClicked(View view) {
+        MainController.removeCrowdMember(crowdID,MainTabbedActivity.getMainUserId(),DbEventType.USER_CROWDS_CHANGED);
+        Toast.makeText(EditCrowdActivity.this, "Remove " + MainTabbedActivity.getMainUserId(), Toast.LENGTH_SHORT).show();
+        finish();
     }
 }
