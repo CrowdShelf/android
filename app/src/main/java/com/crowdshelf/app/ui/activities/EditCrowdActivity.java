@@ -37,6 +37,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     private UserListAdapter listAdapter;
     private EditText usernameEditText;
     private EditText crowdNameEditText;
+    private String crowdID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         lv.setAdapter(listAdapter);
         lv.setOnItemClickListener(this);
         Intent intent = getIntent();
-        String crowdID = intent.getStringExtra("crowdID");
+        crowdID = intent.getStringExtra("crowdID");
         crowdNameEditText.setOnKeyListener(this);
         findViewById(R.id.crowdMember).setOnKeyListener(this);
         if (!crowdID.isEmpty()) {
@@ -67,6 +68,26 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                 MainController.getUser(m.getId(), DbEventType.EditCrowdActivity_ADD_USERS);
             }
         }
+    }
+
+    public void deleteCrowdButtonClick(View v){
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Crowd?")
+                .setMessage("Are you sure you want to remove this crowd?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        MainController.deleteCrowd(crowdID, DbEventType.USER_CROWDS_CHANGED);
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 

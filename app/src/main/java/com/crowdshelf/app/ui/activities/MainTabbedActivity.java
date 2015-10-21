@@ -89,7 +89,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.deleteRealm(realmConfiguration); // Clean slate
+//        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         realm = Realm.getDefaultInstance();
         mainController = new MainController();
@@ -437,11 +437,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    public void editCrowdClicked(View view) {
-        Intent intent = new Intent(this, EditCrowdActivity.class);
-        intent.putExtra("crowdID", userCrowds.get(0).getId());
-        startActivity(intent);
-    }
+//    public void editCrowdClicked(View view) {
+//        Intent intent = new Intent(this, EditCrowdActivity.class);
+//        intent.putExtra("crowdID", userCrowds.get(0).getId());
+//        startActivity(intent);
+//    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

@@ -62,5 +62,14 @@ tools:context="com.crowdshelf.app.ui.activities.EditCrowdActivity">
         android:visibility="invisible"
         android:layout_alignParentRight="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Crowd"
+        android:id="@+id/button"
+        android:onClick="deleteCrowdButtonClick"
+        android:layout_below="@+id/memberListView"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>
