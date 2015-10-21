@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,7 +34,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
-public class EditCrowdActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class EditCrowdActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnKeyListener{
     private Realm realm;
     private String TAG = "EditCrowdActivity";
     private ArrayList<User> crowdMembers;
@@ -54,6 +56,8 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         Intent intent = getIntent();
         String crowdID = intent.getStringExtra("crowdID");
         EditText crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
+        crowdNameEditText.setOnKeyListener(this);
+        findViewById(R.id.crowdMember).setOnKeyListener(this);
         if (!crowdID.isEmpty()){
             findViewById(R.id.createCrowdButton).setVisibility(View.INVISIBLE);
             findViewById(R.id.updateCrowdButton).setVisibility(View.VISIBLE);
@@ -141,5 +145,27 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         if (username.length() > 0) {
             MainController.getUser(username, DbEventType.EditCrowdActivity_ADD_USERS);
         }
+    }
+
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent event) {
+        if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+                keyCode == EditorInfo.IME_ACTION_DONE ||
+                event.getAction() == KeyEvent.ACTION_DOWN &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            if (!event.isShiftPressed()) {
+                Log.v("AndroidEnterKeyActivity","Enter Key Pressed!");
+                switch (view.getId()) {
+                    case R.id.crowdNameEditText:
+                        findViewById(R.id.crowdNameEditText).clearFocus();
+                        findViewById(R.id.crowdMember).requestFocus();
+                        break;
+                    case R.id.crowdMember:
+                        break;
+                }
+                return true;
+            }
+        }
+        return false; // pass on to other listeners.
     }
 }
