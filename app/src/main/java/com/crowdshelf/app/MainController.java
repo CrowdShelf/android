@@ -74,6 +74,10 @@ public class MainController {
         NetworkController.getUser(userId, dbEventType);
     }
 
+    public static void getUserByUsername(String userName, DbEventType dbEventType) {
+        NetworkController.getUserByUsername(userName, dbEventType);
+    }
+
     /*
     Crowds
      */
