@@ -29,9 +29,9 @@ public class NetworkHelper {
     public static void sendRequest(final HttpRequestMethod requestMethod, final String route, final String jsonData,
                                    final ResponseHandler responseHandler, final DbEventType dbEventType)
     {
-        new AsyncTask<Void, Void, InputStreamReader>() {
+        new AsyncTask<Void, Void, String>() {
             @Override
-            protected InputStreamReader doInBackground(Void... params) {
+            protected String doInBackground(Void... params) {
                 try {
                     URL url = new URL(host + "/api" + route);
                     Log.i(TAG, "Send request: " + requestMethod.toString() + " URL: " + url.toString());
@@ -58,7 +58,18 @@ public class NetworkHelper {
                     }
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        return new InputStreamReader(connection.getInputStream());
+                        InputStreamReader iReader = new InputStreamReader(connection.getInputStream());
+                        BufferedReader bReader = new BufferedReader(iReader);
+                        StringBuilder builder = new StringBuilder();
+                        String line = null;
+                        while ((line = bReader.readLine()) != null)
+                        {
+                            builder.append(line).append("\n");
+                        }
+                        String jsonString = builder.toString();
+                        iReader.close();
+                        bReader.close();
+                        return jsonString;
                     } else {
                         Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
                                 " ResponseMessage: " + connection.getResponseMessage());
@@ -68,30 +79,17 @@ public class NetworkHelper {
                 } catch (IOException e) {
                     Log.w(TAG, "SendRequest IOException" + e.toString());
                 }
-                return null;
+                return "";
             }
 
-            protected void onPostExecute(InputStreamReader reader) {
-                if (reader != null) {
-                    handleResponse(reader, responseHandler, dbEventType);
-                } else {
-                    Log.i(TAG, "onPostExecute - InputStreamReader is null");
-                }
+            protected void onPostExecute(String jsonString) {
+                handleResponse(jsonString, responseHandler, dbEventType);
             }
         }.execute();
     }
 
-    public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DbEventType dbEventType) {
+    public static void handleResponse(String jsonString, ResponseHandler responseHandler, DbEventType dbEventType) {
         try {
-            BufferedReader bReader = new BufferedReader(iReader);
-            StringBuilder builder = new StringBuilder();
-            String line = null;
-            while ((line = bReader.readLine()) != null)
-            {
-                builder.append(line).append("\n");
-            }
-            String jsonString = builder.toString();
-
             if (jsonString.length() > 0) {
                 Log.i(TAG, "Received JSON: " + jsonString);
                 if (responseHandler != null) {
@@ -100,10 +98,6 @@ public class NetworkHelper {
             } else {
                 Log.d(TAG, "Did not receive data from server");
             }
-            iReader.close();
-            bReader.close();
-        } catch (IOException e) {
-            Log.i(TAG, "HandleResponse IOException" + e.toString());;
         } catch (NullPointerException e) {
             Log.i(TAG, "HandleResponse NullPointerException" + e.toString());
         }
