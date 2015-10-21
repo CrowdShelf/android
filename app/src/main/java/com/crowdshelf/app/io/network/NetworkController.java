@@ -137,6 +137,13 @@ public class NetworkController {
                 dbEventType);
     }
 
+    public static void deleteCrowd(String crowdId, DbEventType dbEventType) {
+        NetworkHelper.sendRequest(
+                HttpRequestMethod.DELETE, "/crowds/" + crowdId,
+                null, null,
+                dbEventType);
+    }
+
     public static void getCrowd(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.GET, "/crowds/" + crowdId,
