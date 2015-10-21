@@ -100,6 +100,17 @@ public class MainController {
         NetworkController.createCrowd(crowd, dbEventType);
     }
 
+    public static void deleteCrowd(String crowdId, DbEventType dbEventType) {
+        realm.beginTransaction();
+        Crowd crowd = realm.where(Crowd.class)
+                .equalTo("id", crowdId)
+                .findFirst();
+        crowd.removeFromRealm();
+        realm.commitTransaction();
+        NetworkController.deleteCrowd(crowdId, dbEventType);
+        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, crowdId));
+    }
+
     public static void getCrowd(String crowdId, DbEventType dbEventType) {
         NetworkController.getCrowd(crowdId, dbEventType);
     }
