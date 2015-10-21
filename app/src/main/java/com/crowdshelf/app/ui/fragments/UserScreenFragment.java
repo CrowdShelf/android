@@ -3,7 +3,6 @@ package com.crowdshelf.app.ui.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,11 +80,16 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         super.onDestroy();
     }
 
-    public void updateBookShelf(List<Book> userBooks) {
-        Log.i(TAG, "updateBookShelf, userbooks: " + userBooks);
+    public void updateOwnedBookShelf(List<Book> userBooks) {
         ownedBooksGridViewFragment.setmItems(userBooks);
-        lentedBooksGridViewFragment.setmItems(userBooks);
+    }
+
+    public void updateBorrowedBookShelf(List<Book> userBooks) {
         borrowedBooksGridViewFragment.setmItems(userBooks);
+    }
+
+    public void updateLentedBooks(List<Book> userBooks) {
+        lentedBooksGridViewFragment.setmItems(userBooks);
     }
 
 

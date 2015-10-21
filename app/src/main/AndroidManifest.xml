@@ -20,7 +20,6 @@
         </activity>
         <activity
             android:name="com.crowdshelf.app.ui.activities.MainTabbedActivity"
-            android:label="@string/title_activity_main_tabbed"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -43,6 +42,8 @@
             android:label="@string/title_activity_user_list" >
         </activity>
         <activity android:name="com.crowdshelf.app.ui.activities.EditCrowdActivity" >
+        </activity>
+        <activity android:name="com.crowdshelf.app.ui.activities.BookGridViewActivity" >
         </activity>
     </application>
 

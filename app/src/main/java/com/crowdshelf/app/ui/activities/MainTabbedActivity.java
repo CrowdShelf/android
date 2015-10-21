@@ -65,9 +65,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     private static String mainUserId; //= "5602a211a0913f110092352a";
     private static List<BookInfo> userBookInfos;
-    private static List<Book> userBooks;
     private static List<Crowd> userCrowds;
     public static List<Book> userCrowdBooks;
+    private static List<Book> ownedBooks;
+    private static List<Book> borrowedBooks;
+    private static List<Book> lentedBooks;
+    private int updateUserBooksRan = 0;
+    private CrowdsScreenFragment crowdScreenFragment;
 
     public static MixpanelAPI getMixpanel() {
         return mixpanel;
@@ -94,10 +98,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, LOGIN);
-
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -112,8 +112,30 @@ public class MainTabbedActivity extends AppCompatActivity implements
         tabLayout.setupWithViewPager(mViewPager);
 
         userScreenFragment = UserScreenFragment.newInstance();
+        crowdScreenFragment = CrowdsScreenFragment.newInstance();
         userBookInfos = new ArrayList<>();
 
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, LOGIN);
+
+    }
+
+    public void showAllOwnedBooksButtonPressed(View v){
+        openShowAllBooksActivity("Owned");
+    }
+
+    public void showAllBorrowedBooksButtonPressed(View v){
+        openShowAllBooksActivity("Borrowed");
+    }
+
+    public void showAllRentedOutBooksButtonPressed(View v){
+        openShowAllBooksActivity("RentedOut");
+    }
+
+    private void openShowAllBooksActivity(String shelf){
+        Intent intent = new Intent(this, BookGridViewActivity.class);
+        intent.putExtra("shelf", shelf);
+        startActivity(intent);
     }
 
     @Override
@@ -176,32 +198,30 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
             case BOOK_INFO_RECEIVED_ADD_TO_USERSHELF:
                 updateUserBooks();
-//                Log.i(TAG, "Should add to user shelf");
-//                Book bookToAdd = realm.where(Book.class)
-//                        .equalTo("isbn", event.getDbObjectId())
-//                        .equalTo("owner", getMainUserId())
-//                        .findFirst();
-//                if (bookToAdd != null){
-//                    userBooks.add(bookToAdd);
-//                    userScreenFragment.updateBookShelf(userBooks);
-//                }
                 break;
-            case BOOK_REMOVED:
         }
     }
 
-    public void refreshUserBooks(View v){
-        updateUserBooks();
-    }
-
     public void updateUserBooks() {
-        userBooks = realm.where(Book.class)
-                .equalTo("owner", mainUserId)
-                .equalTo("rentedTo", "")
-                .or()
-                .equalTo("rentedTo", mainUserId)
-                .findAll();
-        userScreenFragment.updateBookShelf(userBooks);
+        if (mainUserId != null) { //TODO: Should not be necessary
+            updateUserBooksRan += 1;
+            Log.i(TAG, "updateUserBooksRan: " + updateUserBooksRan);
+            ownedBooks = realm.where(Book.class)
+                    .equalTo("owner", mainUserId)
+                    .findAll();
+            userScreenFragment.updateOwnedBookShelf(ownedBooks);
+
+            lentedBooks = realm.where(Book.class)
+                    .equalTo("owner", mainUserId)
+                    .notEqualTo("rentedTo", "")
+                    .findAll();
+            userScreenFragment.updateLentedBooks(lentedBooks);
+
+            borrowedBooks = realm.where(Book.class)
+                    .equalTo("rentedTo", mainUserId)
+                    .findAll();
+            userScreenFragment.updateBorrowedBookShelf(borrowedBooks);
+        }
     }
 
     public void updateUserCrowds() {
@@ -216,6 +236,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
             }
         }
         userCrowds = userCrowdsTemp;
+        crowdScreenFragment.updateCrowdList(userCrowds);
+
     }
 
     public void updateUserCrowdBooks() {
@@ -251,57 +273,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "onActivityResult");
         switch (requestCode) {
-            case SCANNED_BOOK_ACTION:
-                updateUserBooks(); //TODO: Do this better
-                if (resultCode == RESULT_OK) {
-                    int enumInt = data.getIntExtra("result", 0);
-                    ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
-
-                    Log.i(TAG, "onActivityResult action: " + action);
-                    switch (action) {
-                        case ADD_BUTTON_CLICKED:
-                            //TODO: Add book to user shelf
-
-                            Book b1 = new Book();
-                            b1.setIsbn(lastScannedBookIsbn);
-                            b1.setOwner(mainUserId);
-                            b1.setAvailableForRent(true);
-
-                            //MainController.getBookInfo(lastScannedBookIsbn, DBEventType.CREATE_BOOK_AFTER_ADD);
-                            Log.i(TAG, "onActivityResult createBook");
-                            MainController.createBook(b1, DbEventType.CREATE_BOOK_AFTER_ADD);
-                            Log.i(TAG, "onActivityResult createdBook");
-                    }
-                }
-                break;
-            case GET_BOOK_CLICKED_ACTION:
-                updateUserBooks(); //TODO: Do this better
-
-                Log.i(TAG, "onActivityResult  - GET_BOOK_CLICKED_ACTION");
-
-                if (resultCode == RESULT_OK) {
-                    int enumInt = data.getIntExtra("result", -1);
-                    ScannedBookActions action = ScannedBookActions.fromValue(enumInt);
-
-
-                    String bookID = data.getStringExtra("bookID");
-
-                    switch (action) {
-                        case REMOVE_BUTTON_CLICKED:
-                            Log.i(TAG, "REMOVE_BUTTON_CLICKED");
-                            for (Book b : userBooks) {
-                                if (b.getId().equals(bookID)) {
-                                    Log.i(TAG, "Book deleted: " + b.getId());
-                                    MainController.removeBook(b.getId(), DbEventType.BOOK_REMOVED);
-                                    updateUserBooks();
-                                    break;
-                                }
-                            }
-                    }
-                }
-                break;
             case LOGIN:
                 if (resultCode == RESULT_OK) {
+//                    updateUserBooks();
                     String username = data.getStringExtra("username");
                     Log.i(TAG, "Username: " + username);
                     User u = realm.where(User.class)
@@ -466,7 +440,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 case 0:
                     return userScreenFragment;
                 case 1:
-                    return CrowdsScreenFragment.newInstance(null, null);
+                    return crowdScreenFragment;
                 case 2:
                     return ScannerScreenFragment.newInstance();
                 default:
@@ -503,14 +477,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     public static String getMainUserId() {
         return mainUserId;
-    }
-
-    public static List<BookInfo> getUserBookInfos() {
-        return userBookInfos;
-    }
-
-    public static List<Book> getUserBooks() {
-        return userBooks;
     }
 
     public static List<Crowd> getUserCrowds() {

@@ -35,16 +35,19 @@ public class BookGridViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+
         return mItems.size();
     }
 
     @Override
     public Object getItem(int position) {
+
         return mItems.get(position);
     }
 
     @Override
     public long getItemId(int position) {
+
         return position;
     }
 
@@ -74,7 +77,7 @@ public class BookGridViewAdapter extends BaseAdapter {
                 .equalTo("isbn", book.getIsbn())
                 .findFirst();
         realm.close();
-        if (bookInfo == null) {
+        if (bookInfo.getTitle() == null) {
             viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.bookCoverImageView.setVisibility(View.INVISIBLE);
             viewHolder.bookTitleTextView.setVisibility(View.INVISIBLE);
@@ -85,7 +88,6 @@ public class BookGridViewAdapter extends BaseAdapter {
             viewHolder.bookCoverImageView.setVisibility(View.VISIBLE);
             viewHolder.bookTitleTextView.setText(bookInfo.getTitle());
             viewHolder.bookTitleTextView.setVisibility(View.VISIBLE);
-
         }
 
         return convertView;

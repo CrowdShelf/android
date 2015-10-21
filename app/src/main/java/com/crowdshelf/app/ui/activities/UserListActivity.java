@@ -41,7 +41,7 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         MainTabbedActivity.getBus().register(this);
 
         Intent intent = getIntent();
-        ISBN = intent.getStringExtra("ISBN");
+        ISBN = intent.getStringExtra("isbn");
         userID = MainTabbedActivity.getMainUserId();
         Log.i(TAG, "ISBN: " + ISBN);
 
@@ -108,11 +108,16 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
                 .equalTo("isbn", ISBN)
                 .findFirst();
 
-        MainController.addRenter(bookToRent.getId(), userID, DbEventType.NONE);
+        MainController.addRenter(bookToRent.getId(), userID, DbEventType.USER_BOOKS_CHANGED);
 
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("userName", u.getName());
-        setResult(RESULT_OK, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy: realm, bus, super");
+        realm.close();
+        MainTabbedActivity.getBus().unregister(this);
+        super.onDestroy();
     }
 }

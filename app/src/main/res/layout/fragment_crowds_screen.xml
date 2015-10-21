@@ -1,26 +1,22 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.crowdshelf.app.ui.fragments.CrowdsScreenFragment">
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="crowdscreen"
-        android:id="@+id/crowdsscreen" />
+    <!-- TODO: Update blank fragment layout -->
 
+    <fragment
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/crowdListFragment"
+        android:name="com.crowdshelf.app.ui.fragments.CrowdListFragment"/>
+</FrameLayout>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create new crowd"
         android:onClick="createCrowdClicked"
         android:id="@+id/createNewCrowd"
-        android:layout_column="1"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit crowd"
-        android:onClick="editCrowdClicked"
-        android:id="@+id/editCrowdButton"
         android:layout_column="2"/>
 
 </GridLayout>
