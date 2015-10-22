@@ -81,7 +81,9 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         MainController.deleteCrowd(crowdID, DbEventType.USER_CROWDS_CHANGED);
+                        MainTabbedActivity.getMixpanel().track("DeleteCrowd");
                         finish();
+
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -105,6 +107,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
             MainController.deleteCrowd(crowdID, DbEventType.USER_CROWDS_CHANGED);
         }
         MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), membersStrings, DbEventType.USER_CROWDS_CHANGED);
+        MainTabbedActivity.getMixpanel().track("CreateCrowd");
         finish();
     }
 

@@ -109,9 +109,6 @@ public class ViewBookActivity extends Activity {
     public void addButtonClick(View view) {
         Toast.makeText(ViewBookActivity.this, "Book added", Toast.LENGTH_SHORT).show();
 
-        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MainTabbedActivity.getProjectToken());
-        mixpanel.track("BookAdded");
-
         Book b1 = new Book();
         b1.setIsbn(isbn);
         b1.setOwner(MainTabbedActivity.getMainUserId());

@@ -11,14 +11,16 @@ tools:context="com.crowdshelf.app.ui.activities.EditCrowdActivity">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Crowd name"
-        android:id="@+id/crowdNameEditText" />
+        android:id="@+id/crowdNameEditText"
+        android:textColor="#000000" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Username of crowd member"
         android:id="@+id/crowdMember"
-        android:layout_below="@id/crowdNameEditText"/>
+        android:layout_below="@id/crowdNameEditText"
+        android:textColor="#000000" />
 
     <Button
         android:layout_width="wrap_content"
@@ -72,7 +74,17 @@ tools:context="com.crowdshelf.app.ui.activities.EditCrowdActivity">
         android:id="@+id/leaveCrowdButton"
         android:onClick="leaveCrowdClicked"
         android:layout_below="@+id/memberListView"
-        android:layout_toEndOf="@+id/deleteCrowdButton" />
+        android:layout_toEndOf="@+id/deleteCrowdButton"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Click to remove user"
+        android:id="@+id/textView"
+        android:layout_above="@+id/memberListView"
+        android:layout_alignEnd="@+id/memberListView" />
 
 
 </RelativeLayout>
