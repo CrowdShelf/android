@@ -144,7 +144,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_testing);
-        item.setVisible(true);
+        item.setVisible(false);
         super.onPrepareOptionsMenu(menu);
         return true;
     }
