@@ -22,7 +22,9 @@ import com.squareup.otto.ThreadEnforcer;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -116,9 +118,21 @@ public class MainTabbedActivity extends AppCompatActivity implements
         userScreenFragment = UserScreenFragment.newInstance();
         crowdScreenFragment = CrowdsScreenFragment.newInstance();
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, LOGIN);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.getBoolean("firstTime", false)) {
+            // <---- run your one time code here
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, LOGIN);
 
+            // mark first time has runned.
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTime", true);
+            editor.commit();
+        }
+        else {
+            updateUserBooks();
+            Toast.makeText(MainTabbedActivity.this, getMainUserId(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void showAllOwnedBooksButtonPressed(View v){
