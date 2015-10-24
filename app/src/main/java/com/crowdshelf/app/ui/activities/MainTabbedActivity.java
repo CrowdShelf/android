@@ -118,21 +118,22 @@ public class MainTabbedActivity extends AppCompatActivity implements
         userScreenFragment = UserScreenFragment.newInstance();
         crowdScreenFragment = CrowdsScreenFragment.newInstance();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean("firstTime", false)) {
-            // <---- run your one time code here
+        // Fix and uncomment to add storing of username
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        if (!prefs.getBoolean("firstTime", false)) {
+//            // <---- run your one time code here
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, LOGIN);
 
-            // mark first time has runned.
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("firstTime", true);
-            editor.commit();
-        }
-        else {
-            updateUserBooks();
-            Toast.makeText(MainTabbedActivity.this, getMainUserId(), Toast.LENGTH_SHORT).show();
-        }
+//            // mark first time has runned.
+//            SharedPreferences.Editor editor = prefs.edit();
+//            editor.putBoolean("firstTime", true);
+//            editor.commit();
+//        }
+//        else {
+//            updateUserBooks();
+//            Toast.makeText(MainTabbedActivity.this, getMainUserId(), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     public void showAllOwnedBooksButtonPressed(View v){
