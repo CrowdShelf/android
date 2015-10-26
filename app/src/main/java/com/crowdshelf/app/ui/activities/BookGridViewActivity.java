@@ -1,7 +1,14 @@
 package com.crowdshelf.app.ui.activities;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.Crowd;
+import com.crowdshelf.app.models.MemberId;
+import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
+import com.squareup.otto.Subscribe;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +60,17 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
                         .findAll());
 
                 break;
+            default:
+                setTitle("Crowd Books");
+                String crowdID = shelf;
+                Crowd crowd = realm.where(Crowd.class)
+                        .equalTo("id", crowdID)
+                        .findFirst();
+                for (MemberId u : crowd.getMembers()){
+                    books.addAll(realm.where(Book.class)
+                            .equalTo("owner", u.getId())
+                            .findAll());
+                }
         }
 
         gridViewFragment.setmItems(books);

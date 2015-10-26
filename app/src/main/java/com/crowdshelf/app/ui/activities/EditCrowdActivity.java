@@ -211,4 +211,10 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         Toast.makeText(EditCrowdActivity.this, "Remove " + MainTabbedActivity.getMainUserId(), Toast.LENGTH_SHORT).show();
         finish();
     }
+
+    public void crowdBooksClick(View view) {
+        Intent intent = new Intent(this, BookGridViewActivity.class);
+        intent.putExtra("shelf", crowdID);
+        startActivity(intent);
+    }
 }
