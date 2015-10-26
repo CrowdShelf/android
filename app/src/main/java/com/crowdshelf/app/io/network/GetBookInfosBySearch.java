@@ -90,15 +90,17 @@ public class GetBookInfosBySearch {
 
             @Override
             protected void onPostExecute(List<BookInfo> results) {
-                for (BookInfo result: results) {
-                    putBookInfoInDatabase(result, dbEventType);
+                if (results != null || results.size() != 0) {
+                    for (BookInfo result : results) {
+                        putBookInfoInDatabase(result, dbEventType);
+                    }
                 }
             }
         }.execute();
     }
 
     private static void putBookInfoInDatabase(BookInfo bookInfo, DbEventType dbEventType) {
-        if (bookInfo == null || bookInfo.getIsbn().equals("not found")) {
+        if (bookInfo == null) {
             return;
         }
         Realm realm = Realm.getDefaultInstance();
