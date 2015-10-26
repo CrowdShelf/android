@@ -39,6 +39,7 @@ public class GetBookInfosBySearch {
             @Override
             protected List<BookInfo> doInBackground(Void... params) {
                 try {
+                    query.replace(" ", "+");
                     URL url = new URL(googleBooksAPIUrl + query);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
