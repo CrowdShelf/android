@@ -90,7 +90,7 @@ public class GetBookInfosBySearch {
 
             @Override
             protected void onPostExecute(List<BookInfo> results) {
-                if (results != null || results.size() != 0) {
+                if (results != null) {
                     for (BookInfo result : results) {
                         putBookInfoInDatabase(result, dbEventType);
                     }
