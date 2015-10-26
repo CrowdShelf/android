@@ -39,8 +39,8 @@ public class GetBookInfosBySearch {
             @Override
             protected List<BookInfo> doInBackground(Void... params) {
                 try {
-                    query.replace(" ", "+");
-                    URL url = new URL(googleBooksAPIUrl + query);
+                    String s = query.replace(" ", "+");
+                    URL url = new URL(googleBooksAPIUrl + s);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
 
@@ -81,7 +81,6 @@ public class GetBookInfosBySearch {
 
                         bookInfos.add(new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray, description));
                     }
-
                    return bookInfos;
                 } catch (Exception e) {
                     Log.w(TAG, e.getMessage());
@@ -99,7 +98,7 @@ public class GetBookInfosBySearch {
     }
 
     private static void putBookInfoInDatabase(BookInfo bookInfo, DbEventType dbEventType) {
-        if (bookInfo == null){
+        if (bookInfo == null || bookInfo.getIsbn().equals("not found")) {
             return;
         }
         Realm realm = Realm.getDefaultInstance();
