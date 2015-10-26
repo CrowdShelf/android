@@ -110,7 +110,7 @@ public class GetBookInfosBySearch {
     }
 
     private static void putBookInfoInDatabase(BookInfo bookInfo, DbEventType dbEventType) {
-        if (bookInfo == null) {
+        if (bookInfo == null || bookInfo.getIsbn().equals("")) {
             return;
         }
         Realm realm = Realm.getDefaultInstance();
