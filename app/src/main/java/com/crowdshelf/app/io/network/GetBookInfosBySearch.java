@@ -58,17 +58,9 @@ public class GetBookInfosBySearch {
                     for (GoogleBooksItem item: main.getItems()) {
                         GoogleBooksVolumeInfo info = item.getVolumeInfo();
                         String isbn = "";
-                        for (GoogleBooksIndustryIdentifier industryIdentifier: info.getIndustryIdentifiers()) {
-                            if (industryIdentifier.getType().equals("ISBN_10")) {
-                                isbn = industryIdentifier.getIdentifier();
-                            }
-                        }
+                        isbn = info.getIsbn10();
                         if (isbn.equals("")) {
-                            for (GoogleBooksIndustryIdentifier industryIdentifier: info.getIndustryIdentifiers()) {
-                                if (industryIdentifier.getType().equals("ISBN_13")) {
-                                    isbn = industryIdentifier.getIdentifier();
-                                }
-                            }
+                            isbn = info.getIsbn13();
                         }
                         if (isbn.equals("")) {
                             continue;

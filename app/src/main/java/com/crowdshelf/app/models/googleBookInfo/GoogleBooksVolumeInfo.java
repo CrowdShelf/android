@@ -45,4 +45,28 @@ public class GoogleBooksVolumeInfo {
     public List<GoogleBooksIndustryIdentifier> getIndustryIdentifiers() {
         return industryIdentifiers;
     }
+
+    public String getIsbn10() {
+        String isbn = "";
+        if (getIndustryIdentifiers() != null) {
+            for (GoogleBooksIndustryIdentifier industryIdentifier : getIndustryIdentifiers()) {
+                if (industryIdentifier.getType().equals("ISBN_10")) {
+                    isbn = industryIdentifier.getIdentifier();
+                }
+            }
+        }
+        return isbn;
+    }
+
+    public String getIsbn13() {
+        String isbn = "";
+        if (getIndustryIdentifiers() != null) {
+            for (GoogleBooksIndustryIdentifier industryIdentifier : getIndustryIdentifiers()) {
+                if (industryIdentifier.getType().equals("ISBN_13")) {
+                    isbn = industryIdentifier.getIdentifier();
+                }
+            }
+        }
+        return isbn;
+    }
 }
