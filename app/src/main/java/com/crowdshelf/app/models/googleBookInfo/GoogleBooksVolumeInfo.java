@@ -1,5 +1,6 @@
 package com.crowdshelf.app.models.googleBookInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class GoogleBooksVolumeInfo {
     private String description;
     private GoogleBooksImageLinks imageLinks;
     private String[] authors;
-    private List<GoogleBooksIndustryIdentifier> industryIdentifiers;
+    private ArrayList<GoogleBooksIndustryIdentifier> industryIdentifiers;
 
     public String getTitle() {
         return title;
