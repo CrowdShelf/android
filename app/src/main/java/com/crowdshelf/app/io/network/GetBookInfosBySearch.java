@@ -63,6 +63,16 @@ public class GetBookInfosBySearch {
                                 isbn = industryIdentifier.getIdentifier();
                             }
                         }
+                        if (isbn.equals("")) {
+                            for (GoogleBooksIndustryIdentifier industryIdentifier: info.getIndustryIdentifiers()) {
+                                if (industryIdentifier.getType().equals("ISBN_13")) {
+                                    isbn = industryIdentifier.getIdentifier();
+                                }
+                            }
+                        }
+                        if (isbn.equals("")) {
+                            continue;
+                        }
                         String title = info.getTitle();
                         String subtitle = info.getSubTitle();
                         String author = getAuthorsAsString(info.getAuthors());
@@ -81,7 +91,7 @@ public class GetBookInfosBySearch {
 
                         bookInfos.add(new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray, description));
                     }
-                   return bookInfos;
+                    return bookInfos;
                 } catch (Exception e) {
                     Log.w(TAG, e.getMessage());
                 }
