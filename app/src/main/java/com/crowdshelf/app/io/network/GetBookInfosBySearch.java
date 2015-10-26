@@ -73,16 +73,21 @@ public class GetBookInfosBySearch {
                         String publisher = info.getPublisher();
                         String pubDate = info.getPublishedDate();
                         String description = info.getDescription();
-                        URL imgUrl = new URL(info.getImageLinks().getThumbnail());
-                        HttpURLConnection connection = (HttpURLConnection) imgUrl.openConnection();
-                        connection.setDoInput(true);
-                        connection.connect();
-                        InputStream input = connection.getInputStream();
-                        Bitmap artwork = BitmapFactory.decodeStream(input);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        artwork.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] artworkByteArray = stream.toByteArray();
-
+                        byte[] artworkByteArray = null;
+                        String imgUrlS = info.getImageLinks().getThumbnail();
+                        if (imgUrlS != null) {
+                            if (!imgUrlS.equals("")) {
+                                URL imgUrl = new URL(info.getImageLinks().getThumbnail());
+                                HttpURLConnection connection = (HttpURLConnection) imgUrl.openConnection();
+                                connection.setDoInput(true);
+                                connection.connect();
+                                InputStream input = connection.getInputStream();
+                                Bitmap artwork = BitmapFactory.decodeStream(input);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                artwork.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                artworkByteArray = stream.toByteArray();
+                            }
+                        }
                         bookInfos.add(new BookInfo(isbn, title, subtitle, author, publisher, pubDate, artworkByteArray, description));
                     }
                     return bookInfos;
