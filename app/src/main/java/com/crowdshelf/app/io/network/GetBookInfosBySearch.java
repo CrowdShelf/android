@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class GetBookInfosBySearch {
             protected List<BookInfo> doInBackground(Void... params) {
                 try {
                     String s = query.replace(" ", "+");
+                    s = URLEncoder.encode(s, "utf-8");
                     URL url = new URL(googleBooksAPIUrl + s);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
