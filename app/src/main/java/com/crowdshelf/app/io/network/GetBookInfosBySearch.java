@@ -74,8 +74,8 @@ public class GetBookInfosBySearch {
                         String pubDate = info.getPublishedDate();
                         String description = info.getDescription();
                         byte[] artworkByteArray = null;
-                        String imgUrlS = info.getImageLinks().getThumbnail();
-                        if (imgUrlS != null) {
+                        if (info.getImageLinks() != null) {
+                            String imgUrlS = info.getImageLinks().getThumbnail();
                             if (!imgUrlS.equals("")) {
                                 URL imgUrl = new URL(info.getImageLinks().getThumbnail());
                                 HttpURLConnection connection = (HttpURLConnection) imgUrl.openConnection();
