@@ -14,12 +14,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
+import com.crowdshelf.app.io.network.GetBookInfosBySearch;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.adapter.SearchResultAdapter;
@@ -70,11 +72,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
             TextView searchText = (TextView) findViewById(R.id.searchResultTextView);
             searchText.setText("Result for " + query);
 
-            //use the query to search
-            List<String> isbns = Arrays.asList("9780136042594", "9781847399304", "9783161484100", "9780670921607");
-            for (String isbn : isbns) {
-                MainController.getBookInfo(isbn, DbEventType.BOOKINFO_CHANGED);
-            }
+            GetBookInfosBySearch.getBookInfos(query, DbEventType.BOOKINFO_CHANGED);
         }
     }
 
@@ -88,6 +86,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
                     .equalTo("isbn", event.getDbObjectId())
                     .findFirst();
                 searchResult.add(bookInfo);
+                    ProgressBar pb = (ProgressBar)findViewById(R.id.searchActivityProgressBar);
+                    pb.setVisibility(View.GONE);
                 listAdapter.notifyDataSetChanged();
 //                if (!searchResult.contains(bookInfo)) {
 //                    searchResult.add(bookInfo);
