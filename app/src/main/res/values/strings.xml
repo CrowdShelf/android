@@ -31,4 +31,5 @@
     <string name="title_activity_user_list">UserListActivity</string>
     <string name="title_activity_remove">remove</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
 </resources>
