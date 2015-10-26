@@ -71,11 +71,16 @@ public class ViewBookActivity extends Activity {
                     .equalTo("isbn", book.getIsbn())
                     .findFirst();
 
-            if (bookOwnerID.equals(MainTabbedActivity.getMainUserId())){
+            if (MainTabbedActivity.getMainUserId().equals(book.getRentedTo())){
+                returnBookButton.setVisibility(View.VISIBLE);
+                removeBookButton.setVisibility(View.GONE);
+            }
+            else if(MainTabbedActivity.getMainUserId().equals(book.getOwner())){
                 returnBookButton.setVisibility(View.GONE);
                 removeBookButton.setVisibility(View.VISIBLE);
-            }else{
-                returnBookButton.setVisibility(View.VISIBLE);
+            }
+            else {
+                returnBookButton.setVisibility(View.GONE);
                 removeBookButton.setVisibility(View.GONE);
             }
 
