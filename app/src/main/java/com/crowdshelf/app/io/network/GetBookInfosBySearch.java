@@ -123,6 +123,9 @@ public class GetBookInfosBySearch {
     }
 
     public static String getAuthorsAsString(String[] authors) {
+        if (authors == null){
+            return "";
+        }
         String authorString = "";
         for (int i = 0; i < authors.length; i++) {
             if (i == authors.length-1){
