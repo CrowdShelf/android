@@ -118,6 +118,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
         userScreenFragment = UserScreenFragment.newInstance();
         crowdScreenFragment = CrowdsScreenFragment.newInstance();
 
+        // Remove shadow between ActionBar and tabs
+        getSupportActionBar().setElevation(0);
+
         // Fix and uncomment to add storing of username
 //        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 //        if (!prefs.getBoolean("firstTime", false)) {

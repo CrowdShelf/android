@@ -13,21 +13,12 @@
         android:id="@+id/tool_bar"
         layout="@layout/tool_bar"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:fadingEdge="none"
-        android:requiresFadingEdge="none"
-        android:fadingEdgeLength="0dp" />
+        android:layout_width="match_parent" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fadingEdge="none"
-        android:requiresFadingEdge="none"
-        android:fadingEdgeLength="0dp"
-        android:dividerPadding="0dp"
-        android:padding="0dp"
-        android:showDividers="none">
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
