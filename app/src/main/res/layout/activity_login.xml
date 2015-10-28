@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/createNewUserButton"
-        android:text="Create new user"
+        android:text="Sign up for Crowdshelf"
         android:onClick="changeToCreateUserViewButtonClicked"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
@@ -38,7 +38,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:id="@+id/usernameTextfield"
         android:hint="username"
         android:layout_centerHorizontal="true"
@@ -46,18 +46,24 @@
         style="@style/LoginEditTextStyle"
         android:autoText="false"
         android:layout_alignParentEnd="false"
-        android:textIsSelectable="false" />
+        android:textIsSelectable="false"
+        android:nextFocusForward="@+id/passwordTextField"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        />
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
         android:id="@+id/passwordTextField"
         android:hint="password"
         android:layout_below="@+id/usernameTextfield"
         android:layout_centerHorizontal="true"
-        android:enabled="false"
         style="@style/LoginEditTextStyle"
-        android:layout_alignParentEnd="false" />
+        android:layout_alignParentEnd="false"
+        android:imeOptions="actionDone"
+        android:singleLine="true"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -78,10 +84,14 @@
         android:inputType="textEmailAddress"
         android:hint="mail"
         android:id="@+id/mailTextfield"
-        android:layout_below="@+id/usernameTextfield"
+        android:layout_below="@+id/passwordTextField"
         android:layout_centerHorizontal="true"
         android:visibility="invisible"
-        style="@style/LoginEditTextStyle" />
+        style="@style/LoginEditTextStyle"
+        android:enabled="true"
+        android:nextFocusForward="@+id/nameTextfield"
+        android:imeOptions="actionNext"
+        android:singleLine="true"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -92,7 +102,9 @@
         android:layout_below="@+id/mailTextfield"
         android:layout_centerHorizontal="true"
         android:visibility="invisible"
-        style="@style/LoginEditTextStyle" />
+        style="@style/LoginEditTextStyle"
+        android:imeOptions="actionDone"
+        android:singleLine="true"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -112,11 +124,11 @@
         android:layout_height="wrap_content"
         android:text="forgot password?"
         android:id="@+id/forgotPasswordButton"
-        android:layout_alignTop="@+id/registationButton"
-        android:layout_centerHorizontal="true"
         android:background="@null"
         android:elevation="@null"
-        android:textColor="#0162ff" />
+        android:textColor="#0162ff"
+        android:layout_alignTop="@+id/nameTextfield"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
