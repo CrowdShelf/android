@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -35,7 +34,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
         setContentView(R.layout.activity_login);
         MainTabbedActivity.getBus().register(this);
         EditText usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
-        usernameTextField.setOnKeyListener(this);
+        usernameTextField.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Log.i(TAG, "On key oressed");
+                return true;
+            }
+        });
     }
 
     @Override
@@ -129,22 +134,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
 /*    @Override
     public void onBackPressed() {}*/
 
-    public void registerLayout(View view) {
+    public void changeToCreateUserViewButtonClicked(View view) {
         findViewById(R.id.mailTextfield).setVisibility(View.VISIBLE);
         findViewById(R.id.nameTextfield).setVisibility(View.VISIBLE);
         findViewById(R.id.registationButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.registerLayout).setVisibility(View.INVISIBLE);
         findViewById(R.id.cancelLayout).setVisibility(View.VISIBLE);
+
+        findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.createNewUserButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.passwordTextField).setVisibility(View.INVISIBLE);
+        findViewById(R.id.forgotPasswordButton).setVisibility(View.INVISIBLE);
+
     }
 
-    public void cancelLayout(View view) {
+    public void cancelCreateNewUserButtonClicked(View view) {
         findViewById(R.id.mailTextfield).setVisibility(View.INVISIBLE);
         findViewById(R.id.nameTextfield).setVisibility(View.INVISIBLE);
         findViewById(R.id.registationButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.registerLayout).setVisibility(View.VISIBLE);
         findViewById(R.id.cancelLayout).setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.forgotPasswordButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.createNewUserButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.passwordTextField).setVisibility(View.VISIBLE);
     }
 
     @Override

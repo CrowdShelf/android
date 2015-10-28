@@ -26,7 +26,7 @@
     <string name="title_activity_login">loginActivity</string>
     <string name="nameText">Enter username</string>
     <string name="mailText">Enter mail</string>
-    <string name="registrationButtonText">Register user</string>
+    <string name="registrationButtonText">Create user</string>
     <string name="loginButtonText">Login</string>
     <string name="title_activity_user_list">UserListActivity</string>
     <string name="title_activity_remove">remove</string>
