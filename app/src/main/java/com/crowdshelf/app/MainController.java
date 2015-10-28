@@ -61,15 +61,15 @@ public class MainController {
     Users
      */
 
-    public static void login(String username, DbEventType dbEventType) {
-        NetworkController.login(username, dbEventType);
+    public static void login(String username, String password, DbEventType dbEventType) {
+        NetworkController.login(username, password, dbEventType);
 
     }
 
-    public static void createUser(User user, DbEventType dbEventType) {
+    public static void createUser(String username, String name, String email, String password, DbEventType dbEventType) {
         // This user is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
-        NetworkController.createUser(user, dbEventType);
+        NetworkController.createUser(username, name, email, password, dbEventType);
     }
 
     public static void getUser(String userId, DbEventType dbEventType) {
