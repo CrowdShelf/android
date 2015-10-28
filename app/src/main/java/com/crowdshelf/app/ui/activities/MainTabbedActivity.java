@@ -404,7 +404,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 searchManager.getSearchableInfo(getComponentName()));
 
         // Remove to set hint to search in the phones language
-        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHint("Search...");
+//        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHint("Search...");
         return true;
     }
 
