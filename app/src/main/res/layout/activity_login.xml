@@ -4,15 +4,28 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.crowdshelf.app.ui.activities.LoginActivity">
+    tools:context="com.crowdshelf.app.ui.activities.LoginActivity"
+    android:focusable="false"
+    android:clickable="false"
+    style="@android:style/Widget.Material.Button.Borderless.Small">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/crowdshelfLogoImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="50dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/registerLayout"
+        android:id="@+id/createNewUserButton"
         android:text="Create new user"
-        android:layout_alignParentRight="true"
-        android:onClick="registerLayout"/>
+        android:onClick="changeToCreateUserViewButtonClicked"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -20,17 +33,31 @@
         android:id="@+id/cancelLayout"
         android:text="Cancel"
         android:layout_alignParentRight="true"
-        android:onClick="cancelLayout"
+        android:onClick="cancelCreateNewUserButtonClicked"
         android:visibility="invisible"/>
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/usernameTextfield"
-        android:hint="Username"
-        android:width="200dp"
-        android:layout_below="@+id/registerLayout"
-        android:layout_centerHorizontal="true" />
+        android:hint="username"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/crowdshelfLogoImageView"
+        style="@style/LoginEditTextStyle"
+        android:autoText="false"
+        android:layout_alignParentEnd="false"
+        android:textIsSelectable="false" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordTextField"
+        android:hint="password"
+        android:layout_below="@+id/usernameTextfield"
+        android:layout_centerHorizontal="true"
+        android:enabled="false"
+        style="@style/LoginEditTextStyle"
+        android:layout_alignParentEnd="false" />
 
     <Button
         android:layout_width="wrap_content"
@@ -38,30 +65,34 @@
         android:text="@string/loginButtonText"
         android:id="@+id/loginButton"
         android:onClick="login"
-        android:layout_below="@+id/usernameTextfield"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/passwordTextField"
+        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/passwordTextField"
+        android:layout_alignRight="@+id/passwordTextField"
+
+        />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:inputType="textEmailAddress"
-        android:hint="Mail"
-        android:ems="10"
+        android:hint="mail"
         android:id="@+id/mailTextfield"
         android:layout_below="@+id/usernameTextfield"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        style="@style/LoginEditTextStyle" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:inputType="textPersonName"
-        android:hint="Name"
-        android:ems="10"
+        android:hint="name"
         android:id="@+id/nameTextfield"
         android:layout_below="@+id/mailTextfield"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        style="@style/LoginEditTextStyle" />
 
     <Button
         android:layout_width="wrap_content"
@@ -71,7 +102,21 @@
         android:onClick="register"
         android:layout_below="@+id/nameTextfield"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:layout_alignLeft="@+id/nameTextfield"
+        android:layout_alignRight="@+id/nameTextfield"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="forgot password?"
+        android:id="@+id/forgotPasswordButton"
+        android:layout_alignTop="@+id/registationButton"
+        android:layout_centerHorizontal="true"
+        android:background="@null"
+        android:elevation="@null"
+        android:textColor="#0162ff" />
 
 
 </RelativeLayout>

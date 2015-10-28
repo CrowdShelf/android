@@ -1,33 +1,33 @@
 package com.crowdshelf.app.ui.activities;
-import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
+import com.crowdshelf.app.io.network.GetBookInfosBySearch;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.adapter.SearchResultAdapter;
 import com.squareup.otto.Subscribe;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.menu.ActionMenuItemView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -37,15 +37,22 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
     private String TAG = "SearchResultsActivity";
     private SearchResultAdapter listAdapter;
     private ArrayList<BookInfo> searchResult;
+    private boolean isLocalSearchActive;
+    private String lastQuery;
+    private ProgressBar pb;
+    private MenuItem toggleSearchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
+        pb = (ProgressBar)findViewById(R.id.searchActivityProgressBar);
+        toggleSearchButton = (MenuItem) findViewById(R.id.search_menu_toggle);
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
         searchResult = new ArrayList<>();
         listAdapter = new SearchResultAdapter(this, searchResult);
+        isLocalSearchActive = true;
         ListView lv = (ListView) findViewById(R.id.searchResultListView);
         lv.setAdapter(listAdapter);
         lv.setOnItemClickListener(this);
@@ -54,9 +61,63 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.search_menu_toggle:
+                if (isLocalSearchActive){
+                    changeSearchToInternet(lastQuery);
+                    isLocalSearchActive = false;
+                    ((ActionMenuItemView) findViewById(R.id.search_menu_toggle)).setTitle("Search Crowdshelf");
+                }
+                else{
+                    changeSearchToLocal(lastQuery);
+                    isLocalSearchActive = true;
+                    ((ActionMenuItemView) findViewById(R.id.search_menu_toggle)).setTitle("Search online");
+
+                }
+            }
+            return true;
+    }
+
+    private void changeSearchToLocal(String query) {
+        pb.setVisibility(View.VISIBLE);
+        Set<BookInfo> bookInfos = new HashSet<>();
+
+        bookInfos.addAll(realm.where(BookInfo.class)
+                .contains("title", query, false)
+                .or()
+                .contains("author", query, false)
+                .findAll());
+
+        searchResult.clear();
+        searchResult.addAll(bookInfos);
+        pb.setVisibility(View.GONE);
+        listAdapter.notifyDataSetChanged();
+    }
+
+    private void changeSearchToInternet(String query) {
+        pb.setVisibility(View.VISIBLE);
+        searchResult.clear();
+        listAdapter.notifyDataSetChanged();
+        GetBookInfosBySearch.getBookInfos(query, DbEventType.BOOKINFO_CHANGED);
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -64,16 +125,15 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
     }
 
     private void handleIntent(Intent intent) {
-
+        pb.setVisibility(View.VISIBLE);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            TextView searchText = (TextView) findViewById(R.id.searchResultTextView);
-            searchText.setText("Result for " + query);
-
-            //use the query to search
-            List<String> isbns = Arrays.asList("9780136042594", "9781847399304", "9783161484100", "9780670921607");
-            for (String isbn : isbns) {
-                MainController.getBookInfo(isbn, DbEventType.BOOKINFO_CHANGED);
+            lastQuery = query;
+            setTitle(("Result for " + query));
+            if (isLocalSearchActive){
+                changeSearchToLocal(query);
+            }else {
+                changeSearchToInternet(query);
             }
         }
     }
@@ -88,11 +148,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
                     .equalTo("isbn", event.getDbObjectId())
                     .findFirst();
                 searchResult.add(bookInfo);
+                pb.setVisibility(View.GONE);
                 listAdapter.notifyDataSetChanged();
-//                if (!searchResult.contains(bookInfo)) {
-//                    searchResult.add(bookInfo);
-//                    listAdapter.notifyDataSetChanged();
-//                }
                 break;
 
         }
