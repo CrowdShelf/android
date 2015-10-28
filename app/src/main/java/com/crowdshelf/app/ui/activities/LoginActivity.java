@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -21,11 +22,13 @@ import com.squareup.otto.Subscribe;
 
 import ntnu.stud.markul.crowdshelf.R;
 
-public class LoginActivity extends AppCompatActivity implements View.OnKeyListener {
+public class LoginActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
     private static final String TAG = "LoginActivity";
     private String username;
     private String email;
     private String name;
+    private EditText usernameTextField;
+    private EditText passwordTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +36,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
         setTitle("Login");
         setContentView(R.layout.activity_login);
         MainTabbedActivity.getBus().register(this);
-        EditText usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
-        usernameTextField.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Log.i(TAG, "On key oressed");
-                return true;
-            }
-        });
+        usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
+        passwordTextField = (EditText) findViewById(R.id.passwordTextField);
+        passwordTextField.setOnEditorActionListener(this);
     }
 
     @Override
@@ -74,8 +72,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
     }
 
     public void register(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        username = usernameTextfield.getText().toString();
+        username = usernameTextField.getText().toString();
 
         EditText emailTextfield = (EditText) findViewById(R.id.mailTextfield);
         email = emailTextfield.getText().toString();
@@ -92,8 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
     }
 
     public void login(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        username = usernameTextfield.getText().toString();
+        username = usernameTextField.getText().toString();
         MainController.login(username, DbEventType.LOGIN);
     }
 
@@ -142,8 +138,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
 
         findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.createNewUserButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.passwordTextField).setVisibility(View.INVISIBLE);
         findViewById(R.id.forgotPasswordButton).setVisibility(View.INVISIBLE);
+
+        passwordTextField.setNextFocusForwardId(R.id.mailTextfield);
+        passwordTextField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
     }
 
@@ -156,28 +154,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnKeyListen
         findViewById(R.id.forgotPasswordButton).setVisibility(View.VISIBLE);
         findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
         findViewById(R.id.createNewUserButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.passwordTextField).setVisibility(View.VISIBLE);
+
+        passwordTextField.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
     }
 
+
     @Override
-    public boolean onKey(View view, int keyCode, KeyEvent event) {
-        if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
-        keyCode == EditorInfo.IME_ACTION_DONE ||
-        event.getAction() == KeyEvent.ACTION_DOWN &&
-        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            if (!event.isShiftPressed()) {
-                Log.v("AndroidEnterKeyActivity","Enter Key Pressed!");
-                switch (view.getId()) {
-                    case R.id.usernameTextfield:
-                        login(view);
-                        break;
-                    case R.id.nameTextfield:
-                        register(view);
-                        break;
-                    }
-                return true;
-                }
-            }
-        return false; // pass on to other listeners.
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        Log.i(TAG, "onEditorAction");
+        switch (actionId){
+            case EditorInfo.IME_ACTION_DONE:
+                login(null);
+                break;
         }
+        return false;
+    }
 }
