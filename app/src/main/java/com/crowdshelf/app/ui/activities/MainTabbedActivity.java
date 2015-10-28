@@ -116,6 +116,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tab_indicator));
 
         userScreenFragment = UserScreenFragment.newInstance();
         crowdScreenFragment = CrowdsScreenFragment.newInstance();
