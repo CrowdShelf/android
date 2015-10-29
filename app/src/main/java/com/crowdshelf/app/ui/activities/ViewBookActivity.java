@@ -100,9 +100,9 @@ public class ViewBookActivity extends Activity implements AdapterView.OnItemClic
                     .findAll();
             if (!rentedBooks.isEmpty()){
                 for (Book b : rentedBooks){
-                    if (MainTabbedActivity.getMainUserId().equals(b.getRentedTo())){
+                    if (MainTabbedActivity.getMainUserId().equals(b.getOwner())){
                         User renter = realm.where(User.class)
-                                .equalTo("id", b.getOwner())
+                                .equalTo("id", b.getRentedTo())
                                 .findFirst();
                         renters.add(renter);
                     }
@@ -208,10 +208,8 @@ public class ViewBookActivity extends Activity implements AdapterView.OnItemClic
                 .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
                 .equalTo("owner", u.getId())
                 .findFirst();
-        MainController.removeRenter(rentedBook.getId(), u.getId(), DbEventType.USER_BOOKS_CHANGED);
-        Toast.makeText(ViewBookActivity.this, "Book was returned", Toast.LENGTH_SHORT).show();
-
-        finish();
+//        MainController.removeRenter(rentedBook.getId(), u.getId(), DbEventType.USER_BOOKS_CHANGED);
+        Toast.makeText(ViewBookActivity.this, u.getName() + " borrows your copy of " + bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
