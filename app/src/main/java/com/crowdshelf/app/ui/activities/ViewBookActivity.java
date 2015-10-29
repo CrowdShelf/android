@@ -18,8 +18,11 @@ import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.MemberId;
+import com.crowdshelf.app.models.User;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -60,31 +63,46 @@ public class ViewBookActivity extends Activity {
             returnBookButton.setVisibility(View.GONE);
             removeBookButton.setVisibility(View.GONE);
 
+            // Check if mainUser borrows the book
+            Book rentedToMainUser = realm.where(Book.class)
+                    .equalTo("isbn", isbn)
+                    .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
+                    .findFirst();
+            if (rentedToMainUser != null){
+                returnBookButton.setVisibility(View.VISIBLE);
+            }
+
+            // Check if mainUser owns the book
+            Book ownedBook = realm.where(Book.class)
+                    .equalTo("isbn", isbn)
+                    .equalTo("owner", MainTabbedActivity.getMainUserId())
+                    .findFirst();
+            if (ownedBook != null){
+                removeBookButton.setVisibility(View.VISIBLE);
+            }
+
+            // Get all users borrowing the book from mainUser
+            List<Book> rentedBooks= realm.where(Book.class)
+                    .equalTo("isbn", isbn)
+                    .notEqualTo("rentedTo", "")
+                    .findAll();
+            if (!rentedBooks.isEmpty()){
+                List<String> renters = new ArrayList<>();
+                for (Book b : rentedBooks){
+                    if (MainTabbedActivity.getMainUserId().equals(b.getOwner())){
+                        renters.add(b.getRentedTo());
+                    }
+                }
+                if (!renters.isEmpty()){
+
+                }
+            }
             bookInfo = realm.where(BookInfo.class)
                     .equalTo("isbn", isbn)
                     .findFirst();
-        } else if (bookID != null) {
-            book = realm.where(Book.class)
-                    .equalTo("id", bookID)
-                    .findFirst();
-            bookInfo = realm.where(BookInfo.class)
-                    .equalTo("isbn", book.getIsbn())
-                    .findFirst();
-
-            if (MainTabbedActivity.getMainUserId().equals(book.getRentedTo())){
-                returnBookButton.setVisibility(View.VISIBLE);
-                removeBookButton.setVisibility(View.GONE);
-            }
-            else if(MainTabbedActivity.getMainUserId().equals(book.getOwner())){
-                returnBookButton.setVisibility(View.GONE);
-                removeBookButton.setVisibility(View.VISIBLE);
-            }
-            else {
-                returnBookButton.setVisibility(View.GONE);
-                removeBookButton.setVisibility(View.GONE);
-            }
-
         }
+
+        setTitle(bookInfo.getTitle());
         drawBookInfoUI(bookInfo);
 
 
@@ -105,10 +123,12 @@ public class ViewBookActivity extends Activity {
         TextView titleTextView = (TextView)findViewById(R.id.titleView);
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
         TextView infoTextView = (TextView)findViewById(R.id.infoView);
+        TextView authorView = (TextView)findViewById(R.id.authorView);
         titleTextView.setText(bookInfo.getTitle());
         infoTextView.setText(bookInfo.getDescription());
         Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
         imageView.setImageBitmap(bitmap);
+        authorView.setText(bookInfo.getAuthor());
     }
 
     public void addButtonClick(View view) {
@@ -141,8 +161,11 @@ public class ViewBookActivity extends Activity {
 
     public void removeButtonClick(View view) {
         Toast.makeText(ViewBookActivity.this, "Book removed", Toast.LENGTH_SHORT).show();
-
-        MainController.removeBook(book.getId(), DbEventType.USER_BOOKS_CHANGED);
+        Book ownedBook = realm.where(Book.class)
+                .equalTo("isbn",isbn)
+                .equalTo("owner", MainTabbedActivity.getMainUserId())
+                .findFirst();
+        MainController.removeBook(ownedBook.getId(), DbEventType.USER_BOOKS_CHANGED);
 
         finish();
     }

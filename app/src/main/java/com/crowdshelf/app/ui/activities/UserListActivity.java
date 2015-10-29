@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEvent;
@@ -115,7 +116,7 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
                 .equalTo("owner", u.getId())
                 .equalTo("isbn", ISBN)
                 .findFirst();
-
+        Toast.makeText(UserListActivity.this, "Book was borrowed", Toast.LENGTH_SHORT).show();
         MainController.addRenter(bookToRent.getId(), userID, DbEventType.USER_BOOKS_CHANGED);
 
         finish();
