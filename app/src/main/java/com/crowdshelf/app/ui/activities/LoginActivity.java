@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     public void login(View view) {
         username = usernameTextField.getText().toString();
         password = passwordTextField.getText().toString();
-        MainController.login(username, password DbEventType.LOGIN);
+        MainController.login(username, password, DbEventType.LOGIN);
     }
 
     @Subscribe

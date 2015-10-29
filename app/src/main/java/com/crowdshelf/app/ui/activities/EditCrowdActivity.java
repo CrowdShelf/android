@@ -48,6 +48,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     private String crowdID;
     private ImageView crowdImageView;
     private LetterTileProvider letterTileProvider;
+    private int mGroupImagePixelSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,9 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
         addUserNameTextField = (EditText) findViewById(R.id.crowdMemberTextField);
         crowdImageView = (ImageView) findViewById(R.id.editCrowdImageView);
+
+        mGroupImagePixelSize = getResources().getDimensionPixelSize(R.dimen.letter_tile_size);
+
 
         addUserNameTextField.setOnEditorActionListener(this);
         crowdNameEditText.addTextChangedListener(this);
@@ -298,7 +302,9 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-//        crowdImageView.setImageBitmap(letterTileProvider.getLetterTile(String.valueOf(s), getResources().getDimensionPixelSize(R.dimen.letter_tile_size)));
+        if (count > 0) {
+            crowdImageView.setImageBitmap(letterTileProvider.getLetterTile(String.valueOf(s), mGroupImagePixelSize));
+        }
     }
 
     @Override

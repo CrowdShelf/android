@@ -4,8 +4,6 @@ import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
-import com.crowdshelf.app.io.ScannerEvent;
-import com.crowdshelf.app.io.ScannerEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
@@ -22,10 +20,7 @@ import com.squareup.otto.ThreadEnforcer;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -445,11 +440,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
             case 0:
                 Log.i(TAG, "onPageSelected position: " + position);
                 updateUserBooks();
-                MainTabbedActivity.getBus().post(new ScannerEvent(ScannerEventType.TURN_SCANNER_OFF, null));
                 break;
             case 1:
                 Log.i(TAG, "onPageSelected position: " + position);
-                MainTabbedActivity.getBus().post(new ScannerEvent(ScannerEventType.TURN_SCANNER_ON, null));
+                updateUserCrowds();
                 break;
             case 2:
                 Log.i(TAG, "onPageSelected position: " + position);

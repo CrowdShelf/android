@@ -90,6 +90,7 @@ tools:context="com.crowdshelf.app.ui.activities.EditCrowdActivity">
         android:text="Add user"
         android:id="@+id/button"
         android:layout_above="@+id/memberListView"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="addUserToCrowdClicked" />
 
 </RelativeLayout>

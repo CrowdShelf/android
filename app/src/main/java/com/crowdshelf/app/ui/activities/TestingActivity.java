@@ -121,7 +121,7 @@ public class TestingActivity extends AppCompatActivity {
         user.setName("jayson gason");
         user.setUsername("jayson");
         user.setEmail("jayson@gmail.com");
-        NetworkController.createUser(user, DbEventType.USER_CREATED);
+//        NetworkController.createUser(user, DbEventType.USER_CREATED);
     }
 
     public void createBookOnClick(View v){
