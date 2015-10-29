@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     private String username;
     private String email;
     private String name;
+    private String password;
     private EditText usernameTextField;
     private EditText passwordTextField;
 
@@ -80,17 +81,21 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         EditText nameTextfield = (EditText) findViewById(R.id.nameTextfield);
         name = nameTextfield.getText().toString();
 
+        EditText passwordTextfield = (EditText) findViewById(R.id.nameTextfield);
+        password = passwordTextField.getText().toString();
+
         User user=new User();
         user.setUsername(username);
         user.setName(name);
         user.setEmail(email);
 
-        MainController.createUser(user, DbEventType.USER_CREATED);
+        MainController.createUser(username, name, email, password, DbEventType.USER_CREATED);
     }
 
     public void login(View view) {
         username = usernameTextField.getText().toString();
-        MainController.login(username, DbEventType.LOGIN);
+        password = passwordTextField.getText().toString();
+        MainController.login(username, password DbEventType.LOGIN);
     }
 
     @Subscribe
@@ -112,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                  */
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
                 NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
-                MainController.login(username, DbEventType.LOGIN);
+                MainController.login(username, password, DbEventType.LOGIN);
 
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 break;

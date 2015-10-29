@@ -72,7 +72,13 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
                         .equalTo("id", event.getDbObjectId())
                         .notEqualTo("id", MainTabbedActivity.getMainUserId())
                         .findFirst();
-                if (!usersWithBook.contains(user)) {
+                if (!usersWithBook.contains(user) && user != null) {
+                    usersWithBook.add(user);
+                    listAdapter.notifyDataSetChanged();
+                }
+                if (usersWithBook.isEmpty()){
+                    user = new User();
+                    user.setName("No user in your crowds got this book");
                     usersWithBook.add(user);
                     listAdapter.notifyDataSetChanged();
                 }
