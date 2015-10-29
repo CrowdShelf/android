@@ -120,7 +120,18 @@ public class MainController {
     }
 
     public static void removeCrowdMember(String crowdId, String userId, DbEventType dbEventType){
+        realm.beginTransaction();
+        Crowd crowd = realm.where(Crowd.class)
+                .equalTo("id", crowdId)
+                .findFirst();
+        for (MemberId memderId: crowd.getMembers()) {
+            if (memderId.getId().equals(userId)) {
+                memderId.removeFromRealm();
+            }
+        }
+        realm.commitTransaction();
         NetworkController.removeCrowdMember(crowdId, userId, dbEventType);
+        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, userId));
     }
 
     /*
