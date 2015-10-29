@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.adapter.UserListAdapter;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ import ntnu.stud.markul.crowdshelf.R;
 /**
  * Created by MortenAlver on 07.09.2015.
  */
-public class ViewBookActivity extends Activity {
+public class ViewBookActivity extends Activity implements AdapterView.OnItemClickListener {
     private static final String TAG = "ViewBookActivity";
     private static final int BORROW_BOOK_ACTION = 0;
     private Realm realm;
@@ -39,6 +42,8 @@ public class ViewBookActivity extends Activity {
     private String isbn;
     private String bookID;
     private Book book;
+    private UserListAdapter listAdapter;
+    private ArrayList<User> renters = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,13 @@ public class ViewBookActivity extends Activity {
         isbn = intent.getStringExtra("isbn");
         bookID = intent.getStringExtra("bookID");
         String bookOwnerID = intent.getStringExtra("bookOwnerID");
+
+
+        listAdapter = new UserListAdapter(this, renters);
+
+        ListView lv = (ListView)findViewById(R.id.rentedToListView);
+        lv.setAdapter(listAdapter);
+        lv.setOnItemClickListener(this);
 
         if (isbn != null) {
             if (isbn.equals("")) {
@@ -87,14 +99,16 @@ public class ViewBookActivity extends Activity {
                     .notEqualTo("rentedTo", "")
                     .findAll();
             if (!rentedBooks.isEmpty()){
-                List<String> renters = new ArrayList<>();
                 for (Book b : rentedBooks){
-                    if (MainTabbedActivity.getMainUserId().equals(b.getOwner())){
-                        renters.add(b.getRentedTo());
+                    if (MainTabbedActivity.getMainUserId().equals(b.getRentedTo())){
+                        User renter = realm.where(User.class)
+                                .equalTo("id", b.getOwner())
+                                .findFirst();
+                        renters.add(renter);
                     }
                 }
                 if (!renters.isEmpty()){
-
+                    listAdapter.notifyDataSetChanged();
                 }
             }
             bookInfo = realm.where(BookInfo.class)
@@ -153,7 +167,11 @@ public class ViewBookActivity extends Activity {
 
     public void returnButtonClick(View view) {
         Toast.makeText(ViewBookActivity.this, "Returned book: " + bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
-        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DbEventType.USER_BOOKS_CHANGED);
+        Book rentedBook = realm.where(Book.class)
+                .equalTo("isbn", isbn)
+                .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
+                .findFirst();
+        MainController.removeRenter(rentedBook.getId(), MainTabbedActivity.getMainUserId(), DbEventType.USER_BOOKS_CHANGED);
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();
@@ -180,6 +198,20 @@ public class ViewBookActivity extends Activity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+        User u = renters.get(position);
+        Book rentedBook = realm.where(Book.class)
+                .equalTo("isbn", isbn)
+                .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
+                .equalTo("owner", u.getId())
+                .findFirst();
+        MainController.removeRenter(rentedBook.getId(), u.getId(), DbEventType.USER_BOOKS_CHANGED);
+        Toast.makeText(ViewBookActivity.this, "Book was returned", Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 
     @Override
