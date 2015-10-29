@@ -80,7 +80,7 @@ public class CrowdListFragment extends Fragment implements AdapterView.OnItemCli
         Intent intent = new Intent(getContext(), EditCrowdActivity.class);
         intent.putExtra("crowdID", crowd.getId());
         startActivity(intent);
-        Toast.makeText(getContext(), "Clicked on: " + crowd.getName(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(getContext(), "Clicked on: " + crowd.getName(), Toast.LENGTH_LONG).show();
     }
 
 }

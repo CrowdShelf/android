@@ -60,19 +60,19 @@ public class LetterTileProvider {
         mDefaultBitmap = BitmapFactory.decodeResource(res, android.R.drawable.sym_def_app_icon);
     }
 
-    public Bitmap getLetterTile(String displayName, String key, int width, int height) {
-        final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    public Bitmap getLetterTile(String displayName, int size) {
+        final Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         final char firstChar = displayName.charAt(0);
 
         final Canvas c = mCanvas;
         c.setBitmap(bitmap);
-        c.drawColor(pickColor(key));
+        c.drawColor(pickColor(String.valueOf(firstChar)));
 
         if (isEnglishLetterOrDigit(firstChar)) {
             mFirstChar[0] = Character.toUpperCase(firstChar);
             mPaint.setTextSize(mTileLetterFontSize);
             mPaint.getTextBounds(mFirstChar, 0, 1, mBounds);
-            c.drawText(mFirstChar, 0, 1, width / 2, height / 2
+            c.drawText(mFirstChar, 0, 1, size / 2, size / 2
                     + (mBounds.bottom - mBounds.top) / 2, mPaint);
         } else {
             c.drawBitmap(mDefaultBitmap, 0, 0, null);
@@ -81,7 +81,7 @@ public class LetterTileProvider {
     }
 
     private static boolean isEnglishLetterOrDigit(char c) {
-        if (c == 'æ' || c == 'Æ' || c == 'ø' || c == 'Ø' || c == 'Å' || c == 'Å'){
+        if (c == 'æ' || c == 'Æ' || c == 'ø' || c == 'Ø' || c == 'å' || c == 'Å'){
             return true;
         }
         return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '0' <= c && c <= '9';

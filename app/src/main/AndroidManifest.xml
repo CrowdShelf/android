@@ -61,7 +61,8 @@
             android:name="com.crowdshelf.app.ui.activities.UserListActivity"
             android:label="@string/title_activity_user_list" >
         </activity>
-        <activity android:name="com.crowdshelf.app.ui.activities.EditCrowdActivity" >
+        <activity android:name="com.crowdshelf.app.ui.activities.EditCrowdActivity"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity android:name="com.crowdshelf.app.ui.activities.BookGridViewActivity" >
         </activity>

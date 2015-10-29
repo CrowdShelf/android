@@ -27,7 +27,7 @@
     <string name="nameText">Enter username</string>
     <string name="mailText">Enter mail</string>
     <string name="registrationButtonText">Create user</string>
-    <string name="loginButtonText">Log in</string>
+    <string name="loginButtonText">Sign in</string>
     <string name="title_activity_user_list">UserListActivity</string>
     <string name="title_activity_remove">remove</string>
     <string name="section_format">Hello World from section: %1$d</string>

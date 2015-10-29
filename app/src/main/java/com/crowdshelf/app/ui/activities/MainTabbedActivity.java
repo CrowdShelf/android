@@ -324,7 +324,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     mainUserId = u.getId();
                     Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
                     MainController.getMainUserData(mainUserId);
-                    Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
                     getMixpanel().identify(u.getId());
                 }
                 break;

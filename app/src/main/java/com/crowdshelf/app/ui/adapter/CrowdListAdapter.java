@@ -87,7 +87,7 @@ public class CrowdListAdapter extends BaseAdapter {
         viewHolder.numMembersInCrowdTextView.setText(String.valueOf(crowd.getMembers().size()));
         viewHolder.numBooksInCrowdTextView.setText(String.valueOf(books.size()));
         viewHolder.crowdNameTextView.setText(crowd.getName());
-        viewHolder.crowdPictureImageView.setImageBitmap(letterTileProvider.getLetterTile(crowd.getName(), String.valueOf(crowd.getName().charAt(0)), tileSize, tileSize));
+        viewHolder.crowdPictureImageView.setImageBitmap(letterTileProvider.getLetterTile(crowd.getName(), tileSize));
 
         return convertView;
     }
