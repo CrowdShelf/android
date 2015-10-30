@@ -10,6 +10,7 @@
     <color name="divider">#B6B6B6</color>
     <color name="background">#EDEDED</color>
     <color name="tab_indicator">#FFFFFF</color>
+    <color name="linkColor">#0645AD</color>
 
     <color name="fab_color_1">#ff5252</color>
     <color name="fab_color_1_muted">#ff8080</color>

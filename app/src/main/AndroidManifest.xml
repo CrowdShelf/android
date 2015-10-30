@@ -61,6 +61,10 @@
             android:name="com.crowdshelf.app.ui.activities.UserListActivity"
             android:label="@string/title_activity_user_list" >
         </activity>
+        <activity android:name="com.crowdshelf.app.ui.activities.OwnerListActivity">
+        </activity>
+        <activity android:name="com.crowdshelf.app.ui.activities.RenterListActivity">
+        </activity>
         <activity android:name="com.crowdshelf.app.ui.activities.EditCrowdActivity" >
         </activity>
         <activity android:name="com.crowdshelf.app.ui.activities.BookGridViewActivity" >

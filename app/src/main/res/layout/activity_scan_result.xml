@@ -5,7 +5,7 @@
     tools:context="com.crowdshelf.app.ui.activities.ScannerActivity"
 
     android:columnCount="3"
-    android:rowCount="26">
+    android:rowCount="18">
 
 
 
@@ -75,7 +75,8 @@
         android:text="@string/returnButton"
         android:layout_row="11"
         android:layout_columnSpan="3"
-        android:layout_column="0" />
+        android:layout_column="0"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/btnLL"
@@ -102,14 +103,71 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <ListView
+    <TextView
         android:layout_row="13"
         android:layout_column="0"
         android:layout_columnSpan="3"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/borrowedToText"
+        android:text="Lent out to:"/>
+
+
+    <ListView
+        android:layout_row="14"
+        android:layout_column="0"
+        android:layout_columnSpan="3"
+        android:layout_width="wrap_content"
+        android:layout_height="75dp"
+        android:visibility="gone"
         android:id="@+id/rentedToListView"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_row="13"
+        android:layout_column="0"
+        android:layout_columnSpan="3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rentersTextLink"
+        android:visibility="gone"
+        android:onClick="seeAllRentersClicked"
+        android:textSize="15sp"
+        android:paddingTop="10dp"/>
+
+    <TextView
+        android:layout_row="15"
+        android:layout_column="0"
+        android:layout_columnSpan="3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/borrowedFromText"
+        android:text="Borrowed from:"/>
+
+
+    <ListView
+        android:layout_row="16"
+        android:layout_column="0"
+        android:layout_columnSpan="3"
+        android:layout_width="wrap_content"
+        android:layout_height="75dp"
+        android:visibility="gone"
+        android:id="@+id/borrowedFromListView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_row="15"
+        android:layout_column="0"
+        android:layout_columnSpan="3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ownersTextLink"
+        android:visibility="gone"
+        android:onClick="seeAllOwnersClicked"
+        android:textSize="15sp"
+        android:paddingTop="10dp"/>
 
     <Button
         android:id="@+id/removeButton"
@@ -117,7 +175,7 @@
         android:layout_height="wrap_content"
         android:onClick="removeButtonClick"
         android:text="@string/removeButton"
-        android:layout_row="25"
+        android:layout_row="17"
         android:layout_columnSpan="3"
         android:layout_column="0"
         android:layout_gravity="bottom" />
