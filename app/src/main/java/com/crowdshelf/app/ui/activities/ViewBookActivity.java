@@ -6,11 +6,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -38,7 +41,7 @@ import ntnu.stud.markul.crowdshelf.R;
 /**
  * Created by MortenAlver on 07.09.2015.
  */
-public class ViewBookActivity extends Activity implements AdapterView.OnItemClickListener {
+public class ViewBookActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
     private static final String TAG = "ViewBookActivity";
     private static final int BORROW_BOOK_ACTION = 0;
     private Realm realm;
@@ -61,6 +64,9 @@ public class ViewBookActivity extends Activity implements AdapterView.OnItemClic
         infoTextView.setMovementMethod(new ScrollingMovementMethod());
 
         realm = Realm.getDefaultInstance();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         Intent intent = getIntent();
         isbn = intent.getStringExtra("isbn");
@@ -267,6 +273,15 @@ public class ViewBookActivity extends Activity implements AdapterView.OnItemClic
                 }
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainTabbedActivity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
     }
 
     @Override
