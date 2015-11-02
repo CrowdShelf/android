@@ -3,6 +3,7 @@ package com.crowdshelf.app.io.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
 import com.google.gson.Gson;
@@ -62,14 +63,18 @@ public class NetworkHelper {
                         BufferedReader bReader = new BufferedReader(iReader);
                         StringBuilder builder = new StringBuilder();
                         String line = null;
-                        while ((line = bReader.readLine()) != null)
-                        {
+                        while ((line = bReader.readLine()) != null) {
                             builder.append(line).append("\n");
                         }
                         String jsonString = builder.toString();
                         iReader.close();
                         bReader.close();
                         return jsonString;
+                    } else if (connection.getResponseCode() == 401) {
+                        // Token timed out. Login again.
+                        MainController.loginWithSavedCredentials();
+                        // Do the request again. @todo: this may run before the above login has finished!
+                        sendRequest(requestMethod, route, jsonData, responseHandler, dbEventType);
                     } else {
                         Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
                                 " ResponseMessage: " + connection.getResponseMessage());

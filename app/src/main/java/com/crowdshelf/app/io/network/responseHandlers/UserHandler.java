@@ -18,6 +18,9 @@ public class UserHandler implements ResponseHandler {
     @Override
     public void handleJsonResponse(String jsonString, DbEventType dbEventType) {
         try {
+            /*
+            @todo: get token
+             */
             User u = gson.fromJson(jsonString, User.class);
             Log.i(TAG, "User added _id " + u.getId() + " username " + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
             Realm realm = Realm.getDefaultInstance();

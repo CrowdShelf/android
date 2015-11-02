@@ -46,7 +46,7 @@ public class MainController {
                 MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
                         .findAll();
-                for (Crowd c : crowds) {
+                for (Crowd c: crowds) {
                     for (MemberId memberId : c.getMembers()) {
                         if (!memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
                             getBooks(memberId.getId(), DbEventType.USER_CROWD_BOOKS_CHANGED);
@@ -63,7 +63,14 @@ public class MainController {
 
     public static void login(String username, String password, DbEventType dbEventType) {
         NetworkController.login(username, password, dbEventType);
+    }
 
+    public static void loginWithSavedCredentials() {
+        String username = MainTabbedActivity.getMainUserId();
+        String password = realm.where(User.class)
+                .equalTo("username", username)
+                .findFirst().getPassword();
+        NetworkController.login(username, password, DbEventType.NONE);
     }
 
     public static void createUser(String username, String name, String email, String password, DbEventType dbEventType) {
@@ -182,15 +189,6 @@ public class MainController {
                 .equalTo("isbn", isbn)
                 .findFirst();
         if (bookInfo == null) {
-            /*
-            // Add a blank BookInfo to be updated when the BookInfo is downloaded, to avoid running
-            // multiple threads for getting BookInfo for the same book
-            realm.beginTransaction();
-            BookInfo bookInfo1 = new BookInfo();
-            bookInfo1.setIsbn(isbn);
-            realm.copyToRealm(bookInfo1);
-            realm.commitTransaction();
-            */
             GetBookInfoAsyncTask.getBookInfo(isbn, dbEventType);
         } else {
             MainTabbedActivity.getBus().post(new DbEvent(dbEventType, isbn));

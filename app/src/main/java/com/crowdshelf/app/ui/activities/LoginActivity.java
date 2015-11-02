@@ -20,6 +20,7 @@ import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.User;
 import com.squareup.otto.Subscribe;
 
+import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class LoginActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
@@ -95,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     public void login(View view) {
         username = usernameTextField.getText().toString();
         password = passwordTextField.getText().toString();
-        MainController.login(username, password DbEventType.LOGIN);
+        MainController.login(username, password, DbEventType.LOGIN);
     }
 
     @Subscribe
@@ -107,8 +108,16 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
                 Log.i(TAG, "DbEvent Login with username: " + username);
-                returnIntent.putExtra("username",username);
+                returnIntent.putExtra("username", username);
                 setResult(RESULT_OK,returnIntent);
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                User u = realm.where(User.class)
+                        .equalTo("username", username)
+                        .findFirst();
+                u.setPassword(password);
+                realm.commitTransaction();
+                realm.close();
                 finish();
                 break;
             case USER_CREATED:
@@ -127,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: realm, bus, super");
+        Log.i(TAG, "onDestroy: bus, super");
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
