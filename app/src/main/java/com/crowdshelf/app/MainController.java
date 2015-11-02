@@ -65,6 +65,16 @@ public class MainController {
         NetworkController.login(username, password, dbEventType);
     }
 
+    public static String getToken() {
+        String token = realm.where(User.class)
+                .equalTo("username", MainTabbedActivity.getMainUserId())
+                .findFirst().getToken();
+        if (token == null || token.equals("")) {
+            Log.e(TAG, "Tried to get token it was empty");
+        }
+        return token;
+    }
+
     public static void loginWithSavedCredentials() {
         String username = MainTabbedActivity.getMainUserId();
         String password = realm.where(User.class)
