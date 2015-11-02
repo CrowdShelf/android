@@ -30,13 +30,14 @@ public class NetworkHelper {
     public static void sendRequest(final HttpRequestMethod requestMethod, final String route, final String jsonData,
                                    final ResponseHandler responseHandler, final DbEventType dbEventType)
     {
+        final String token = MainController.getToken();
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 try {
                     String routeWithToken = route;
                     if (requestMethod == HttpRequestMethod.GET) {
-                        routeWithToken += "?token=" + MainController.getToken();
+                        routeWithToken += "?token=" + token;
                     }
                     URL url = new URL(host + "/api" + routeWithToken);
                     Log.i(TAG, "Send request: " + requestMethod.toString() + " URL: " + url.toString());
@@ -55,7 +56,7 @@ public class NetworkHelper {
                     connection.connect();
                     //Log.i(TAG, "NetworkHelper DoOutput: " + connection.getDoOutput() + "DoInput: " + connection.getDoInput());
                     if (jsonData != null) {
-                        String jsonDataWithToken = jsonData.substring(0, 1) + "token: " + MainController.getToken() + ", " + jsonData.substring(1, jsonData.length());
+                        String jsonDataWithToken = jsonData.substring(0, 1) + "token: " + token + ", " + jsonData.substring(1, jsonData.length());
                         Log.i(TAG, "Sending JsonData: " + jsonDataWithToken);
                         OutputStreamWriter writer = new OutputStreamWriter(
                                 connection.getOutputStream());
