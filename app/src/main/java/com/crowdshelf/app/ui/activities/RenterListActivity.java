@@ -1,9 +1,9 @@
 package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +21,16 @@ import com.crowdshelf.app.ui.adapter.UserListAdapter;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
-public class UserListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+/**
+ * Created by MortenAlver on 30.10.2015.
+ */
+public class RenterListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private static final String TAG = "UserListActivity";
+    private static final String TAG = "RenterListActivity";
     private Realm realm;
     private ArrayList<User> usersWithBook;
     private String ISBN;
@@ -43,7 +45,7 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         realm = Realm.getDefaultInstance();
         MainTabbedActivity.getBus().register(this);
 
-        setTitle("Tap to borrow from user");
+        setTitle("Users borrowing your book");
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -61,26 +63,46 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         lv.setOnItemClickListener(this);
 
         for (Book crowdBook : MainTabbedActivity.userCrowdBooks){
-            if (crowdBook.getIsbn().equals(ISBN) && !crowdBook.getOwner().equals(MainTabbedActivity.getMainUserId())){
-                String gotBook = crowdBook.getOwner();
-                if (!crowdBook.getRentedTo().isEmpty()){
-                    gotBook = crowdBook.getRentedTo();
-                }
+            if (crowdBook.getIsbn().equals(ISBN) && crowdBook.getOwner().equals(MainTabbedActivity.getMainUserId())){
                 User user = realm.where(User.class)
-                        .equalTo("id", gotBook)
+                        .equalTo("id", crowdBook.getRentedTo())
                         .notEqualTo("id", MainTabbedActivity.getMainUserId())
                         .findFirst();
                 if (!usersWithBook.contains(user) && user != null) {
                     usersWithBook.add(user);
                     listAdapter.notifyDataSetChanged();
                 }
+                if (usersWithBook.isEmpty()){
+                    user = new User();
+                    user.setName("No user in your crowds got this book");
+                    usersWithBook.add(user);
+                    listAdapter.notifyDataSetChanged();
+                }
             }
         }
-        if (usersWithBook.isEmpty()) {
-            User user = new User();
-            user.setName("No user in your crowds got this book");
-            usersWithBook.add(user);
-            listAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void handleDBEvents(DbEvent event) {
+        realm.refresh();
+        Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
+        switch (event.getDbEventType()) {
+            case UserListActivity_USER_READY:
+                User user = realm.where(User.class)
+                        .equalTo("id", event.getDbObjectId())
+                        .notEqualTo("id", MainTabbedActivity.getMainUserId())
+                        .findFirst();
+                if (!usersWithBook.contains(user) && user != null) {
+                    usersWithBook.add(user);
+                    listAdapter.notifyDataSetChanged();
+                }
+                if (usersWithBook.isEmpty()){
+                    user = new User();
+                    user.setName("No user in your crowds got this book");
+                    usersWithBook.add(user);
+                    listAdapter.notifyDataSetChanged();
+                }
+                break;
         }
     }
 
@@ -117,22 +139,7 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         User u = usersWithBook.get(position);
-        Book bookToRent = realm.where(Book.class)
-                .equalTo("isbn", ISBN)
-                .equalTo("owner", u.getId())
-                .equalTo("rentedTo", "")
-                .findFirst();
-        if (bookToRent == null){
-            bookToRent = realm.where(Book.class)
-                    .equalTo("isbn", ISBN)
-                    .notEqualTo("owner", userID)
-                    .equalTo("rentedTo", u.getId())
-                    .findFirst();
-        }
-        Toast.makeText(UserListActivity.this, "Book was borrowed", Toast.LENGTH_SHORT).show();
-        MainController.addRenter(bookToRent.getId(), userID, DbEventType.USER_BOOKS_CHANGED);
-
-        finish();
+        Toast.makeText(RenterListActivity.this, u.getName() + " borrows this book", Toast.LENGTH_SHORT).show();
     }
 
     @Override
