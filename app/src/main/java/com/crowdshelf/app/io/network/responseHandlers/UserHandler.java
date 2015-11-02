@@ -22,7 +22,7 @@ public class UserHandler implements ResponseHandler {
             @todo: get token
              */
             User u = gson.fromJson(jsonString, User.class);
-            Log.i(TAG, "User added _id " + u.getId() + " username " + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
+            Log.i(TAG, "User added _id " + u.getId() + " username " + u.getUsername() + " name " + u.getName() + " email " + u.getEmail() + " token " + u.getToken());
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(u);

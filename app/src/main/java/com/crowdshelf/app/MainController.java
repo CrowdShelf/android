@@ -66,9 +66,11 @@ public class MainController {
     }
 
     public static String getToken() {
-        String token = realm.where(User.class)
-                .equalTo("username", MainTabbedActivity.getMainUserId())
-                .findFirst().getToken();
+        User u = realm.where(User.class)
+                .equalTo("id", MainTabbedActivity.getMainUserId())
+                .findFirst();
+        if (u == null) Log.e(TAG, "mainuser is null cant get token");
+        String token = u.getToken();
         if (token == null || token.equals("")) {
             Log.e(TAG, "Tried to get token but it was empty");
         }
