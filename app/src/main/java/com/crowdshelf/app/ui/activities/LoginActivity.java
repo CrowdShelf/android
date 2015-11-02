@@ -90,13 +90,13 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         user.setName(name);
         user.setEmail(email);
 
-        MainController.createUser(username, name, email, password, DbEventType.USER_CREATED);
+        MainController.createUser(username, name, email, DbEventType.USER_CREATED);
     }
 
     public void login(View view) {
         username = usernameTextField.getText().toString();
         password = passwordTextField.getText().toString();
-        MainController.login(username, password, DbEventType.LOGIN);
+        MainController.login(username, DbEventType.LOGIN);
     }
 
     @Subscribe
@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                  */
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
                 NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
-                MainController.login(username, password, DbEventType.LOGIN);
+                MainController.login(username, DbEventType.LOGIN);
 
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 break;
@@ -154,8 +154,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         findViewById(R.id.createNewUserButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.forgotPasswordButton).setVisibility(View.INVISIBLE);
 
-        passwordTextField.setNextFocusForwardId(R.id.mailTextfield);
-        passwordTextField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        usernameTextField.setNextFocusForwardId(R.id.mailTextfield);
+        usernameTextField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
     }
 
@@ -169,7 +169,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
         findViewById(R.id.createNewUserButton).setVisibility(View.VISIBLE);
 
-        passwordTextField.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        usernameTextField.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
     }
 

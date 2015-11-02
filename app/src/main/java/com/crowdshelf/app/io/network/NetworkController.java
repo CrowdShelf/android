@@ -190,12 +190,11 @@ public class NetworkController {
     Users
      */
 
-    public static void createUser(String username, String name, String email, String password, DbEventType dbEventType) {
+    public static void createUser(String username, String name, String email, DbEventType dbEventType) {
         JsonObject object = new JsonObject();
         object.addProperty("username", username);
         object.addProperty("name", name);
         object.addProperty("email", email);
-        object.addProperty("password", password);
         String jsonData = object.toString();
 
         NetworkHelper.sendRequest(
@@ -218,10 +217,9 @@ public class NetworkController {
                 dbEventType);
     }
 
-    public static void login(String username, String password, DbEventType dbEventType) {
+    public static void login(String username, DbEventType dbEventType) {
         JsonObject object = new JsonObject();
         object.addProperty("username", username);
-        object.addProperty("password", password);
         String jsonData = object.toString();
         NetworkHelper.sendRequest(HttpRequestMethod.POST,
                 "/login/", jsonData,

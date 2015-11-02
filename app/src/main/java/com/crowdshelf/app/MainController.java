@@ -61,8 +61,8 @@ public class MainController {
     Users
      */
 
-    public static void login(String username, String password, DbEventType dbEventType) {
-        NetworkController.login(username, password, dbEventType);
+    public static void login(String username, DbEventType dbEventType) {
+        NetworkController.login(username, dbEventType);
     }
 
     public static void loginWithSavedCredentials() {
@@ -70,13 +70,13 @@ public class MainController {
         String password = realm.where(User.class)
                 .equalTo("username", username)
                 .findFirst().getPassword();
-        NetworkController.login(username, password, DbEventType.NONE);
+        NetworkController.login(username, DbEventType.NONE);
     }
 
-    public static void createUser(String username, String name, String email, String password, DbEventType dbEventType) {
+    public static void createUser(String username, String name, String email, DbEventType dbEventType) {
         // This user is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
-        NetworkController.createUser(username, name, email, password, dbEventType);
+        NetworkController.createUser(username, name, email, dbEventType);
     }
 
     public static void getUser(String userId, DbEventType dbEventType) {

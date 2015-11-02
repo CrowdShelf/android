@@ -109,7 +109,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 
             menu.setHeaderTitle(obj.getName());
             menu.add(0, acmi.position, 0, "Show books");
-            menu.add(0, acmi.position, 1, "Delete " + obj.getName());
+            menu.add(0, acmi.position, 1, "Remove " + obj.getName() + " from group");
 
         }
     }
