@@ -34,6 +34,7 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
         setContentView(R.layout.activity_book_grid_view);
         Intent intent = getIntent();
         String shelf = intent.getStringExtra("shelf");
+        String userID = intent.getStringExtra("userID");
         realm = Realm.getDefaultInstance();
         BookGridViewFragment gridViewFragment = (BookGridViewFragment) getSupportFragmentManager().findFragmentById(R.id.bookGridViewActivityFragment);
 
@@ -61,14 +62,21 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
 
                 break;
             default:
-                setTitle("Crowd Books");
-                String crowdID = shelf;
-                Crowd crowd = realm.where(Crowd.class)
-                        .equalTo("id", crowdID)
-                        .findFirst();
-                for (MemberId u : crowd.getMembers()){
+                if (userID == null) {
+                    setTitle("Crowd Books");
+                    String crowdID = shelf;
+                    Crowd crowd = realm.where(Crowd.class)
+                            .equalTo("id", crowdID)
+                            .findFirst();
+                    for (MemberId u : crowd.getMembers()) {
+                        books.addAll(realm.where(Book.class)
+                                .equalTo("owner", u.getId())
+                                .findAll());
+                    }
+                }
+                else {
                     books.addAll(realm.where(Book.class)
-                            .equalTo("owner", u.getId())
+                            .equalTo("owner", userID)
                             .findAll());
                 }
         }
