@@ -95,4 +95,10 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
         intent.putExtra("bookOwnerID", b.getOwner());
         startActivity(intent);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
 }

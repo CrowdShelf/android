@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +50,8 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     private ImageView crowdImageView;
     private LetterTileProvider letterTileProvider;
     private int mGroupImagePixelSize;
+    private ListView userListView;
+    private User selectedContexMenuUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         letterTileProvider = new LetterTileProvider(this);
 
-        ListView lv = (ListView) findViewById(R.id.memberListView);
+        userListView = (ListView) findViewById(R.id.memberListView);
         crowdNameEditText = (EditText) findViewById(R.id.crowdNameEditText);
         addUserNameTextField = (EditText) findViewById(R.id.crowdMemberTextField);
         crowdImageView = (ImageView) findViewById(R.id.editCrowdImageView);
@@ -75,8 +78,10 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         addUserNameTextField.setOnEditorActionListener(this);
         crowdNameEditText.addTextChangedListener(this);
 
-        lv.setAdapter(listAdapter);
-        lv.setOnItemClickListener(this);
+        userListView.setAdapter(listAdapter);
+        userListView.setOnItemClickListener(this);
+        registerForContextMenu(userListView);
+
         Intent intent = getIntent();
         crowdID = intent.getStringExtra("crowdID");
         crowdNameEditText.setOnKeyListener(this);
@@ -93,6 +98,54 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                 MainController.getUser(m.getId(), DbEventType.EditCrowdActivity_ADD_USERS);
             }
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.memberListView) {
+            ListView lv = (ListView) v;
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            User obj = (User) lv.getItemAtPosition(acmi.position);
+
+            menu.setHeaderTitle(obj.getName());
+            menu.add(0, acmi.position, 0, "Show books");
+            menu.add(0, acmi.position, 1, "Delete " + obj.getName());
+
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        selectedContexMenuUser = (User) userListView.getItemAtPosition(item.getItemId());
+        switch (item.getOrder()){
+            case 0:
+                Intent intent = new Intent(this, BookGridViewActivity.class);
+                intent.putExtra("userID", selectedContexMenuUser.getId());
+                intent.putExtra("shelf", "ninjahack");
+                startActivity(intent);
+                break;
+
+            case 1:
+                new AlertDialog.Builder(this)
+                .setTitle("Remove user?")
+                .setMessage("Are you sure you want to remove this user?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        Toast.makeText(EditCrowdActivity.this, "Removed", Toast.LENGTH_SHORT).show();
+                        crowdMembers.remove(selectedContexMenuUser);
+                        listAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        }
+      return true;
     }
 
     @Override
@@ -204,24 +257,25 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> a, View v, final int position, long id) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete entry")
-                .setMessage("Are you sure you want to remove this entry?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                        Toast.makeText(EditCrowdActivity.this, "Removed", Toast.LENGTH_SHORT).show();
-                        crowdMembers.remove(position);
-                        listAdapter.notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+            this.openContextMenu(v);
+//        new AlertDialog.Builder(this)
+//                .setTitle("Delete entry")
+//                .setMessage("Are you sure you want to remove this entry?")
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // continue with delete
+//                        Toast.makeText(EditCrowdActivity.this, "Removed", Toast.LENGTH_SHORT).show();
+//                        crowdMembers.remove(position);
+//                        listAdapter.notifyDataSetChanged();
+//                    }
+//                })
+//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // do nothing
+//                    }
+//                })
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .show();
     }
 
     @Override

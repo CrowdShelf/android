@@ -32,7 +32,7 @@ public class CrowdListAdapter extends BaseAdapter {
     public CrowdListAdapter(Context context, List<Crowd> items) {
         mContext = context;
         mItems = items;
-        realm = Realm.getDefaultInstance();
+
     }
 
 
@@ -71,7 +71,7 @@ public class CrowdListAdapter extends BaseAdapter {
             // recycle the already inflated view
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
+        realm = Realm.getDefaultInstance();
         Crowd crowd = mItems.get(position);
         List<Book> books = new ArrayList<>();
         for (MemberId u : crowd.getMembers()){
@@ -79,6 +79,7 @@ public class CrowdListAdapter extends BaseAdapter {
                     .equalTo("owner", u.getId())
                     .findAll());
         }
+        realm.close();
 
         LetterTileProvider letterTileProvider = new LetterTileProvider(mContext);
         final Resources res = mContext.getResources();
@@ -98,5 +99,6 @@ public class CrowdListAdapter extends BaseAdapter {
         TextView numBooksInCrowdTextView;
         TextView numMembersInCrowdTextView;
     }
+
 
 }
