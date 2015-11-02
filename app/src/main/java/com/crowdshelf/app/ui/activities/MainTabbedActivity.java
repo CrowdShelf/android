@@ -146,13 +146,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.action_testing);
-        item.setVisible(false);
-        super.onPrepareOptionsMenu(menu);
-        return true;
-    }
 
     @Subscribe
     public void handleDBEvents(DbEvent event) {
@@ -389,6 +382,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_tabbed, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setTextColor(getResources().getColor(R.color.primary_text));
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHintTextColor(getResources().getColor(R.color.primary_text));
 
