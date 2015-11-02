@@ -33,7 +33,7 @@ public class BookHandler implements ResponseHandler {
             realm.commitTransaction();
 
             if (b.getId().equals("")) {
-                Log.w(TAG, "Received book does not have an id");
+                Log.e(TAG, "Received book does not have an id");
             }
             MainTabbedActivity.getBus().post(new DbEvent(dbEventType, b.getId()));
         } catch (JsonSyntaxException e) {

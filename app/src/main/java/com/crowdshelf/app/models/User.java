@@ -18,6 +18,9 @@ public class User extends RealmObject{
     private String name;
     private String email;
 
+    private String password;
+    private String token;
+
     public String getId() {
         return id;
     }
@@ -50,21 +53,19 @@ public class User extends RealmObject{
         this.email = email;
     }
 
-    /* Does not work with realm
-    public String toString() {
-        return "username: " + String.valueOf(username);
+    public String getPassword() {
+        return password;
     }
 
-    // For JUnit testing
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        } else {
-            final User user = (User) obj;
-            return this.id.equals(user.id) &&
-                    this.username.equals(user.username);
-        }
+    public void setPassword(String password) {
+        this.password = password;
     }
-    */
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
