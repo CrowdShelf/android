@@ -72,7 +72,7 @@ public class MainController {
         if (token == null || token.equals("")) {
             Log.e(TAG, "Tried to get token it was empty");
         }
-        return token;
+        return new String(token);
     }
 
     public static void loginWithSavedCredentials() {
