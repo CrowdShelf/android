@@ -30,16 +30,11 @@ public class NetworkHelper {
     public static void sendRequest(final HttpRequestMethod requestMethod, final String route, final String jsonData,
                                    final ResponseHandler responseHandler, final DbEventType dbEventType)
     {
-        final String token = MainController.getToken();
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 try {
-                    String routeWithToken = route;
-                    if (requestMethod == HttpRequestMethod.GET) {
-                        routeWithToken += "?token=" + token;
-                    }
-                    URL url = new URL(host + "/api" + routeWithToken);
+                    URL url = new URL(host + "/api" + route);
                     Log.i(TAG, "Send request: " + requestMethod.toString() + " URL: " + url.toString());
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoOutput(false); // must be false for GET. WHY?
@@ -56,11 +51,10 @@ public class NetworkHelper {
                     connection.connect();
                     //Log.i(TAG, "NetworkHelper DoOutput: " + connection.getDoOutput() + "DoInput: " + connection.getDoInput());
                     if (jsonData != null) {
-                        String jsonDataWithToken = jsonData.substring(0, 1) + "token: " + token + ", " + jsonData.substring(1, jsonData.length());
-                        Log.i(TAG, "Sending JsonData: " + jsonDataWithToken);
+                        Log.i(TAG, "Sending JsonData: " + jsonData);
                         OutputStreamWriter writer = new OutputStreamWriter(
                                 connection.getOutputStream());
-                        writer.write(jsonDataWithToken);
+                        writer.write(jsonData);
                         writer.close();
                     }
 

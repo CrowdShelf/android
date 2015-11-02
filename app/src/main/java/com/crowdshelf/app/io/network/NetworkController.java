@@ -1,5 +1,8 @@
 package com.crowdshelf.app.io.network;
 
+import android.util.Log;
+
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.BookHandler;
 import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
@@ -17,6 +20,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
@@ -41,6 +46,21 @@ public class NetworkController {
             .setPrettyPrinting()
             .create();
 
+    private static String addTokenToUrl(String url) {
+        return url + "?token=" + MainController.getToken();
+    }
+
+    private static String addTokenToJsonObject(String jsonData) {
+        String jsonDataWithToken = "";
+        try {
+            JSONObject jsonObj = new JSONObject(jsonData);
+            jsonObj.put("token", MainController.getToken());
+            jsonDataWithToken = jsonObj.toString();
+        } catch (Exception e) {
+            Log.w("Networkcontroller", e.toString());
+        }
+        return jsonDataWithToken;
+    }
 
     /*
     Books
@@ -51,14 +71,14 @@ public class NetworkController {
         String jsonData = gson.toJson(book, Book.class);
         NetworkHelper.sendRequest(
                 HttpRequestMethod.POST, "/books",
-                jsonData, bookHandler,
+                addTokenToJsonObject(jsonData), bookHandler,
                 dbEventType);
     }
 
     // Remove book to database
     public static void removeBook(String bookId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.DELETE, "/books/" + bookId,
+                HttpRequestMethod.DELETE, addTokenToUrl("/books/") + bookId,
                 null, null,
                 dbEventType);
     }
@@ -114,14 +134,14 @@ public class NetworkController {
 
     public static void addRenter(String bookId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.PUT, "/books/" + bookId +  "/renter/" + userId,
+                HttpRequestMethod.PUT, addTokenToUrl("/books/" + bookId +  "/renter/" + userId),
                 null, bookHandler,
                 dbEventType);
     }
 
     public static void removeRenter(String bookId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.DELETE, "/books/" + bookId + "/renter/" + userId,
+                HttpRequestMethod.DELETE, addTokenToUrl("/books/" + bookId + "/renter/" + userId),
                 null, bookHandler,
                 dbEventType);
     }
@@ -133,14 +153,14 @@ public class NetworkController {
     public static void createCrowd(Crowd crowd, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.POST, "/crowds",
-                gson.toJson(crowd, Crowd.class), crowdHandler,
+                addTokenToJsonObject(gson.toJson(crowd, Crowd.class)), crowdHandler,
                 dbEventType);
     }
 
     public static void deleteCrowd(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.DELETE, "/crowds/" + crowdId,
-                null, null,
+                HttpRequestMethod.DELETE, addTokenToUrl("/crowds/" + crowdId),
+                addTokenToJsonObject(""), null,
                 dbEventType);
     }
 
@@ -175,14 +195,14 @@ public class NetworkController {
     public static void addCrowdMember(String crowdId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.PUT, "/crowds/" + crowdId + "/members/" + userId,
-                null, null,
+                addTokenToJsonObject(""), null,
                 dbEventType);
     }
 
     public static void removeCrowdMember(String crowdId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.DELETE, "/crowds/" + crowdId + "/members/" + userId,
-                null, null,
+                addTokenToJsonObject(""), null,
                 dbEventType);
     }
 
