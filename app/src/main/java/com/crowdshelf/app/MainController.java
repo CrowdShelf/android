@@ -65,6 +65,16 @@ public class MainController {
         NetworkController.login(username, password, dbEventType);
     }
 
+    public static String getToken() {
+        String token = realm.where(User.class)
+                .equalTo("username", MainTabbedActivity.getMainUserId())
+                .findFirst().getToken();
+        if (token == null || token.equals("")) {
+            Log.e(TAG, "Tried to get token but it was empty");
+        }
+        return new String(token);
+    }
+
     public static void loginWithSavedCredentials() {
         String username = MainTabbedActivity.getMainUserId();
         String password = realm.where(User.class)
@@ -267,4 +277,11 @@ public class MainController {
         realm.close();
     }
 
+    public static void forgotPassword(String username, DbEventType dbEventType) {
+        NetworkController.forgotPassword(username, dbEventType);
+    }
+
+    public static void resetPassword(String username, String password, String key, DbEventType dbEventType) {
+        resetPassword(username, password, key, dbEventType);
+    }
 }
