@@ -45,6 +45,8 @@ public class LetterTileProvider {
     private final int mTileLetterFontSize;
     /** The default image to display */
     private final Bitmap mDefaultBitmap;
+    private Bitmap lastImage;
+    private char lastChar;
 
     public LetterTileProvider(Context context) {
         final Resources res = context.getResources();
@@ -60,28 +62,33 @@ public class LetterTileProvider {
         mDefaultBitmap = BitmapFactory.decodeResource(res, android.R.drawable.sym_def_app_icon);
     }
 
-    public Bitmap getLetterTile(String displayName, String key, int width, int height) {
-        final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    public Bitmap getLetterTile(String displayName, int size) {
+        final Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         final char firstChar = displayName.charAt(0);
+        if (firstChar == lastChar){
+            return lastImage;
+        }
 
         final Canvas c = mCanvas;
         c.setBitmap(bitmap);
-        c.drawColor(pickColor(key));
+        c.drawColor(pickColor(String.valueOf(firstChar)));
 
         if (isEnglishLetterOrDigit(firstChar)) {
             mFirstChar[0] = Character.toUpperCase(firstChar);
             mPaint.setTextSize(mTileLetterFontSize);
             mPaint.getTextBounds(mFirstChar, 0, 1, mBounds);
-            c.drawText(mFirstChar, 0, 1, width / 2, height / 2
+            c.drawText(mFirstChar, 0, 1, size / 2, size / 2
                     + (mBounds.bottom - mBounds.top) / 2, mPaint);
         } else {
             c.drawBitmap(mDefaultBitmap, 0, 0, null);
         }
-        return getCroppedBitmap(bitmap);
+        lastChar = firstChar;
+        lastImage = getCroppedBitmap(bitmap);
+        return lastImage;
     }
 
     private static boolean isEnglishLetterOrDigit(char c) {
-        if (c == 'æ' || c == 'Æ' || c == 'ø' || c == 'Ø' || c == 'Å' || c == 'Å'){
+        if (c == 'æ' || c == 'Æ' || c == 'ø' || c == 'Ø' || c == 'å' || c == 'Å'){
             return true;
         }
         return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '0' <= c && c <= '9';
@@ -91,11 +98,7 @@ public class LetterTileProvider {
         // String.hashCode() is not supposed to change across java versions, so
         // this should guarantee the same key always maps to the same color
         final int color = Math.abs(key.hashCode()) % NUM_OF_TILE_COLORS;
-        try {
-            return mColors.getColor(color, Color.BLACK);
-        } finally {
-            mColors.recycle();
-        }
+        return mColors.getColor(color, Color.BLACK);
     }
 
     private Bitmap getCroppedBitmap(Bitmap bitmap) {

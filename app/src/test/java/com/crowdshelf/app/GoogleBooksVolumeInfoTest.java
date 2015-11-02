@@ -2,10 +2,6 @@ package com.crowdshelf.app;
 
 import android.os.Build;
 
-import com.crowdshelf.app.bookInfo.GoogleBooksVolumeInfo;
-
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;

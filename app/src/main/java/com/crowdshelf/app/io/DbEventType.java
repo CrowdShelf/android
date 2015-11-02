@@ -8,6 +8,7 @@ public enum DbEventType {
     USER_BOOKS_CHANGED,
     USER_CROWDS_CHANGED,
     USER_CROWD_BOOKS_CHANGED,
+    REDRAW_USER_BOOKS,
 
     /*
     These should not be necessary:
@@ -36,4 +37,5 @@ public enum DbEventType {
     FORGOT_PASSWORD_KEY_READY,
 
     UserListActivity_USER_READY, EditCrowdActivity_ADD_USERS, EditCrowdActivity_USERNAME_RECEIVED, GET_USER, NONE // To be used instead of null when you want to call a method which requires a DBEventType but you don't to handle the response
+    ;
 }

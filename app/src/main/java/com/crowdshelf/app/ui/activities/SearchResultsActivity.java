@@ -97,22 +97,35 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
 
     private void changeSearchToLocal(String query) {
         pb.setVisibility(View.VISIBLE);
+        Set<BookInfo> allBookInfos = new HashSet<>();
         Set<BookInfo> bookInfos = new HashSet<>();
 
-        bookInfos.addAll(realm.where(BookInfo.class)
+        allBookInfos.addAll(realm.where(BookInfo.class)
                 .contains("title", query, false)
                 .or()
                 .contains("author", query, false)
                 .findAll());
 
+        for (BookInfo bookInfo: allBookInfos) {
+            for (Book book: MainTabbedActivity.userCrowdBooks){
+                if (bookInfo.getIsbn().equals(book.getIsbn())){
+                    bookInfos.add(bookInfo);
+                    break;
+                }
+            }
+        }
+
         searchResult.clear();
         searchResult.addAll(bookInfos);
+        setTitle((String.valueOf(bookInfos.size()) + " results for \"" + query +"\""));
+
         pb.setVisibility(View.GONE);
         listAdapter.notifyDataSetChanged();
     }
 
     private void changeSearchToInternet(String query) {
         pb.setVisibility(View.VISIBLE);
+        setTitle(("loading results for \"" + query + "\"..."));
         searchResult.clear();
         listAdapter.notifyDataSetChanged();
         GetBookInfosBySearch.getBookInfos(query, DbEventType.BOOKINFO_CHANGED);
@@ -129,7 +142,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             lastQuery = query;
-            setTitle(("Result for " + query));
+            setTitle(("loading results for \"" + query + "\"..."));
             if (isLocalSearchActive){
                 changeSearchToLocal(query);
             }else {
@@ -149,16 +162,16 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
                     .findFirst();
                 searchResult.add(bookInfo);
                 pb.setVisibility(View.GONE);
+                setTitle((String.valueOf(searchResult.size()) + " results for \"" + lastQuery + "\""));
                 listAdapter.notifyDataSetChanged();
                 break;
-
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> a, View v, final int position, long id) {
         BookInfo bookInfo = searchResult.get(position);
-        Toast.makeText(SearchResultsActivity.this, bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(SearchResultsActivity.this, bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("isbn", bookInfo.getIsbn());
         startActivity(intent);

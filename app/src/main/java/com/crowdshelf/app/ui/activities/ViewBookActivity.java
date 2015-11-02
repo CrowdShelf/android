@@ -4,12 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +27,12 @@ import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.MemberId;
+import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.adapter.UserListAdapter;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -28,7 +41,7 @@ import ntnu.stud.markul.crowdshelf.R;
 /**
  * Created by MortenAlver on 07.09.2015.
  */
-public class ViewBookActivity extends Activity {
+public class ViewBookActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
     private static final String TAG = "ViewBookActivity";
     private static final int BORROW_BOOK_ACTION = 0;
     private Realm realm;
@@ -36,6 +49,10 @@ public class ViewBookActivity extends Activity {
     private String isbn;
     private String bookID;
     private Book book;
+    private UserListAdapter listAdapter;
+    private UserListAdapter borrowedFromListAdapter;
+    private ArrayList<User> renters = new ArrayList<>();
+    private ArrayList<User> owners = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +64,25 @@ public class ViewBookActivity extends Activity {
         infoTextView.setMovementMethod(new ScrollingMovementMethod());
 
         realm = Realm.getDefaultInstance();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         Intent intent = getIntent();
         isbn = intent.getStringExtra("isbn");
         bookID = intent.getStringExtra("bookID");
         String bookOwnerID = intent.getStringExtra("bookOwnerID");
+
+
+        listAdapter = new UserListAdapter(this, renters);
+        ListView lv = (ListView)findViewById(R.id.rentedToListView);
+        lv.setAdapter(listAdapter);
+//        lv.setOnItemClickListener(this);
+
+        borrowedFromListAdapter = new UserListAdapter(this, owners);
+        ListView lv2 = (ListView)findViewById(R.id.borrowedFromListView);
+        lv2.setAdapter(borrowedFromListAdapter);
+        lv2.setOnItemClickListener(this);
 
         if (isbn != null) {
             if (isbn.equals("")) {
@@ -60,31 +91,107 @@ public class ViewBookActivity extends Activity {
             returnBookButton.setVisibility(View.GONE);
             removeBookButton.setVisibility(View.GONE);
 
+            // Check if mainUser borrows the book
+            Book rentedToMainUser = realm.where(Book.class)
+                    .equalTo("isbn", isbn)
+                    .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
+                    .findFirst();
+//            if (rentedToMainUser != null){
+//                returnBookButton.setVisibility(View.VISIBLE);
+//            }
+
+            // Check if mainUser owns the book
+            Book ownedBook = realm.where(Book.class)
+                    .equalTo("isbn", isbn)
+                    .equalTo("owner", MainTabbedActivity.getMainUserId())
+                    .findFirst();
+            if (ownedBook != null){
+                removeBookButton.setVisibility(View.VISIBLE);
+            }
+
+            // Get all users borrowing the book from mainUser
+            List<Book> rentedBooks= realm.where(Book.class)
+                    .equalTo("isbn", isbn)
+                    .notEqualTo("rentedTo", "")
+                    .findAll();
+            if (!rentedBooks.isEmpty()){
+                for (Book b : rentedBooks){
+                    if (MainTabbedActivity.getMainUserId().equals(b.getOwner())){
+                        User renter = realm.where(User.class)
+                                .equalTo("id", b.getRentedTo())
+                                .findFirst();
+                        renters.add(renter);
+                    }
+                }
+                if (!renters.isEmpty()){
+                    if (renters.size() > 1){
+                        TextView ownersText = (TextView) findViewById(R.id.rentersTextLink);
+                        ownersText.setText("Borrowed to ");
+                        Spannable blueName = new SpannableString(renters.get(0).getName());
+                        blueName.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.linkColor)), 0, blueName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ownersText.append(blueName);
+                        ownersText.append(" and ");
+                        Spannable blueOthers = new SpannableString((renters.size()-1) + " others");
+                        blueOthers.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.linkColor)), 0, blueOthers.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ownersText.append(blueOthers);
+                        lv.setVisibility(View.GONE);
+                        findViewById(R.id.borrowedToText).setVisibility(View.GONE);
+                        ownersText.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        lv.setVisibility(View.VISIBLE);
+                        findViewById(R.id.borrowedToText).setVisibility(View.VISIBLE);
+                        listAdapter.notifyDataSetChanged();
+                    }
+                }
+                else{
+                    findViewById(R.id.borrowedToText).setVisibility(View.GONE);
+                    lv.setVisibility(View.GONE);
+                }
+            }
+
+            // Get all the mainUser borrows the book from
+            if (!rentedBooks.isEmpty()){
+                for (Book b : rentedBooks){
+                    if (MainTabbedActivity.getMainUserId().equals(b.getRentedTo())){
+                        User owner = realm.where(User.class)
+                                .equalTo("id", b.getOwner())
+                                .findFirst();
+                        owners.add(owner);
+                    }
+                }
+                if (!owners.isEmpty()){
+                    if (owners.size() > 1){
+                        TextView ownersText = (TextView) findViewById(R.id.ownersTextLink);
+                        ownersText.setText("Borrowed from ");
+
+                        Spannable blueName = new SpannableString(owners.get(0).getName());
+                        blueName.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.linkColor)), 0, blueName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ownersText.append(blueName);
+                        ownersText.append(" and ");
+                        Spannable blueOthers = new SpannableString(owners.size()-1 + " others");
+                        blueOthers.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.linkColor)), 0, blueOthers.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ownersText.append(blueOthers);
+
+                        lv2.setVisibility(View.GONE);
+                        findViewById(R.id.borrowedFromText).setVisibility(View.GONE);
+                        ownersText.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        lv2.setVisibility(View.VISIBLE);
+                        findViewById(R.id.borrowedFromText).setVisibility(View.VISIBLE);
+                        borrowedFromListAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+
             bookInfo = realm.where(BookInfo.class)
                     .equalTo("isbn", isbn)
                     .findFirst();
-        } else if (bookID != null) {
-            book = realm.where(Book.class)
-                    .equalTo("id", bookID)
-                    .findFirst();
-            bookInfo = realm.where(BookInfo.class)
-                    .equalTo("isbn", book.getIsbn())
-                    .findFirst();
-
-            if (MainTabbedActivity.getMainUserId().equals(book.getRentedTo())){
-                returnBookButton.setVisibility(View.VISIBLE);
-                removeBookButton.setVisibility(View.GONE);
-            }
-            else if(MainTabbedActivity.getMainUserId().equals(book.getOwner())){
-                returnBookButton.setVisibility(View.GONE);
-                removeBookButton.setVisibility(View.VISIBLE);
-            }
-            else {
-                returnBookButton.setVisibility(View.GONE);
-                removeBookButton.setVisibility(View.GONE);
-            }
-
         }
+
+        setTitle(bookInfo.getTitle());
         drawBookInfoUI(bookInfo);
 
 
@@ -105,10 +212,12 @@ public class ViewBookActivity extends Activity {
         TextView titleTextView = (TextView)findViewById(R.id.titleView);
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
         TextView infoTextView = (TextView)findViewById(R.id.infoView);
+        TextView authorView = (TextView)findViewById(R.id.authorView);
         titleTextView.setText(bookInfo.getTitle());
         infoTextView.setText(bookInfo.getDescription());
         Bitmap bitmap = BitmapFactory.decodeByteArray(bookInfo.getArtworkByteArray(), 0, bookInfo.getArtworkByteArray().length);
         imageView.setImageBitmap(bitmap);
+        authorView.setText(bookInfo.getAuthor());
     }
 
     public void addButtonClick(View view) {
@@ -133,7 +242,11 @@ public class ViewBookActivity extends Activity {
 
     public void returnButtonClick(View view) {
         Toast.makeText(ViewBookActivity.this, "Returned book: " + bookInfo.getTitle(), Toast.LENGTH_SHORT).show();
-        MainController.removeRenter(bookID, MainTabbedActivity.getMainUserId(), DbEventType.USER_BOOKS_CHANGED);
+        Book rentedBook = realm.where(Book.class)
+                .equalTo("isbn", isbn)
+                .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
+                .findFirst();
+        MainController.removeRenter(rentedBook.getId(), MainTabbedActivity.getMainUserId(), DbEventType.USER_BOOKS_CHANGED);
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();
@@ -141,8 +254,11 @@ public class ViewBookActivity extends Activity {
 
     public void removeButtonClick(View view) {
         Toast.makeText(ViewBookActivity.this, "Book removed", Toast.LENGTH_SHORT).show();
-
-        MainController.removeBook(book.getId(), DbEventType.USER_BOOKS_CHANGED);
+        Book ownedBook = realm.where(Book.class)
+                .equalTo("isbn",isbn)
+                .equalTo("owner", MainTabbedActivity.getMainUserId())
+                .findFirst();
+        MainController.removeBook(ownedBook.getId(), DbEventType.USER_BOOKS_CHANGED);
 
         finish();
     }
@@ -160,9 +276,43 @@ public class ViewBookActivity extends Activity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainTabbedActivity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+        User u = owners.get(position);
+        Book rentedBook = realm.where(Book.class)
+                .equalTo("isbn", isbn)
+                .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
+                .equalTo("owner", u.getId())
+                .findFirst();
+        MainController.removeRenter(rentedBook.getId(), MainTabbedActivity.getMainUserId(), DbEventType.USER_BOOKS_CHANGED);
+        Toast.makeText(ViewBookActivity.this, bookInfo.getTitle() + " was returned", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy: realm, super");
         realm.close();
         super.onDestroy();
+    }
+
+    public void seeAllOwnersClicked(View view) {
+        Intent intent = new Intent(this, OwnerListActivity.class);
+        intent.putExtra("isbn", bookInfo.getIsbn());
+        startActivityForResult(intent, BORROW_BOOK_ACTION);
+    }
+
+    public void seeAllRentersClicked(View view) {
+        Intent intent = new Intent(this, RenterListActivity.class);
+        intent.putExtra("isbn", bookInfo.getIsbn());
+        startActivityForResult(intent, BORROW_BOOK_ACTION);
     }
 }

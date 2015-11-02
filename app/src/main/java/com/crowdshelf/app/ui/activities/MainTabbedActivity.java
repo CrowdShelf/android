@@ -4,8 +4,6 @@ import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
-import com.crowdshelf.app.io.ScannerEvent;
-import com.crowdshelf.app.io.ScannerEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
@@ -22,10 +20,7 @@ import com.squareup.otto.ThreadEnforcer;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -96,9 +91,12 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         realmConfiguration = new RealmConfiguration.Builder(this).build();
-//        Realm.deleteRealm(realmConfiguration); // Clean slate
+        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.clear(Crowd.class);
+        realm.commitTransaction();
         mainController = new MainController();
         mainController.onCreate();
 
@@ -124,22 +122,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
         // Remove shadow between ActionBar and tabs
         getSupportActionBar().setElevation(0);
 
-        // Fix and uncomment to add storing of username
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        if (!prefs.getBoolean("firstTime", false)) {
-//            // <---- run your one time code here
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, LOGIN);
-
-//            // mark first time has runned.
-//            SharedPreferences.Editor editor = prefs.edit();
-//            editor.putBoolean("firstTime", true);
-//            editor.commit();
-//        }
-//        else {
-//            updateUserBooks();
-//            Toast.makeText(MainTabbedActivity.this, getMainUserId(), Toast.LENGTH_SHORT).show();
-//        }
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, LOGIN);
     }
 
     public void showAllOwnedBooksButtonPressed(View v){
@@ -176,6 +160,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
+            case REDRAW_USER_BOOKS:
+                redrawUserBooks();
             case USER_BOOKS_CHANGED:
                 updateUserBooks();
                 break;
@@ -225,6 +211,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 updateUserBooks();
                 break;
         }
+    }
+
+    private void redrawUserBooks(){
+        Log.i(TAG, "redrawUserBooks");
+        userScreenFragment.updateOwnedBookShelf(ownedBooks);
+        userScreenFragment.updateLentedBooks(lentedBooks);
+        userScreenFragment.updateBorrowedBookShelf(borrowedBooks);
     }
 
     public void updateUserBooks() {
@@ -316,7 +309,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         switch (requestCode) {
             case LOGIN:
                 if (resultCode == RESULT_OK) {
-//                    updateUserBooks();
                     String username = data.getStringExtra("username");
                     User u = realm.where(User.class)
                             .equalTo("username", username)
@@ -324,7 +316,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     mainUserId = u.getId();
                     Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
                     MainController.getMainUserData(mainUserId);
-                    Toast.makeText(this, "Swipe right to go to the scanner", Toast.LENGTH_LONG).show();
                     getMixpanel().identify(u.getId());
                 }
                 break;
@@ -370,6 +361,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         Book b = realm.where(Book.class).equalTo("id", bookID).findFirst();
 
         Intent intent = new Intent(this, ViewBookActivity.class);
+        intent.putExtra("isbn", b.getIsbn());
         intent.putExtra("bookID", bookID);
         intent.putExtra("bookOwnerID", b.getOwner());
 
@@ -445,11 +437,10 @@ public class MainTabbedActivity extends AppCompatActivity implements
             case 0:
                 Log.i(TAG, "onPageSelected position: " + position);
                 updateUserBooks();
-                MainTabbedActivity.getBus().post(new ScannerEvent(ScannerEventType.TURN_SCANNER_OFF, null));
                 break;
             case 1:
                 Log.i(TAG, "onPageSelected position: " + position);
-                MainTabbedActivity.getBus().post(new ScannerEvent(ScannerEventType.TURN_SCANNER_ON, null));
+                updateUserCrowds();
                 break;
             case 2:
                 Log.i(TAG, "onPageSelected position: " + position);
@@ -550,5 +541,19 @@ public class MainTabbedActivity extends AppCompatActivity implements
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    private static class UpdateUserBooksThread extends Thread {
+        private final int TIMEOUT = 3000;
+
+        public void run() {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    Thread.sleep(TIMEOUT);
+                    MainTabbedActivity.getBus().post(DbEventType.REDRAW_USER_BOOKS);
+                }
+            } catch (InterruptedException ex) {
+            }
+        }
     }
 }

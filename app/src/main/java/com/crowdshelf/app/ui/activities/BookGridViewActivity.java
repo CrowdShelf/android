@@ -90,8 +90,15 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
         Book b = realm.where(Book.class).equalTo("id", bookID).findFirst();
 
         Intent intent = new Intent(this, ViewBookActivity.class);
+        intent.putExtra("isbn", b.getIsbn());
         intent.putExtra("bookID", bookID);
         intent.putExtra("bookOwnerID", b.getOwner());
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }
