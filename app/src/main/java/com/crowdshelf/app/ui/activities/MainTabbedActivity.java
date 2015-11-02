@@ -20,6 +20,9 @@ import com.squareup.otto.ThreadEnforcer;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -392,6 +395,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Remove to set hint to search in the phones language
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHint("Search...");
+
+        Drawable drawable = menu.findItem(R.id.open_scanner).getIcon();
+        if (drawable != null) {
+            drawable.mutate();
+            drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        }
+
         return true;
     }
 

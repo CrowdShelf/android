@@ -10,8 +10,9 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_favorite"
-        android:icon="@drawable/barcode_icon"
+        android:id="@+id/open_scanner"
+        android:icon="@drawable/barcode_icon2"
         app:showAsAction="ifRoom"
-        android:title="OpenScanner" />
+        android:title="OpenScanner"
+        />
 </menu>
