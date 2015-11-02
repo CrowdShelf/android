@@ -1,5 +1,8 @@
 package com.crowdshelf.app.ui.activities;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DbEvent;
@@ -313,9 +316,28 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
                     MainController.getMainUserData(mainUserId);
                     getMixpanel().identify(u.getId());
+                    return;
                 }
                 break;
         }
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Log.d(TAG, "Cancelled scan");
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Log.d(TAG, "Scanned");
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                isbnReceived(result.getContents());
+            }
+        } else {
+            Log.d("MainActivity", "Weird");
+            // This is important, otherwise the result will not be passed to the fragment
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+
     }//onActivityResult
 
     public void startViewBook(ScannedBookActions scannedBookAction, String isbn) {
@@ -407,16 +429,14 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_testing) {
-            Intent intent = new Intent(this, TestingActivity.class);
-            startActivity(intent);
-            return true;
+        switch (item.getItemId()){
+            case R.id.open_scanner:
+                IntentIntegrator integrator = new IntentIntegrator(this);
+                integrator.setCaptureActivity(ScannerCaptureActivity.class);
+                integrator.setOrientationLocked(false);
+                integrator.initiateScan();
+                Toast.makeText(this, "Scan book barcode", Toast.LENGTH_LONG).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -466,12 +486,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-//    public void editCrowdClicked(View view) {
-//        Intent intent = new Intent(this, EditCrowdActivity.class);
-//        intent.putExtra("crowdID", userCrowds.get(0).getId());
-//        startActivity(intent);
-//    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -491,8 +505,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     return userScreenFragment;
                 case 1:
                     return crowdScreenFragment;
-                case 2:
-                    return ScannerScreenFragment.newInstance();
+//                case 2:
+//                    return ScannerScreenFragment.newInstance();
                 default:
                     return null;
             }
@@ -500,8 +514,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-
-            return 3;
+            return 2;
         }
 
         @Override
@@ -512,12 +525,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section3).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section2).toUpperCase(l);
+//                case 2:
+//                    return getString(R.string.title_section2).toUpperCase(l);
             }
             return null;
         }
-
     }
 
 
