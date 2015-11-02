@@ -409,11 +409,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_testing) {
-            Intent intent = new Intent(this, TestingActivity.class);
-            startActivity(intent);
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
