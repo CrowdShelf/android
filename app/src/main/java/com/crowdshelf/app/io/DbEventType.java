@@ -33,5 +33,7 @@ public enum DbEventType {
     ON_START_USER_CROWDS_READY,
     ON_START_USER_CROWD_BOOKS_READY,
 
+    FORGOT_PASSWORD_KEY_READY,
+
     UserListActivity_USER_READY, EditCrowdActivity_ADD_USERS, EditCrowdActivity_USERNAME_RECEIVED, GET_USER, NONE // To be used instead of null when you want to call a method which requires a DBEventType but you don't to handle the response
 }

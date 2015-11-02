@@ -277,4 +277,11 @@ public class MainController {
         realm.close();
     }
 
+    public static void forgotPassword(String username, DbEventType dbEventType) {
+        NetworkController.forgotPassword(username, dbEventType);
+    }
+
+    public static void resetPassword(String username, String password, String key, DbEventType dbEventType) {
+        resetPassword(username, password, key, dbEventType);
+    }
 }
