@@ -26,6 +26,9 @@ public class MainController {
     private static Realm realm;
     private static final String TAG = "MainController";
 
+    /*
+    Must be called on application startup
+     */
     public void onCreate() {
         MainTabbedActivity.getBus().register(this);
         realm = Realm.getDefaultInstance();
@@ -36,36 +39,21 @@ public class MainController {
         switch (dbEvent.getDbEventType()) {
             case ON_START_USER_CROWDS_READY:
                 /*
-                Get all crowds which the main user is a member of,
-                then retrieve all the books of the members of these crowds
-                (which will include the books of the main user)
+                When all the crowds for the main user is retrieved,
+                retrieve all the books of the members of these crowds
+                (not including the books of the main user)
                  */
                 MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
                         .findAll();
-                for (Crowd crowd : crowds) {
-                    for (MemberId memberId : crowd.getMembers()) {
-                        if (memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
-                            for (MemberId memberId2 : crowd.getMembers()) {
-                                NetworkController.getBooksOwnedAndRented(memberId2.getId(), DbEventType.ON_START_USER_CROWD_BOOKS_READY);
-                            }
-                            break;
+                for (Crowd c: crowds) {
+                    for (MemberId memberId : c.getMembers()) {
+                        if (!memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
+                            getBooks(memberId.getId(), DbEventType.USER_CROWD_BOOKS_CHANGED);
                         }
                     }
                 }
                 break;
-            case ON_START_USER_CROWD_BOOKS_READY:
-                /*
-                Get BookInfo for all User Books and User Crowd Books
-                 */
-                // Todo: Only get bookInfo for the appropriate books
-                List<Book> books = realm.where(Book.class)
-                        .findAll();
-                for (Book b : books) {
-                    getBookInfo(b.getIsbn(), DbEventType.BOOK_INFO_RECEIVED_ADD_TO_USERSHELF);
-                }
-                MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_BOOKS_CHANGED, "all"));
-                MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWD_BOOKS_CHANGED, "all"));
         }
     }
 
@@ -75,53 +63,63 @@ public class MainController {
 
     public static void login(String username, DbEventType dbEventType) {
         NetworkController.login(username, dbEventType);
-
     }
 
-    public static void createUser(User user, DbEventType dbEventType) {
+    public static void loginWithSavedCredentials() {
+        String username = MainTabbedActivity.getMainUserId();
+        String password = realm.where(User.class)
+                .equalTo("username", username)
+                .findFirst().getPassword();
+        NetworkController.login(username, DbEventType.NONE);
+    }
+
+    public static void createUser(String username, String name, String email, DbEventType dbEventType) {
         // This user is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
-        NetworkController.createUser(user, dbEventType);
+        NetworkController.createUser(username, name, email, dbEventType);
     }
 
-    public static User getUser(String userId, DbEventType dbEventType) {
-        User user = realm.where(User.class)
-                .equalTo("id", userId)
-                .findFirst();
+    public static void getUser(String userId, DbEventType dbEventType) {
         NetworkController.getUser(userId, dbEventType);
+    }
 
-        if (user == null) {
-            Log.d(TAG, "Tried to get user with id: " + userId + " but it was not found in the database!");
-        }
-        return user;
+    public static void getUserByUsername(String userName, DbEventType dbEventType) {
+        NetworkController.getUserByUsername(userName, dbEventType);
     }
 
     /*
     Crowds
      */
 
-    public static void createCrowd(String name, String ownerId, List<MemberId> members, DbEventType dbEventType){
+    public static void createCrowd(String name, String ownerId, List<String> members, DbEventType dbEventType){
         // This crowd is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
         Crowd crowd = new Crowd();
         crowd.setName(name);
         crowd.setOwner(ownerId);
         RealmList<MemberId> memberIds = new RealmList<MemberId>();
-        memberIds.addAll(members);
+        for (String id: members) {
+            MemberId memberId = new MemberId();
+            memberId.setId(id);
+            memberIds.add(memberId);
+        }
         crowd.setMembers(memberIds);
         NetworkController.createCrowd(crowd, dbEventType);
     }
 
-    public static Crowd getCrowd(String crowdId, DbEventType dbEventType) {
+    public static void deleteCrowd(String crowdId, DbEventType dbEventType) {
+        realm.beginTransaction();
         Crowd crowd = realm.where(Crowd.class)
                 .equalTo("id", crowdId)
                 .findFirst();
-        NetworkController.getCrowd(crowdId, dbEventType);
+        crowd.removeFromRealm();
+        realm.commitTransaction();
+        NetworkController.deleteCrowd(crowdId, dbEventType);
+        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, crowdId));
+    }
 
-        if (crowd == null) {
-            Log.d(TAG, "Tried to get crowd with id: " + crowdId + " but it was not found in the database!");
-        }
-        return crowd;
+    public static void getCrowd(String crowdId, DbEventType dbEventType) {
+        NetworkController.getCrowd(crowdId, dbEventType);
     }
 
     public static void addCrowdMember(String crowdId, String userId, DbEventType dbEventType){
@@ -129,7 +127,18 @@ public class MainController {
     }
 
     public static void removeCrowdMember(String crowdId, String userId, DbEventType dbEventType){
+        realm.beginTransaction();
+        Crowd crowd = realm.where(Crowd.class)
+                .equalTo("id", crowdId)
+                .findFirst();
+        for (MemberId memderId: crowd.getMembers()) {
+            if (memderId.getId().equals(userId)) {
+                memderId.removeFromRealm();
+            }
+        }
+        realm.commitTransaction();
         NetworkController.removeCrowdMember(crowdId, userId, dbEventType);
+        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, userId));
     }
 
     /*
@@ -150,6 +159,9 @@ public class MainController {
         MainTabbedActivity.getMixpanel().track("BookAdded");
     }
 
+    /*
+    Remove a book from realm and from the backend
+     */
     public static void removeBook(String bookId, DbEventType dbEventType) {
         realm.beginTransaction();
         Book book = realm.where(Book.class)
@@ -158,21 +170,20 @@ public class MainController {
         book.removeFromRealm();
         realm.commitTransaction();
         NetworkController.removeBook(bookId, dbEventType);
+        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookId));
         MainTabbedActivity.getMixpanel().track("BookRemoved");
     }
 
-    public static Book getBook(String bookId, DbEventType dbEventType) {
-        Book book = realm.where(Book.class)
-                .equalTo("id", bookId)
-                .findFirst();
+    /*
+    Get a book by id
+     */
+    public static void getBook(String bookId, DbEventType dbEventType) {
         NetworkController.getBook(bookId, dbEventType);
-
-        if (book == null) {
-            Log.d(TAG, "Tried to get book with id: " + bookId + " but it was not found in the database!");
-        }
-        return book;
     }
 
+    /*
+    Download book info, if not already in database
+     */
     public static void getBookInfo(String isbn, DbEventType dbEventType) {
         BookInfo bookInfo = realm.where(BookInfo.class)
                 .equalTo("isbn", isbn)
@@ -184,87 +195,55 @@ public class MainController {
         }
     }
 
+    /*
+    Add a user given by its user id as a renter to a book given by its book id
+     */
     public static void addRenter(String bookId, String userId, DbEventType dbEventType) {
         // It should not be necessary to update the book object locally. It should be retrieved from
         // server then put into the database and overwrite the old one.
-        /*
-        realm.beginTransaction();
-        Book book = realm.where(Book.class)
-                .equalTo("id", bookId)
-                .findFirst();
-        book.setRentedTo(userId);
-        realm.commitTransaction();
-        */
         NetworkController.addRenter(bookId, userId, dbEventType);
         MainTabbedActivity.getMixpanel().track("BorrowBook");
 
     }
 
+    /*
+    Remove a user given by its user id as a renter from a book given by its book id
+     */
     public static void removeRenter(String bookId, String userId, DbEventType dbEventType) {
         // It should not be necessary to update the book object locally. It should be retrieved from
         // server then put into the database and overwrite the old one.
-        /*
-        realm.beginTransaction();
-        Book book = realm.where(Book.class)
-                .equalTo("id", bookId)
-                .findFirst();
-        book.setRentedTo("");
-        realm.commitTransaction();
-        */
         NetworkController.removeRenter(bookId, userId, dbEventType);
         MainTabbedActivity.getMixpanel().track("ReturnBook");
 
     }
 
     /*
-    Get books owned and rented by a given user
+    Get books owned by and rented to a given user
      */
-    public static List<Book> getBooks(String userId, DbEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("owner", userId)
-                .or()
-                .equalTo("rentedTo", userId)
-                .findAll();
+    public static void getBooks(String userId, DbEventType dbEventType) {
         NetworkController.getBooksOwnedAndRented(userId, dbEventType);
-
-        if (books == null || books.size() == 0) {
-            Log.d(TAG, "Tried to get books owned and rented by given user id: " + userId + " but no books was not found in the database!");
-        }
-        return books;
     }
 
     /*
     Get books owned by a given user
      */
-    public static List<Book> getBooksOwned(String userId, DbEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("owner", userId)
-                .findAll();
+    public static void getBooksOwned(String userId, DbEventType dbEventType) {
         NetworkController.getBooksOwned(userId, dbEventType);
-
-        if (books == null || books.size() == 0) {
-            Log.d(TAG, "Tried to get books owned given user id: " + userId + " but no books was not found in the database!");
-        }
-        return books;
     }
 
     /*
     Get books rented to a given user
      */
-    public static List<Book> getBooksRented(String userId, DbEventType dbEventType) {
-        List<Book> books = realm.where(Book.class)
-                .equalTo("rentedTo", userId)
-                .findAll();
+    public static void getBooksRented(String userId, DbEventType dbEventType) {
         NetworkController.getBooksRented(userId, dbEventType);
-
-        if (books == null || books.size() == 0) {
-            Log.d(TAG, "Tried to get books owned given user id: " + userId + " but no books was not found in the database!");
-        }
-        return books;
     }
 
-    // todo Find out what books to get. Books owned AND rented by the users in the crowd?
+    /*
+    Get the books owned by the members of the given crowd. Does not include books rented to the
+    members
+     */
     public static void getCrowdBooks(String crowdId, DbEventType dbEventType) {
+        getCrowd(crowdId, DbEventType.CROWD_READY_GET_BOOKS);
     }
 
     /*
@@ -275,9 +254,13 @@ public class MainController {
     The books of the members of the above crowds
      */
     public static void getMainUserData(String userId) {
+        getBooks(userId, DbEventType.USER_BOOKS_CHANGED);
         NetworkController.getCrowdsByMember(userId, DbEventType.ON_START_USER_CROWDS_READY);
     }
 
+    /*
+    Must be called on application exit
+     */
     public void onDestroy() {
         Log.i("MainController", "onDestroy: bus, realm");
         MainTabbedActivity.getBus().unregister(this);

@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
@@ -17,19 +20,27 @@ import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.User;
 import com.squareup.otto.Subscribe;
 
+import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
     private static final String TAG = "LoginActivity";
     private String username;
     private String email;
     private String name;
+    private String password;
+    private EditText usernameTextField;
+    private EditText passwordTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Login");
         setContentView(R.layout.activity_login);
         MainTabbedActivity.getBus().register(this);
+        usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
+        passwordTextField = (EditText) findViewById(R.id.passwordTextField);
+        passwordTextField.setOnEditorActionListener(this);
     }
 
     @Override
@@ -63,8 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        username = usernameTextfield.getText().toString();
+        username = usernameTextField.getText().toString();
 
         EditText emailTextfield = (EditText) findViewById(R.id.mailTextfield);
         email = emailTextfield.getText().toString();
@@ -72,51 +82,52 @@ public class LoginActivity extends AppCompatActivity {
         EditText nameTextfield = (EditText) findViewById(R.id.nameTextfield);
         name = nameTextfield.getText().toString();
 
+        EditText passwordTextfield = (EditText) findViewById(R.id.nameTextfield);
+        password = passwordTextField.getText().toString();
+
         User user=new User();
         user.setUsername(username);
         user.setName(name);
         user.setEmail(email);
 
-        MainController.createUser(user, DbEventType.USER_CREATED);
+        MainController.createUser(username, name, email, DbEventType.USER_CREATED);
     }
 
     public void login(View view) {
-        EditText usernameTextfield = (EditText) findViewById(R.id.usernameTextfield);
-        username = usernameTextfield.getText().toString();
+        username = usernameTextField.getText().toString();
+        password = passwordTextField.getText().toString();
         MainController.login(username, DbEventType.LOGIN);
     }
 
     @Subscribe
     public void handleLogin(DbEvent event) {
         Intent returnIntent;
-        Log.i(TAG, "handleLogin - event: " + event.getDbEventType());
         switch (event.getDbEventType()) {
+            // @todo: Handle unsuccessful login attempts (username not found)
             case LOGIN:
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
-                returnIntent.putExtra("username",username);
+                Log.i(TAG, "DbEvent Login with username: " + username);
+                returnIntent.putExtra("username", username);
                 setResult(RESULT_OK,returnIntent);
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                User u = realm.where(User.class)
+                        .equalTo("username", username)
+                        .findFirst();
+                u.setPassword(password);
+                realm.commitTransaction();
+                realm.close();
                 finish();
                 break;
-                /*
-                if (event.getDbObjectId().equals("True")) {
-                    // login succesful
-
-                } else if (event.getDbObjectId().equals("False")) {
-                    // login failed
-                    Toast.makeText(this, "User " + username + " not registrated", Toast.LENGTH_SHORT).show();
-                }
-                break;
-                */
             case USER_CREATED:
                 /*
                 HACK: Put all new users in a default crowd:
                  */
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
-                NetworkController.addCrowdMember("5690113d92611100e5c6a1", event.getDbObjectId(), DBEventType.NONE);
-                MainController.login(username, DBEventType.LOGIN);
-      
-                // log in with new user
+                NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
+                MainController.login(username, DbEventType.LOGIN);
+
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -125,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: realm, bus, super");
+        Log.i(TAG, "onDestroy: bus, super");
         MainTabbedActivity.getBus().unregister(this);
         super.onDestroy();
     }
@@ -133,21 +144,44 @@ public class LoginActivity extends AppCompatActivity {
 /*    @Override
     public void onBackPressed() {}*/
 
-    public void registerLayout(View view) {
+    public void changeToCreateUserViewButtonClicked(View view) {
         findViewById(R.id.mailTextfield).setVisibility(View.VISIBLE);
         findViewById(R.id.nameTextfield).setVisibility(View.VISIBLE);
         findViewById(R.id.registationButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.registerLayout).setVisibility(View.INVISIBLE);
         findViewById(R.id.cancelLayout).setVisibility(View.VISIBLE);
+
+        findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.createNewUserButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.forgotPasswordButton).setVisibility(View.INVISIBLE);
+
+        usernameTextField.setNextFocusForwardId(R.id.mailTextfield);
+        usernameTextField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
     }
 
-    public void cancelLayout(View view) {
+    public void cancelCreateNewUserButtonClicked(View view) {
         findViewById(R.id.mailTextfield).setVisibility(View.INVISIBLE);
         findViewById(R.id.nameTextfield).setVisibility(View.INVISIBLE);
         findViewById(R.id.registationButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
-        findViewById(R.id.registerLayout).setVisibility(View.VISIBLE);
         findViewById(R.id.cancelLayout).setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.forgotPasswordButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.createNewUserButton).setVisibility(View.VISIBLE);
+
+        usernameTextField.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+    }
+
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        Log.i(TAG, "onEditorAction");
+        switch (actionId){
+            case EditorInfo.IME_ACTION_DONE:
+                login(null);
+                break;
+        }
+        return false;
     }
 }

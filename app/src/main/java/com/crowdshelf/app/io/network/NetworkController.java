@@ -6,6 +6,7 @@ import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdHandler;
 import com.crowdshelf.app.io.network.responseHandlers.CrowdListHandler;
 import com.crowdshelf.app.io.network.responseHandlers.UserHandler;
+import com.crowdshelf.app.io.network.responseHandlers.UserListHandler;
 import com.crowdshelf.app.io.network.serializers.BookSerializer;
 import com.crowdshelf.app.io.network.serializers.CrowdSerializer;
 import com.crowdshelf.app.io.network.serializers.UserSerializer;
@@ -25,6 +26,7 @@ import java.lang.reflect.Type;
 public class NetworkController {
     private static BookListHandler bookListHandler = new BookListHandler();
     private static CrowdListHandler crowdListHandler = new CrowdListHandler();
+    private static UserListHandler userListHandler = new UserListHandler();
     private static CrowdHandler crowdHandler = new CrowdHandler();
     private static BookHandler bookHandler = new BookHandler();
     private static UserHandler userHandler = new UserHandler();
@@ -58,7 +60,7 @@ public class NetworkController {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.DELETE, "/books/" + bookId,
                 null, null,
-                null);
+                dbEventType);
     }
 
     public static void getBook(String id, DbEventType dbEventType) {
@@ -135,7 +137,21 @@ public class NetworkController {
                 dbEventType);
     }
 
+    public static void deleteCrowd(String crowdId, DbEventType dbEventType) {
+        NetworkHelper.sendRequest(
+                HttpRequestMethod.DELETE, "/crowds/" + crowdId,
+                null, null,
+                dbEventType);
+    }
+
     public static void getCrowd(String crowdId, DbEventType dbEventType) {
+        NetworkHelper.sendRequest(
+                HttpRequestMethod.GET, "/crowds/" + crowdId,
+                null, crowdHandler,
+                dbEventType);
+    }
+
+    public static void getCrowdBooks(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.GET, "/crowds/" + crowdId,
                 null, crowdHandler,
@@ -174,10 +190,16 @@ public class NetworkController {
     Users
      */
 
-    public static void createUser(User user, DbEventType dbEventType) {
+    public static void createUser(String username, String name, String email, DbEventType dbEventType) {
+        JsonObject object = new JsonObject();
+        object.addProperty("username", username);
+        object.addProperty("name", name);
+        object.addProperty("email", email);
+        String jsonData = object.toString();
+
         NetworkHelper.sendRequest(
                 HttpRequestMethod.POST, "/users",
-                gson.toJson(user, User.class), userHandler,
+                jsonData, userHandler,
                 dbEventType);
     }
 
@@ -185,6 +207,13 @@ public class NetworkController {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.GET, "/users/" + userId,
                 null, userHandler,
+                dbEventType);
+    }
+
+    public static void getUserByUsername(String username, DbEventType dbEventType){
+        NetworkHelper.sendRequest(
+                HttpRequestMethod.GET, "/users?username=" + username,
+                null, userListHandler,
                 dbEventType);
     }
 

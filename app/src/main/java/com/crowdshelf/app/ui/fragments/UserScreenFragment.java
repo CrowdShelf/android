@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 
 import java.util.List;
+import java.util.Set;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -21,7 +23,9 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
     private static final String TAG = "UserScreenFragment";
     private OnUserScreenFragmentInteractionListener mListener;
     private Realm realm;
-    private BookGridViewFragment bookGridViewFragment;
+    private BookGridViewFragment ownedBooksGridViewFragment;
+    private BookGridViewFragment lentedBooksGridViewFragment;
+    private BookGridViewFragment borrowedBooksGridViewFragment;
 
     public UserScreenFragment() {
         // Required empty public constructor
@@ -45,14 +49,11 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
         realm = Realm.getDefaultInstance();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_screen, container, false);
-        List<Fragment> userScreenFragments = getChildFragmentManager().getFragments();
-        bookGridViewFragment = null;
 
-        for (Fragment fragment: userScreenFragments){
-            if (fragment.getClass().equals(BookGridViewFragment.class)){
-                bookGridViewFragment = (BookGridViewFragment) fragment;
-            }
-        }
+        borrowedBooksGridViewFragment = (BookGridViewFragment) getChildFragmentManager().findFragmentById(R.id.borrowedBooks);
+        lentedBooksGridViewFragment = (BookGridViewFragment) getChildFragmentManager().findFragmentById(R.id.lentedBooks);
+        ownedBooksGridViewFragment = (BookGridViewFragment) getChildFragmentManager().findFragmentById(R.id.ownedBooks);
+
         return view;
     }
 
@@ -75,15 +76,28 @@ public class UserScreenFragment extends Fragment implements BookGridViewFragment
 
     @Override
     public void onDestroy() {
-        //bookGridViewFragment.onDestroy();
+        //ownedBooksGridViewFragment.onDestroy();
         Log.i(TAG, "onDestroy: realm, super");
         realm.close();
         super.onDestroy();
     }
 
-    public void updateBookShelf(List<Book> userBooks) {
-        Log.i(TAG, "updateBookShelf, userbooks: " + userBooks);
-        bookGridViewFragment.setmItems(userBooks);
+    public void updateOwnedBookShelf(Set<Book> ownedBooks) {
+        if (ownedBooksGridViewFragment != null) {
+            ownedBooksGridViewFragment.setmItems(ownedBooks);
+        }
+    }
+
+    public void updateBorrowedBookShelf(Set<Book> borrowedBooks) {
+        if (borrowedBooksGridViewFragment != null) {
+            borrowedBooksGridViewFragment.setmItems(borrowedBooks);
+        }
+    }
+
+    public void updateLentedBooks(Set<Book> lentedBooks) {
+        if (lentedBooksGridViewFragment != null) {
+            lentedBooksGridViewFragment.setmItems(lentedBooks);
+        }
     }
 
 

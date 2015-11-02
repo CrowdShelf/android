@@ -3,6 +3,7 @@ package com.crowdshelf.app.io.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
 import com.google.gson.Gson;
@@ -20,7 +21,7 @@ import java.net.URL;
  */
 public class NetworkHelper {
     private final static String TAG = "NetworkHelper";
-    private static String host = "http://crowdshelf-dev.herokuapp.com";
+    private static String host = "http://crowdshelf.xyz";
     // For converting json into java objects using GSON and custom deserializers for each class
     private static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -29,16 +30,16 @@ public class NetworkHelper {
     public static void sendRequest(final HttpRequestMethod requestMethod, final String route, final String jsonData,
                                    final ResponseHandler responseHandler, final DbEventType dbEventType)
     {
-        new AsyncTask<Void, Void, InputStreamReader>() {
+        new AsyncTask<Void, Void, String>() {
             @Override
-            protected InputStreamReader doInBackground(Void... params) {
+            protected String doInBackground(Void... params) {
                 try {
                     URL url = new URL(host + "/api" + route);
                     Log.i(TAG, "Send request: " + requestMethod.toString() + " URL: " + url.toString());
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoOutput(false); // must be false for GET. WHY?
                     connection.setDoInput(true);
-                    // todo decide setDoOutput and DoInput
+                    // todo: Maybe it will become necessary to use other values for setDoOutput and setDoInput
                     if (jsonData != null) {
                     }
                     if (responseHandler != null) {
@@ -48,7 +49,7 @@ public class NetworkHelper {
                     connection.setConnectTimeout(12000);
                     connection.setReadTimeout(12000);
                     connection.connect();
-                    Log.i(TAG, "NetworkHelper DoOutput: " + connection.getDoOutput() + "DoInput: " + connection.getDoInput());
+                    //Log.i(TAG, "NetworkHelper DoOutput: " + connection.getDoOutput() + "DoInput: " + connection.getDoInput());
                     if (jsonData != null) {
                         Log.i(TAG, "Sending JsonData: " + jsonData);
                         OutputStreamWriter writer = new OutputStreamWriter(
@@ -56,42 +57,44 @@ public class NetworkHelper {
                         writer.write(jsonData);
                         writer.close();
                     }
-                    Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
-                            " ResponseMessage: " + connection.getResponseMessage());
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        return new InputStreamReader(connection.getInputStream());
+                        InputStreamReader iReader = new InputStreamReader(connection.getInputStream());
+                        BufferedReader bReader = new BufferedReader(iReader);
+                        StringBuilder builder = new StringBuilder();
+                        String line = null;
+                        while ((line = bReader.readLine()) != null) {
+                            builder.append(line).append("\n");
+                        }
+                        String jsonString = builder.toString();
+                        iReader.close();
+                        bReader.close();
+                        return jsonString;
+                    } else if (connection.getResponseCode() == 401) {
+                        // Token timed out. Login again.
+                        MainController.loginWithSavedCredentials();
+                        // Do the request again. @todo: this may run before the above login has finished!
+                        sendRequest(requestMethod, route, jsonData, responseHandler, dbEventType);
                     } else {
-                        // todo How should this be handled?
+                        Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
+                                " ResponseMessage: " + connection.getResponseMessage());
                     }
                 } catch (java.net.MalformedURLException e) {
                     Log.w(TAG, "SendRequest MalformedURLException" + e.toString());
                 } catch (IOException e) {
                     Log.w(TAG, "SendRequest IOException" + e.toString());
                 }
-                return null;
+                return "";
             }
 
-            protected void onPostExecute(InputStreamReader reader) {
-                Log.i(TAG, "onPostExecute - InputStreamReader: " + reader);
-                if (reader != null) {
-                    handleResponse(reader, responseHandler, dbEventType);
-                }
+            protected void onPostExecute(String jsonString) {
+                handleResponse(jsonString, responseHandler, dbEventType);
             }
         }.execute();
     }
 
-    public static void handleResponse(InputStreamReader iReader, ResponseHandler responseHandler, DbEventType dbEventType) {
+    public static void handleResponse(String jsonString, ResponseHandler responseHandler, DbEventType dbEventType) {
         try {
-            BufferedReader bReader = new BufferedReader(iReader);
-            StringBuilder builder = new StringBuilder();
-            String line = null;
-            while ((line = bReader.readLine()) != null)
-            {
-                builder.append(line).append("\n");
-            }
-            String jsonString = builder.toString();
-
             if (jsonString.length() > 0) {
                 Log.i(TAG, "Received JSON: " + jsonString);
                 if (responseHandler != null) {
@@ -100,10 +103,6 @@ public class NetworkHelper {
             } else {
                 Log.d(TAG, "Did not receive data from server");
             }
-            iReader.close();
-            bReader.close();
-        } catch (IOException e) {
-            Log.i(TAG, "HandleResponse IOException" + e.toString());;
         } catch (NullPointerException e) {
             Log.i(TAG, "HandleResponse NullPointerException" + e.toString());
         }

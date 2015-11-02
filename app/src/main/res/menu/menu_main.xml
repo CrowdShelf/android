@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".com.crowdshelf.app.ui.activities.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".com.crowdshelf.app.ui.activities.MainTabbedActivity">
     <item
         android:id="@+id/action_testing"
         android:orderInCategory="100"

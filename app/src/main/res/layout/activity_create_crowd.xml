@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+tools:context="com.crowdshelf.app.ui.activities.EditCrowdActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Group name"
+        android:id="@+id/crowdNameEditText"
+        android:textColor="#000000"
+        android:layout_marginLeft="20dp"
+        android:layout_alignTop="@+id/editCrowdImageView"
+        android:layout_above="@+id/crowdBooksButton"
+        android:layout_alignEnd="@+id/crowdBooksButton"
+        android:layout_toEndOf="@+id/editCrowdImageView" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="add username to group"
+        android:id="@+id/crowdMemberTextField"
+        android:textColor="#000000"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:layout_alignParentStart="true"
+        android:inputType="text"
+        android:layout_below="@+id/crowdBooksButton"
+        android:layout_marginTop="20dp"
+        android:layout_toStartOf="@+id/button" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="262dp"
+        android:id="@+id/memberListView"
+        android:layout_below="@+id/crowdMemberTextField"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/deleteCrowdButton" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leave Group"
+        android:id="@+id/deleteCrowdButton"
+        android:onClick="leaveCrowdButtonClick"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:allowUndo="true"
+        android:layout_alignEnd="@+id/memberListView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leave crowd"
+        android:id="@+id/leaveCrowdButton"
+        android:onClick="leaveCrowdClicked"
+        android:layout_below="@+id/memberListView"
+        android:layout_toEndOf="@+id/deleteCrowdButton"
+        android:visibility="gone" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View books in group"
+        android:id="@+id/crowdBooksButton"
+        android:onClick="crowdBooksClick"
+        android:layout_below="@+id/editCrowdImageView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="22dp"
+        android:layout_alignEnd="@+id/memberListView" />
+
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:id="@+id/editCrowdImageView"
+        android:src="@drawable/logo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add user"
+        android:id="@+id/button"
+        android:layout_above="@+id/memberListView"
+        android:layout_alignParentEnd="true"
+        android:onClick="addUserToCrowdClicked" />
+
+</RelativeLayout>

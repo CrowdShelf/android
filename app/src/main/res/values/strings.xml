@@ -14,9 +14,9 @@
     <string name="title_activity_shelf">ShelfActivity</string>
     <string name="title_activity_main_tabbed">CrowdShelf</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">My shelf</string>
+    <string name="title_section2">Scanner</string>
+    <string name="title_section3">Groups</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -26,7 +26,11 @@
     <string name="title_activity_login">loginActivity</string>
     <string name="nameText">Enter username</string>
     <string name="mailText">Enter mail</string>
-    <string name="registrationButtonText">Register user</string>
-    <string name="loginButtonText">Login</string>
+    <string name="registrationButtonText">Create user</string>
+    <string name="loginButtonText">Sign in</string>
     <string name="title_activity_user_list">UserListActivity</string>
+    <string name="title_activity_remove">remove</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="title_activity_tabbed_search">TabbedSearchActivity</string>
 </resources>

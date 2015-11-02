@@ -92,11 +92,11 @@ public class TestingActivity extends AppCompatActivity {
     }
 
     public void getCrowdOnClick(View v){
-        outputTextView.setText(MainTabbedActivity.getUserCrowds().get(0).getName());
+        //outputTextView.setText(MainTabbedActivity.getUserCrowds().get(0).getName());
     }
 
     public void getUserOnClick(View v){
-        outputTextView.setText(MainTabbedActivity.getUserCrowdBooks().get(0).getIsbn());
+        //outputTextView.setText(MainTabbedActivity.getUserCrowdBooks().get(0).getIsbn());
     }
 
     public void getBookOnClick(View v){
@@ -121,7 +121,7 @@ public class TestingActivity extends AppCompatActivity {
         user.setName("jayson gason");
         user.setUsername("jayson");
         user.setEmail("jayson@gmail.com");
-        NetworkController.createUser(user, DbEventType.USER_CREATED);
+//        NetworkController.createUser(user, DbEventType.USER_CREATED);
     }
 
     public void createBookOnClick(View v){

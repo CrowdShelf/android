@@ -1,6 +1,4 @@
-package com.crowdshelf.app.bookInfo;
-
-import com.crowdshelf.app.bookInfo.GoogleBooksItem;
+package com.crowdshelf.app.models.googleBookInfo;
 
 import java.util.ArrayList;
 

@@ -15,6 +15,7 @@ import com.crowdshelf.app.ui.adapter.BookGridViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import ntnu.stud.markul.crowdshelf.R;
 
@@ -31,7 +32,7 @@ public class BookGridViewFragment extends Fragment implements AdapterView.OnItem
         return mItems;
     }
 
-    public void setmItems(List<Book> newmItems) {
+    public void setmItems(Set<Book> newmItems) {
         this.mItems.clear();
         this.mItems.addAll(newmItems);
         this.mAdapter.notifyDataSetChanged();
