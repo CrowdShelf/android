@@ -255,8 +255,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     public void updateUserCrowds() {
-        List<Crowd> allCrowds = realm
-                .where(Crowd.class)
+        List<Crowd> allCrowds = realm.where(Crowd.class)
                 .findAll();
         List<Crowd> userCrowdsTemp = new ArrayList<>();
         for (Crowd crowd : allCrowds) {
@@ -297,6 +296,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
             userCrowdBooks.addAll(userCrowdBooksTemp);
         }
     }
+    
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
