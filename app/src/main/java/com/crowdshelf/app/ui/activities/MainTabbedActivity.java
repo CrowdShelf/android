@@ -367,10 +367,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivityForResult(intent, GET_BOOK_CLICKED_ACTION);
     }
 
-    public void scannerButtonClicked(View view) {
-        mViewPager.setCurrentItem(1);
-    }
-
     public void allBooksButtonClicked(View view) {
         Toast.makeText(MainTabbedActivity.this, "At this page you can, in the next version, see all the books you have the possibility to borrow", Toast.LENGTH_LONG).show();
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
@@ -415,6 +411,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                 IntentIntegrator integrator = new IntentIntegrator(this);
                 integrator.setCaptureActivity(ScannerCaptureActivity.class);
                 integrator.setOrientationLocked(false);
+                integrator.setPrompt("");
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.PRODUCT_CODE_TYPES);
                 integrator.initiateScan();
                 Toast.makeText(this, "Scan book barcode", Toast.LENGTH_LONG).show();
                 break;
