@@ -4,10 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.otto.Bus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -78,6 +81,7 @@ public class NetworkHelper {
                     } else {
                         Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
                                 " ResponseMessage: " + connection.getResponseMessage());
+                        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, String.valueOf(connection.getResponseCode())));
                     }
                 } catch (java.net.MalformedURLException e) {
                     Log.w(TAG, "SendRequest MalformedURLException" + e.toString());
