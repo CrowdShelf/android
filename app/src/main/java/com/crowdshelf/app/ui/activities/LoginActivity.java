@@ -121,7 +121,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         switch (event.getDbEventType()) {
             case LOGIN:
                 Toast.makeText(this, "ERROR " + String.valueOf(event.getResponseCode()) + ":\nUsername or password was not correct", Toast.LENGTH_SHORT).show();
-
+                loginSpinner.setVisibility(View.INVISIBLE);
+                logoImageView.setVisibility(View.VISIBLE);
         }
     }
 

@@ -156,13 +156,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.action_testing);
-        item.setVisible(false);
-        super.onPrepareOptionsMenu(menu);
-        return true;
-    }
 
     @Subscribe
     public void handleDBEvents(DbEventOk event) {
