@@ -54,7 +54,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private static final int GET_BOOK_CLICKED_ACTION = 2;
     // projectToken for dev: 93ef1952b96d0faa696176aadc2fbed4
     // projectToken for testing: 9f321d1662e631f2995d9b8f050c4b44
-    private static String projectToken = "9f321d1662e631f2995d9b8f050c4b44"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
+    private static String projectToken = "93ef1952b96d0faa696176aadc2fbed4"; // e.g.: "1ef7e30d2a58d27f4b90c42e31d6d7ad"
     private static Bus bus = new Bus(ThreadEnforcer.ANY); // ThreadEnforcer.ANY lets any thread post to the bus (but only main thread can subscribe)
     public final int SCANNED_BOOK_ACTION = 1;
     public final int LOGIN = 3;

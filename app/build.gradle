@@ -8,8 +8,8 @@ android {
         applicationId "ntnu.stud.markul.crowdshelf"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 5
-        versionName "0.4"
+        versionCode 7
+        versionName "0.5"
 
         //testInstrumentationRunner "android.test.InstrumentationTestRunner"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

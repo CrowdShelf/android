@@ -63,6 +63,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         listAdapter = new UserListAdapter(this, crowdMembers);
 
         setTitle("Create Group");
+        MainController.getUser(MainTabbedActivity.getMainUserId(), DbEventType.GET_USER);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         letterTileProvider = new LetterTileProvider(this);
@@ -97,6 +98,11 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
             for (MemberId m : members) {
                 MainController.getUser(m.getId(), DbEventType.EditCrowdActivity_ADD_USERS);
             }
+        }
+        else {
+            findViewById(R.id.leaveCrowdButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.crowdBooksButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.deleteCrowdButton).setVisibility(View.INVISIBLE);
         }
     }
 
@@ -156,7 +162,12 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                 super.onBackPressed();
                 return true;
             case R.id.saveCrowdButton:
-                updateCrowdButtonClicked();
+                if (crowdNameEditText.getText().toString().isEmpty()){
+                    Toast.makeText(EditCrowdActivity.this, "Group name can not be empty", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    updateCrowdButtonClicked();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -252,6 +263,16 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                         listAdapter.notifyDataSetChanged();
                     }
                 }
+                break;
+            case GET_USER:
+                User user2 = realm.where(User.class)
+                        .equalTo("id", event.getDbObjectId())
+                        .findFirst();
+                if (!crowdMembers.contains(user2)) {
+                    crowdMembers.add(user2);
+                    listAdapter.notifyDataSetChanged();
+                }
+                break;
         }
     }
 
