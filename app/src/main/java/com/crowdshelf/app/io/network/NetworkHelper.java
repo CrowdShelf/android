@@ -73,7 +73,7 @@ public class NetworkHelper {
                     } else if (connection.getResponseCode() == 401) {
                         // Token timed out. Login again.
                         MainController.loginWithSavedCredentials();
-                        // Do the request again. @todo: this may run before the above login has finished!
+                        // Do the request again. @todo: this may run before the above signInButtonClicked has finished!
                         sendRequest(requestMethod, route, jsonData, responseHandler, dbEventType);
                     } else {
                         Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +

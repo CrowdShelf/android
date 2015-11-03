@@ -10,13 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
-import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.User;
 import com.squareup.otto.Subscribe;
 
@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     private String password;
     private EditText usernameTextField;
     private EditText passwordTextField;
+    private ProgressBar loginSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         MainTabbedActivity.getBus().register(this);
         usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
         passwordTextField = (EditText) findViewById(R.id.passwordTextField);
+        loginSpinner = (ProgressBar) findViewById(R.id.loginSpinner);
+        loginSpinner.setVisibility(View.INVISIBLE);
         passwordTextField.setOnEditorActionListener(this);
     }
 
@@ -93,17 +96,26 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         MainController.createUser(username, name, email, password, DbEventType.USER_CREATED);
     }
 
-    public void login(View view) {
+    public void signInButtonClicked(View view) {
         username = usernameTextField.getText().toString();
         password = passwordTextField.getText().toString();
-        MainController.login(username, password, DbEventType.LOGIN);
+        if (username.isEmpty()){
+            Toast.makeText(this, "Username required", Toast.LENGTH_LONG).show();
+        }
+        else if (password.isEmpty()){
+            Toast.makeText(this, "Password required", Toast.LENGTH_LONG).show();
+        }
+        else{
+            MainController.login(username, password, DbEventType.LOGIN);
+            loginSpinner.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Subscribe
     public void handleLogin(DbEvent event) {
         Intent returnIntent;
         switch (event.getDbEventType()) {
-            // @todo: Handle unsuccessful login attempts (username not found)
+            // @todo: Handle unsuccessful signInButtonClicked attempts (username not found)
             case LOGIN:
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
@@ -118,14 +130,13 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                 u.setPassword(password);
                 realm.commitTransaction();
                 realm.close();
+                loginSpinner.setVisibility(View.INVISIBLE);
+
                 finish();
                 break;
             case USER_CREATED:
-                /*
-                HACK: Put all new users in a default crowd:
-                 */
+
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
-                NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
                 MainController.login(username, password, DbEventType.LOGIN);
 
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
@@ -179,7 +190,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         Log.i(TAG, "onEditorAction");
         switch (actionId){
             case EditorInfo.IME_ACTION_DONE:
-                login(null);
+                signInButtonClicked(null);
                 break;
         }
         return false;
