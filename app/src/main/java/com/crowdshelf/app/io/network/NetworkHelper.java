@@ -33,9 +33,9 @@ public class NetworkHelper {
     public static void sendRequest(final HttpRequestMethod requestMethod, final String route, final String jsonData,
                                    final ResponseHandler responseHandler, final DbEventType dbEventType)
     {
-        new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, Response>() {
             @Override
-            protected String doInBackground(Void... params) {
+            protected Response doInBackground(Void... params) {
                 try {
                     URL url = new URL(host + "/api" + route);
                     Log.i(TAG, "Send request: " + requestMethod.toString() + " URL: " + url.toString());
@@ -72,7 +72,7 @@ public class NetworkHelper {
                         String jsonString = builder.toString();
                         iReader.close();
                         bReader.close();
-                        return jsonString;
+                        return new Response(jsonString, connection.getResponseCode(), connection.getResponseMessage());
                     } else if (connection.getResponseCode() == 401) {
                         // Token timed out. Login again.
                         MainController.loginWithSavedCredentials();
@@ -81,31 +81,32 @@ public class NetworkHelper {
                     } else {
                         Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
                                 " ResponseMessage: " + connection.getResponseMessage());
-                        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, String.valueOf(connection.getResponseCode())));
+                        return new Response("", connection.getResponseCode(), connection.getResponseMessage());
                     }
                 } catch (java.net.MalformedURLException e) {
                     Log.w(TAG, "SendRequest MalformedURLException" + e.toString());
                 } catch (IOException e) {
                     Log.w(TAG, "SendRequest IOException" + e.toString());
                 }
-                return "";
+                return new Response("", 0, "");
             }
 
-            protected void onPostExecute(String jsonString) {
-                handleResponse(jsonString, responseHandler, dbEventType);
+            protected void onPostExecute(Response response) {
+                handleResponse(response, responseHandler, dbEventType);
             }
         }.execute();
     }
 
-    public static void handleResponse(String jsonString, ResponseHandler responseHandler, DbEventType dbEventType) {
+    public static void handleResponse(Response response, ResponseHandler responseHandler, DbEventType dbEventType) {
         try {
-            if (jsonString.length() > 0) {
-                Log.i(TAG, "Received JSON: " + jsonString);
+            String jsonData = response.getJsonData();
+            if (jsonData.length() > 0) {
+                Log.i(TAG, "Received JSON: " + jsonData);
                 if (responseHandler != null) {
-                    responseHandler.handleJsonResponse(jsonString, dbEventType);
+                    responseHandler.handleJsonResponse(jsonData, dbEventType);
                 }
-            } else {
-                Log.d(TAG, "Did not receive data from server");
+            } else if (response.getResponseCode() != 200){
+                MainTabbedActivity.getBus().post(new DbEvent(dbEventType, String.valueOf(response.getResponseCode())));
             }
         } catch (NullPointerException e) {
             Log.i(TAG, "HandleResponse NullPointerException" + e.toString());

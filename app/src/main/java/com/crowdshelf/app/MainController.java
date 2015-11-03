@@ -65,6 +65,10 @@ public class MainController {
         NetworkController.login(username, password, dbEventType);
     }
 
+    public static void setToken(String token) {
+
+    }
+
     public static String getToken() {
         String token = realm.where(User.class)
                 .equalTo("id", MainTabbedActivity.getMainUserId())
