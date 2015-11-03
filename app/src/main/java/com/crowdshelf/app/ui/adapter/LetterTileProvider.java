@@ -80,7 +80,7 @@ public class LetterTileProvider {
             c.drawText(mFirstChar, 0, 1, size / 2, size / 2
                     + (mBounds.bottom - mBounds.top) / 2, mPaint);
         } else {
-            c.drawBitmap(mDefaultBitmap, 0, 0, null);
+            return getCroppedBitmap(mDefaultBitmap);
         }
         lastChar = firstChar;
         lastImage = getCroppedBitmap(bitmap);
