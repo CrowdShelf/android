@@ -16,6 +16,7 @@ import com.crowdshelf.app.io.network.serializers.UserSerializer;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -47,14 +48,14 @@ public class NetworkController {
             .create();
 
     private static String addTokenToUrl(String url) {
-        return url + "?token=" + MainController.getToken();
+        return url + "?token=" + MainTabbedActivity.getToken();
     }
 
     private static String addTokenToJsonObject(String jsonData) {
         String jsonDataWithToken = "";
         try {
             JSONObject jsonObj = new JSONObject(jsonData);
-            jsonObj.put("token", MainController.getToken());
+            jsonObj.put("token", MainTabbedActivity.getToken());
             jsonDataWithToken = jsonObj.toString();
         } catch (Exception e) {
             Log.w("Networkcontroller", e.toString());

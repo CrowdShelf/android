@@ -69,16 +69,6 @@ public class MainController {
 
     }
 
-    public static String getToken() {
-        String token = realm.where(User.class)
-                .equalTo("id", MainTabbedActivity.getMainUserId())
-                .findFirst().getToken();
-        if (token == null || token.equals("")) {
-            Log.e(TAG, "Tried to get token but it was empty for user: " + MainTabbedActivity.getMainUserId());
-        }
-        return new String(token);
-    }
-
     public static void loginWithSavedCredentials() {
         String username = MainTabbedActivity.getMainUserId();
         String password = realm.where(User.class)

@@ -18,9 +18,6 @@ public class UserHandler implements ResponseHandler {
     @Override
     public void handleJsonResponse(String jsonString, DbEventType dbEventType) {
         try {
-            /*
-            @todo: get token
-             */
             User u = gson.fromJson(jsonString, User.class);
             Log.i(TAG, "User added _id " + u.getId() + " username " + u.getUsername() + " name " + u.getName() + " email" + u.getEmail());
             Realm realm = Realm.getDefaultInstance();
@@ -30,6 +27,9 @@ public class UserHandler implements ResponseHandler {
             realm.close();
             if (u.getId().equals("")) {
                 Log.w(TAG, "Received user does not have an id!");
+            }
+            if (u.getToken() != null && u.getToken() != "") {
+                MainTabbedActivity.setToken(u.getToken());
             }
             MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, u.getId()));
         } catch (JsonSyntaxException e) {
