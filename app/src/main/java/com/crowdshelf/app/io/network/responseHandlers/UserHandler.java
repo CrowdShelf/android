@@ -29,7 +29,7 @@ public class UserHandler implements ResponseHandler {
                 Log.w(TAG, "Received user does not have an id!");
             }
             if (u.getToken() != null && u.getToken() != "") {
-                MainTabbedActivity.setToken(u.getToken());
+                MainTabbedActivity.setMainUserLoginToken(u.getToken());
             }
             MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, u.getId()));
         } catch (JsonSyntaxException e) {

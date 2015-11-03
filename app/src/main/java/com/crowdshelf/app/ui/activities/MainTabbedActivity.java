@@ -67,7 +67,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private String lastScannedBookIsbn;
 
     private static String mainUserId; //= "5602a211a0913f110092352a";
-    private static String token;
+    private static String mainUserLoginToken;
+    private static String mainUserPassword;
     private static Set<Crowd> userCrowds = new HashSet<>();
     public static Set<Book> userCrowdBooks = new HashSet<>();
     private static Set<Book> ownedBooks = new HashSet<>();
@@ -542,11 +543,19 @@ public class MainTabbedActivity extends AppCompatActivity implements
         }
     }
 
-    public static String getToken() {
-        return token;
+    public static String getMainUserLoginToken() {
+        return mainUserLoginToken;
     }
 
-    public static void setToken(String s) {
-        token = s;
+    public static void setMainUserLoginToken(String s) {
+        mainUserLoginToken = s;
+    }
+
+    public static String getMainUserPassword() {
+        return mainUserPassword;
+    }
+
+    public static void setMainUserPassword(String s) {
+        mainUserPassword = s;
     }
 }

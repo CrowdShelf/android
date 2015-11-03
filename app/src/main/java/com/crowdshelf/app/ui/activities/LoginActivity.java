@@ -115,7 +115,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                 User u = realm.where(User.class)
                         .equalTo("username", username)
                         .findFirst();
-                u.setPassword(password);
+                //u.setPassword(password);
+                MainTabbedActivity.setMainUserPassword(password);
                 realm.commitTransaction();
                 realm.close();
                 finish();

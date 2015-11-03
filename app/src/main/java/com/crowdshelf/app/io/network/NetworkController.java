@@ -2,7 +2,6 @@ package com.crowdshelf.app.io.network;
 
 import android.util.Log;
 
-import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.BookHandler;
 import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
@@ -48,14 +47,14 @@ public class NetworkController {
             .create();
 
     private static String addTokenToUrl(String url) {
-        return url + "?token=" + MainTabbedActivity.getToken();
+        return url + "?token=" + MainTabbedActivity.getMainUserLoginToken();
     }
 
     private static String addTokenToJsonObject(String jsonData) {
         String jsonDataWithToken = "";
         try {
             JSONObject jsonObj = new JSONObject(jsonData);
-            jsonObj.put("token", MainTabbedActivity.getToken());
+            jsonObj.put("token", MainTabbedActivity.getMainUserLoginToken());
             jsonDataWithToken = jsonObj.toString();
         } catch (Exception e) {
             Log.w("Networkcontroller", e.toString());

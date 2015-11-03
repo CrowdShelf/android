@@ -71,9 +71,7 @@ public class MainController {
 
     public static void loginWithSavedCredentials() {
         String username = MainTabbedActivity.getMainUserId();
-        String password = realm.where(User.class)
-                .equalTo("username", username)
-                .findFirst().getPassword();
+        String password = MainTabbedActivity.getMainUserPassword();
         NetworkController.login(username, password, DbEventType.NONE);
     }
 
