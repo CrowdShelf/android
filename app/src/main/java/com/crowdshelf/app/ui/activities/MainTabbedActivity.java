@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,7 @@ import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class MainTabbedActivity extends AppCompatActivity implements
@@ -97,7 +99,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.deleteRealm(realmConfiguration); // Clean slate
+//        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         realm = Realm.getDefaultInstance();
         realm.beginTransaction();
@@ -253,21 +255,21 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     public void updateUserCrowds() {
-        List<Crowd> allCrowds = realm.where(Crowd.class)
+        List<Crowd> allCrowds = realm
+                .where(Crowd.class)
                 .findAll();
         List<Crowd> userCrowdsTemp = new ArrayList<>();
         for (Crowd crowd : allCrowds) {
             for (MemberId memberId : crowd.getMembers()) {
                 if (memberId.getId().equals(mainUserId)) {
                     userCrowdsTemp.add(crowd);
+                    break;
                 }
             }
         }
-        if (userCrowdsTemp != null) {
-            userCrowds.clear();
-            userCrowds.addAll(userCrowdsTemp);
-            crowdScreenFragment.updateCrowdList(userCrowds);
-        }
+        userCrowds.clear();
+        userCrowds.addAll(userCrowdsTemp);
+        crowdScreenFragment.updateCrowdList(userCrowds);
     }
 
     public void updateUserCrowdBooks() {
@@ -294,12 +296,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
             userCrowdBooks.clear();
             userCrowdBooks.addAll(userCrowdBooksTemp);
         }
-    }
-
-    private void loginUser(String username) {
-        //TODO: Login user
-        Toast.makeText(MainTabbedActivity.this, "User: " + username + " logged in.", Toast.LENGTH_SHORT).show();
-        //TODO: populate userShelfISBNs with users books.
     }
 
     @Override
@@ -349,14 +345,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivityForResult(intent, SCANNED_BOOK_ACTION);
     }
 
-    public void fakeScan(View v) {
-        isbnReceived("9780670921607");
-    }
-
-    public void fakeScan2(View v) {
-        isbnReceived("1847399304");
-    }
-
     @Override
     public void isbnReceived(String isbn) {
         MainController.getBookInfo(isbn, DbEventType.SCAN_COMPLETE_GET_BOOKINFO);
@@ -375,8 +363,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("isbn", b.getIsbn());
-        intent.putExtra("bookID", bookID);
-        intent.putExtra("bookOwnerID", b.getOwner());
 
         startActivityForResult(intent, GET_BOOK_CLICKED_ACTION);
     }
