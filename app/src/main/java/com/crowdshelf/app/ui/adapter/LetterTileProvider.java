@@ -59,7 +59,7 @@ public class LetterTileProvider {
         mColors = res.obtainTypedArray(R.array.letter_tile_colors);
         mTileLetterFontSize = res.getDimensionPixelSize(R.dimen.tile_letter_font_size);
 
-        mDefaultBitmap = BitmapFactory.decodeResource(res, android.R.drawable.sym_def_app_icon);
+        mDefaultBitmap = BitmapFactory.decodeResource(res, R.drawable.logo);
     }
 
     public Bitmap getLetterTile(String displayName, int size) {
