@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DbEventFailure;
 import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.NetworkController;
@@ -97,6 +98,15 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         username = usernameTextField.getText().toString();
         password = passwordTextField.getText().toString();
         MainController.login(username, password, DbEventType.LOGIN);
+    }
+
+    @Subscribe
+    public void handleLoginFailure(DbEventFailure event) {
+        switch (event.getDbEventType()) {
+            case LOGIN:
+                Toast.makeText(this, "ERROR " + String.valueOf(event.getResponseCode()) + ":\nUsername or password was not correct", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Subscribe
