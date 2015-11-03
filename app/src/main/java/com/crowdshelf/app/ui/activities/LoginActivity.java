@@ -1,6 +1,7 @@
 package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     private EditText usernameTextField;
     private EditText passwordTextField;
     private ProgressBar loginSpinner;
+    private ImageView logoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         MainTabbedActivity.getBus().register(this);
         usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
         passwordTextField = (EditText) findViewById(R.id.passwordTextField);
+        logoImageView = (ImageView) findViewById(R.id.crowdshelfLogoImageView);
         loginSpinner = (ProgressBar) findViewById(R.id.loginSpinner);
         loginSpinner.setVisibility(View.INVISIBLE);
         passwordTextField.setOnEditorActionListener(this);
@@ -85,7 +89,6 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         EditText nameTextfield = (EditText) findViewById(R.id.nameTextfield);
         name = nameTextfield.getText().toString();
 
-        EditText passwordTextfield = (EditText) findViewById(R.id.nameTextfield);
         password = passwordTextField.getText().toString();
 
         User user=new User();
@@ -107,7 +110,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         }
         else{
             MainController.login(username, password, DbEventType.LOGIN);
-            loginSpinner.setVisibility(View.INVISIBLE);
+            logoImageView.setVisibility(View.INVISIBLE);
+            loginSpinner.setVisibility(View.VISIBLE);
         }
     }
 
