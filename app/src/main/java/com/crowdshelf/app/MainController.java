@@ -250,7 +250,7 @@ public class MainController {
 
     /*
     Populate the database with the necessary data on startup:
-    Main user (already downloaded on login)
+    Main user (already downloaded on signInButtonClicked)
     Main users books
     Main users crowds
     The books of the members of the above crowds

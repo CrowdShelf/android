@@ -4,11 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEventFailure;
-import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
-import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,9 +30,9 @@ public class NetworkHelper {
     public static void sendRequest(final HttpRequestMethod requestMethod, final String route, final String jsonData,
                                    final ResponseHandler responseHandler, final DbEventType dbEventType)
     {
-        new AsyncTask<Void, Void, Response>() {
+        new AsyncTask<Void, Void, String>() {
             @Override
-            protected Response doInBackground(Void... params) {
+            protected String doInBackground(Void... params) {
                 try {
                     URL url = new URL(host + "/api" + route);
                     Log.i(TAG, "Send request: " + requestMethod.toString() + " URL: " + url.toString());
@@ -72,47 +69,39 @@ public class NetworkHelper {
                         String jsonString = builder.toString();
                         iReader.close();
                         bReader.close();
-                        return new Response(jsonString, connection.getResponseCode(), connection.getResponseMessage());
+                        return jsonString;
                     } else if (connection.getResponseCode() == 401) {
-                        if (!route.contains("/login")) {
-                            // Token timed out. Login again.
-                            MainController.loginWithSavedCredentials();
-                            // Do the request again. @todo: this may run before the above login has finished!
-                            sendRequest(requestMethod, route, jsonData, responseHandler, dbEventType);
-                        } else {
-                            return new Response("",connection.getResponseCode(), connection.getResponseMessage());
-                        }
-
+                        // Token timed out. Login again.
+                        MainController.loginWithSavedCredentials();
+                        // Do the request again. @todo: this may run before the above signInButtonClicked has finished!
+                        sendRequest(requestMethod, route, jsonData, responseHandler, dbEventType);
                     } else {
                         Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
                                 " ResponseMessage: " + connection.getResponseMessage());
-                        return new Response("", connection.getResponseCode(), connection.getResponseMessage());
                     }
                 } catch (java.net.MalformedURLException e) {
                     Log.w(TAG, "SendRequest MalformedURLException" + e.toString());
                 } catch (IOException e) {
                     Log.w(TAG, "SendRequest IOException" + e.toString());
                 }
-                return new Response("", 0, "");
+                return "";
             }
 
-            protected void onPostExecute(Response response) {
-                handleResponse(response, responseHandler, dbEventType);
+            protected void onPostExecute(String jsonString) {
+                handleResponse(jsonString, responseHandler, dbEventType);
             }
         }.execute();
     }
 
-    public static void handleResponse(Response response, ResponseHandler responseHandler, DbEventType dbEventType) {
+    public static void handleResponse(String jsonString, ResponseHandler responseHandler, DbEventType dbEventType) {
         try {
-            Log.i(TAG, "data " + response.getJsonData() + " msg " + response.getResponseMessage() + " code " + response.getResponseCode());
-            String jsonData = response.getJsonData();
-            if (jsonData.length() > 0) {
-                Log.i(TAG, "Received JSON: " + jsonData);
+            if (jsonString.length() > 0) {
+                Log.i(TAG, "Received JSON: " + jsonString);
                 if (responseHandler != null) {
-                    responseHandler.handleJsonResponse(jsonData, dbEventType);
+                    responseHandler.handleJsonResponse(jsonString, dbEventType);
                 }
-            } else if (response.getResponseCode() != 200){
-                MainTabbedActivity.getBus().post(new DbEventFailure(dbEventType, response.getResponseCode()));
+            } else {
+                Log.d(TAG, "Did not receive data from server");
             }
         } catch (NullPointerException e) {
             Log.i(TAG, "HandleResponse NullPointerException" + e.toString());

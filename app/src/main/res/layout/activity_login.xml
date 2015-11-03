@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:text="@string/loginButtonText"
         android:id="@+id/loginButton"
-        android:onClick="login"
+        android:onClick="signInButtonClicked"
         android:layout_below="@+id/passwordTextField"
         android:layout_centerHorizontal="true"
         android:layout_alignLeft="@+id/passwordTextField"
@@ -129,6 +129,16 @@
         android:textColor="#0162ff"
         android:layout_alignTop="@+id/nameTextfield"
         android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginSpinner"
+        android:layout_alignTop="@+id/crowdshelfLogoImageView"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="false"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>
