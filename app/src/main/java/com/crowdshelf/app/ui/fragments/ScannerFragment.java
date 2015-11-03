@@ -15,12 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.ScannerEvent;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

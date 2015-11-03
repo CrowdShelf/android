@@ -1,14 +1,9 @@
 package com.crowdshelf.app.ui.activities;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
-import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
-import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
-import com.squareup.otto.Subscribe;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -17,9 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import io.realm.Realm;
