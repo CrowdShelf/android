@@ -121,22 +121,29 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         switch (event.getDbEventType()) {
             // @todo: Handle unsuccessful signInButtonClicked attempts (username not found)
             case LOGIN:
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
-                returnIntent = new Intent();
-                Log.i(TAG, "DbEvent Login with username: " + username);
-                returnIntent.putExtra("username", username);
-                setResult(RESULT_OK,returnIntent);
-                Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                User u = realm.where(User.class)
-                        .equalTo("username", username)
-                        .findFirst();
-                u.setPassword(password);
-                realm.commitTransaction();
-                realm.close();
-                loginSpinner.setVisibility(View.INVISIBLE);
+                if (true) {
+                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
+                    returnIntent = new Intent();
+                    Log.i(TAG, "DbEvent Login with username: " + username);
+                    returnIntent.putExtra("username", username);
+                    setResult(RESULT_OK, returnIntent);
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    User u = realm.where(User.class)
+                            .equalTo("username", username)
+                            .findFirst();
+                    u.setPassword(password);
+                    realm.commitTransaction();
+                    realm.close();
+                    loginSpinner.setVisibility(View.INVISIBLE);
 
-                finish();
+                    finish();
+                }
+                else {
+                    Toast.makeText(this, "Username or password was not correct", Toast.LENGTH_SHORT).show();
+                    loginSpinner.setVisibility(View.INVISIBLE);
+                    logoImageView.setVisibility(View.VISIBLE);
+                }
                 break;
             case USER_CREATED:
 
