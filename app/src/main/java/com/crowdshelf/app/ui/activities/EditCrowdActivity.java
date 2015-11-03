@@ -63,6 +63,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
         listAdapter = new UserListAdapter(this, crowdMembers);
 
         setTitle("Create Group");
+        MainController.getUser(MainTabbedActivity.getMainUserId(), DbEventType.GET_USER);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         letterTileProvider = new LetterTileProvider(this);
@@ -98,6 +99,11 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                 MainController.getUser(m.getId(), DbEventType.EditCrowdActivity_ADD_USERS);
             }
         }
+        else {
+            findViewById(R.id.leaveCrowdButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.crowdBooksButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.deleteCrowdButton).setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -109,7 +115,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 
             menu.setHeaderTitle(obj.getName());
             menu.add(0, acmi.position, 0, "Show books");
-            menu.add(0, acmi.position, 1, "Delete " + obj.getName());
+            menu.add(0, acmi.position, 1, "Remove " + obj.getName() + " from group");
 
         }
     }
@@ -127,25 +133,25 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
 
             case 1:
                 new AlertDialog.Builder(this)
-                .setTitle("Remove user?")
-                .setMessage("Are you sure you want to remove this user?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                        Toast.makeText(EditCrowdActivity.this, "Removed", Toast.LENGTH_SHORT).show();
-                        crowdMembers.remove(selectedContexMenuUser);
-                        listAdapter.notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                        .setTitle("Remove user?")
+                        .setMessage("Are you sure you want to remove this user?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                Toast.makeText(EditCrowdActivity.this, "Removed", Toast.LENGTH_SHORT).show();
+                                crowdMembers.remove(selectedContexMenuUser);
+                                listAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
         }
-      return true;
+        return true;
     }
 
     @Override
@@ -156,7 +162,12 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                 super.onBackPressed();
                 return true;
             case R.id.saveCrowdButton:
-                updateCrowdButtonClicked();
+                if (crowdNameEditText.getText().toString().isEmpty()){
+                    Toast.makeText(EditCrowdActivity.this, "Group name can not be empty", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    updateCrowdButtonClicked();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -252,12 +263,22 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                         listAdapter.notifyDataSetChanged();
                     }
                 }
+                break;
+            case GET_USER:
+                User user2 = realm.where(User.class)
+                        .equalTo("id", event.getDbObjectId())
+                        .findFirst();
+                if (!crowdMembers.contains(user2)) {
+                    crowdMembers.add(user2);
+                    listAdapter.notifyDataSetChanged();
+                }
+                break;
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> a, View v, final int position, long id) {
-            this.openContextMenu(v);
+        this.openContextMenu(v);
 //        new AlertDialog.Builder(this)
 //                .setTitle("Delete entry")
 //                .setMessage("Are you sure you want to remove this entry?")
