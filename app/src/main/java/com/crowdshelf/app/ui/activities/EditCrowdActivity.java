@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
+import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.models.User;
@@ -183,6 +184,12 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                         // continue with delete
                         MainController.removeCrowdMember(crowdID, MainTabbedActivity.getMainUserId(), DbEventType.USER_CROWDS_CHANGED);
                         MainTabbedActivity.getMixpanel().track("LeaveCrowd");
+                        Crowd crowd = realm.where(Crowd.class)
+                                .equalTo("id", crowdID)
+                                .findFirst();
+                        if (crowd.getMembers().isEmpty()){
+                            MainController.deleteCrowd(crowdID, DbEventType.USER_CROWDS_CHANGED);
+                        }
                         finish();
 
                     }
