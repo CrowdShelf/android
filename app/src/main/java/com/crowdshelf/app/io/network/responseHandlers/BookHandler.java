@@ -3,7 +3,7 @@ package com.crowdshelf.app.io.network.responseHandlers;
 import android.util.Log;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
@@ -35,7 +35,7 @@ public class BookHandler implements ResponseHandler {
             if (b.getId().equals("")) {
                 Log.e(TAG, "Received book does not have an id");
             }
-            MainTabbedActivity.getBus().post(new DbEvent(dbEventType, b.getId()));
+            MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, b.getId()));
         } catch (JsonSyntaxException e) {
             Log.w(TAG, "something wrong with JSON data" + e.getMessage());
         } catch (RuntimeException e) {

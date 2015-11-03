@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.User;
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     }
 
     @Subscribe
-    public void handleLogin(DbEvent event) {
+    public void handleLogin(DbEventOk event) {
         Intent returnIntent;
         switch (event.getDbEventType()) {
             // @todo: Handle unsuccessful login attempts (username not found)

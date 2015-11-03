@@ -4,13 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventFailure;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.otto.Bus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -106,7 +106,7 @@ public class NetworkHelper {
                     responseHandler.handleJsonResponse(jsonData, dbEventType);
                 }
             } else if (response.getResponseCode() != 200){
-                MainTabbedActivity.getBus().post(new DbEvent(dbEventType, String.valueOf(response.getResponseCode())));
+                MainTabbedActivity.getBus().post(new DbEventFailure(dbEventType, response.getResponseCode()));
             }
         } catch (NullPointerException e) {
             Log.i(TAG, "HandleResponse NullPointerException" + e.toString());

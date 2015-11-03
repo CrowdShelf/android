@@ -2,7 +2,7 @@ package com.crowdshelf.app.ui.activities;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
@@ -155,7 +155,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
     }
 
     @Subscribe
-    public void handleDBEvents(DbEvent event) {
+    public void handleDBEvents(DbEventOk event) {
         if (event.getDbEventType().equals(DbEventType.NONE)) return;
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());

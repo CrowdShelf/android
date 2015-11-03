@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.crowdshelf.app.models.googleBookInfo.GoogleBooksMain;
 import com.crowdshelf.app.models.googleBookInfo.GoogleBooksVolumeInfo;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
@@ -104,7 +104,7 @@ public class GetBookInfoAsyncTask {
         realm.commitTransaction();
         realm.close();
 
-        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookInfo.getIsbn()));
+        MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, bookInfo.getIsbn()));
         Log.i(TAG, "Added BookInfo for ISBN: " + bookInfo.getIsbn());
     }
 

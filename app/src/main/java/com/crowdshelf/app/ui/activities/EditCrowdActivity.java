@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.MemberId;
@@ -224,7 +224,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
     }
 
     @Subscribe
-    public void handleDBEvents(DbEvent event) {
+    public void handleDBEvents(DbEventOk event) {
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {

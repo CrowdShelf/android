@@ -2,7 +2,7 @@ package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
@@ -31,7 +31,7 @@ public class UserHandler implements ResponseHandler {
             if (u.getId().equals("")) {
                 Log.w(TAG, "Received user does not have an id!");
             }
-            MainTabbedActivity.getBus().post(new DbEvent(dbEventType, u.getId()));
+            MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, u.getId()));
         } catch (JsonSyntaxException e) {
             Log.w(TAG, "something wrong with JSON data" + e.getMessage());;
         } catch (RuntimeException e) {

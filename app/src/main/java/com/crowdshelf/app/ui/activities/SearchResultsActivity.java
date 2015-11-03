@@ -1,5 +1,5 @@
 package com.crowdshelf.app.ui.activities;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.GetBookInfosBySearch;
 import com.crowdshelf.app.models.Book;
@@ -22,11 +22,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import io.realm.Realm;
@@ -152,7 +150,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
     }
 
     @Subscribe
-    public void handleDBEvents(DbEvent event) {
+    public void handleDBEvents(DbEventOk event) {
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()){

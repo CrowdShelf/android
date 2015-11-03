@@ -13,15 +13,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.adapter.UserListAdapter;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
