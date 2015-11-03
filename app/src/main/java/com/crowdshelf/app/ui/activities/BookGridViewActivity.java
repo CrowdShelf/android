@@ -11,9 +11,11 @@ import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 import com.squareup.otto.Subscribe;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,6 +34,8 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_grid_view);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         String shelf = intent.getStringExtra("shelf");
         String userID = intent.getStringExtra("userID");
@@ -100,5 +104,14 @@ public class BookGridViewActivity extends AppCompatActivity implements BookGridV
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+//        Intent myIntent = new Intent(getApplicationContext(), MainTabbedActivity.class);
+//        myIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        startActivityForResult(myIntent, 0);
+        finish();
+        return true;
     }
 }
