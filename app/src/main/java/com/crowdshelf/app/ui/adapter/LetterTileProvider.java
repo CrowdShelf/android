@@ -59,7 +59,7 @@ public class LetterTileProvider {
         mColors = res.obtainTypedArray(R.array.letter_tile_colors);
         mTileLetterFontSize = res.getDimensionPixelSize(R.dimen.tile_letter_font_size);
 
-        mDefaultBitmap = BitmapFactory.decodeResource(res, android.R.drawable.sym_def_app_icon);
+        mDefaultBitmap = BitmapFactory.decodeResource(res, R.drawable.logo);
     }
 
     public Bitmap getLetterTile(String displayName, int size) {
@@ -80,7 +80,7 @@ public class LetterTileProvider {
             c.drawText(mFirstChar, 0, 1, size / 2, size / 2
                     + (mBounds.bottom - mBounds.top) / 2, mPaint);
         } else {
-            c.drawBitmap(mDefaultBitmap, 0, 0, null);
+            return getCroppedBitmap(mDefaultBitmap);
         }
         lastChar = firstChar;
         lastImage = getCroppedBitmap(bitmap);

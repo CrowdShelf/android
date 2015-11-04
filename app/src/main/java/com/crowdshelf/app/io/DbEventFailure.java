@@ -3,20 +3,20 @@ package com.crowdshelf.app.io;
 /**
  * Created by Torstein on 21.09.2015.
  */
-public class DbEvent {
+public class DbEventFailure {
     private DbEventType dbEventType;
-    private String dbObjectId;
+    private int reponseCode;
 
-    public DbEvent(DbEventType dbEventType, String dbObjectId) {
+    public DbEventFailure(DbEventType dbEventType, int responseCode) {
         this.dbEventType = dbEventType;
-        this.dbObjectId = dbObjectId;
+        this.reponseCode = responseCode;
     }
 
     public DbEventType getDbEventType() {
         return dbEventType;
     }
 
-    public String getDbObjectId() {
-        return dbObjectId;
+    public int getResponseCode() {
+        return reponseCode;
     }
 }

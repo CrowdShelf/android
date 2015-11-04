@@ -2,7 +2,7 @@ package com.crowdshelf.app;
 
 import android.util.Log;
 
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.GetBookInfoAsyncTask;
 import com.crowdshelf.app.io.network.NetworkController;
@@ -35,7 +35,7 @@ public class MainController {
     }
 
     @Subscribe
-    public void dbEventListener(DbEvent dbEvent) {
+    public void dbEventListener(DbEventOk dbEvent) {
         switch (dbEvent.getDbEventType()) {
             case ON_START_USER_CROWDS_READY:
                 /*
@@ -43,7 +43,7 @@ public class MainController {
                 retrieve all the books of the members of these crowds
                 (not including the books of the main user)
                  */
-                MainTabbedActivity.getBus().post(new DbEvent(DbEventType.USER_CROWDS_CHANGED, "all"));
+                MainTabbedActivity.getBus().post(new DbEventOk(DbEventType.USER_CROWDS_CHANGED, "all"));
                 List<Crowd> crowds = realm.where(Crowd.class)
                         .findAll();
                 for (Crowd c: crowds) {
@@ -69,21 +69,9 @@ public class MainController {
 
     }
 
-    public static String getToken() {
-        String token = realm.where(User.class)
-                .equalTo("id", MainTabbedActivity.getMainUserId())
-                .findFirst().getToken();
-        if (token == null || token.equals("")) {
-            Log.e(TAG, "Tried to get token but it was empty for user: " + MainTabbedActivity.getMainUserId());
-        }
-        return new String(token);
-    }
-
     public static void loginWithSavedCredentials() {
         String username = MainTabbedActivity.getMainUserId();
-        String password = realm.where(User.class)
-                .equalTo("username", username)
-                .findFirst().getPassword();
+        String password = MainTabbedActivity.getMainUserPassword();
         NetworkController.login(username, password, DbEventType.NONE);
     }
 
@@ -129,7 +117,7 @@ public class MainController {
         crowd.removeFromRealm();
         realm.commitTransaction();
         NetworkController.deleteCrowd(crowdId, dbEventType);
-        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, crowdId));
+        MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, crowdId));
     }
 
     public static void getCrowd(String crowdId, DbEventType dbEventType) {
@@ -152,7 +140,7 @@ public class MainController {
         }
         realm.commitTransaction();
         NetworkController.removeCrowdMember(crowdId, userId, dbEventType);
-        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, userId));
+        MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, userId));
     }
 
     /*
@@ -184,7 +172,7 @@ public class MainController {
         book.removeFromRealm();
         realm.commitTransaction();
         NetworkController.removeBook(bookId, dbEventType);
-        MainTabbedActivity.getBus().post(new DbEvent(dbEventType, bookId));
+        MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, bookId));
         MainTabbedActivity.getMixpanel().track("BookRemoved");
     }
 
@@ -205,7 +193,7 @@ public class MainController {
         if (bookInfo == null) {
             GetBookInfoAsyncTask.getBookInfo(isbn, dbEventType);
         } else {
-            MainTabbedActivity.getBus().post(new DbEvent(dbEventType, isbn));
+            MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, isbn));
         }
     }
 
@@ -262,7 +250,7 @@ public class MainController {
 
     /*
     Populate the database with the necessary data on startup:
-    Main user (already downloaded on login)
+    Main user (already downloaded on signInButtonClicked)
     Main users books
     Main users crowds
     The books of the members of the above crowds

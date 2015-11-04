@@ -4,13 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventFailure;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.ResponseHandler;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.otto.Bus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,10 +74,15 @@ public class NetworkHelper {
                         bReader.close();
                         return new Response(jsonString, connection.getResponseCode(), connection.getResponseMessage());
                     } else if (connection.getResponseCode() == 401) {
-                        // Token timed out. Login again.
-                        MainController.loginWithSavedCredentials();
-                        // Do the request again. @todo: this may run before the above login has finished!
-                        sendRequest(requestMethod, route, jsonData, responseHandler, dbEventType);
+                        if (!route.contains("/login")) {
+                            // Token timed out. Login again.
+                            MainController.loginWithSavedCredentials();
+                            // Do the request again. @todo: this may run before the above login has finished!
+                            sendRequest(requestMethod, route, jsonData, responseHandler, dbEventType);
+                        } else {
+                            return new Response("",connection.getResponseCode(), connection.getResponseMessage());
+                        }
+
                     } else {
                         Log.i(TAG, "ResponseCode: " + String.valueOf(connection.getResponseCode()) +
                                 " ResponseMessage: " + connection.getResponseMessage());
@@ -99,6 +104,7 @@ public class NetworkHelper {
 
     public static void handleResponse(Response response, ResponseHandler responseHandler, DbEventType dbEventType) {
         try {
+            Log.i(TAG, "data " + response.getJsonData() + " msg " + response.getResponseMessage() + " code " + response.getResponseCode());
             String jsonData = response.getJsonData();
             if (jsonData.length() > 0) {
                 Log.i(TAG, "Received JSON: " + jsonData);
@@ -106,7 +112,7 @@ public class NetworkHelper {
                     responseHandler.handleJsonResponse(jsonData, dbEventType);
                 }
             } else if (response.getResponseCode() != 200){
-                MainTabbedActivity.getBus().post(new DbEvent(dbEventType, String.valueOf(response.getResponseCode())));
+                MainTabbedActivity.getBus().post(new DbEventFailure(dbEventType, response.getResponseCode()));
             }
         } catch (NullPointerException e) {
             Log.i(TAG, "HandleResponse NullPointerException" + e.toString());

@@ -13,15 +13,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.User;
 import com.crowdshelf.app.ui.adapter.UserListAdapter;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import ntnu.stud.markul.crowdshelf.R;
@@ -117,22 +114,24 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         User u = usersWithBook.get(position);
-        Book bookToRent = realm.where(Book.class)
-                .equalTo("isbn", ISBN)
-                .equalTo("owner", u.getId())
-                .equalTo("rentedTo", "")
-                .findFirst();
-        if (bookToRent == null){
-            bookToRent = realm.where(Book.class)
+        if (u != null) {
+            Book bookToRent = realm.where(Book.class)
                     .equalTo("isbn", ISBN)
-                    .notEqualTo("owner", userID)
-                    .equalTo("rentedTo", u.getId())
+                    .equalTo("owner", u.getId())
+                    .equalTo("rentedTo", "")
                     .findFirst();
-        }
-        Toast.makeText(UserListActivity.this, "Book was borrowed", Toast.LENGTH_SHORT).show();
-        MainController.addRenter(bookToRent.getId(), userID, DbEventType.USER_BOOKS_CHANGED);
+            if (bookToRent == null) {
+                bookToRent = realm.where(Book.class)
+                        .equalTo("isbn", ISBN)
+                        .notEqualTo("owner", userID)
+                        .equalTo("rentedTo", u.getId())
+                        .findFirst();
+            }
+            Toast.makeText(UserListActivity.this, "Book was borrowed", Toast.LENGTH_SHORT).show();
+            MainController.addRenter(bookToRent.getId(), userID, DbEventType.USER_BOOKS_CHANGED);
 
-        finish();
+            finish();
+        }
     }
 
     @Override

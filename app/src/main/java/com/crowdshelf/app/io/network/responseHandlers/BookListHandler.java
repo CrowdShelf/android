@@ -2,10 +2,9 @@ package com.crowdshelf.app.io.network.responseHandlers;
 
 import android.util.Log;
 
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +24,7 @@ public class BookListHandler implements ResponseHandler {
             for (int i = 0; i < jsonArray.length(); i++) {
                 bh.handleJsonResponse(jsonArray.getString(i), DbEventType.NONE);
             }
-            MainTabbedActivity.getBus().post(new DbEvent(dbEventType, "all"));
+            MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, "all"));
         } catch (JSONException e){
             Log.w("BookListHandler", "something wrong with JSON data" + e.getMessage());
         }
