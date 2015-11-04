@@ -274,6 +274,6 @@ public class MainController {
     }
 
     public static void resetPassword(String username, String password, String key, DbEventType dbEventType) {
-        resetPassword(username, password, key, dbEventType);
+        NetworkController.resetPassword(username, password, key, dbEventType);
     }
 }

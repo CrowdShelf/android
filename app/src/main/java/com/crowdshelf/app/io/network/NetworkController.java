@@ -85,49 +85,49 @@ public class NetworkController {
 
     public static void getBook(String id, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books/" + id,
+                HttpRequestMethod.GET, addTokenToUrl("/books/" + id),
                 null, bookHandler,
                 dbEventType);
     }
 
     public static void getBooks(DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books",
+                HttpRequestMethod.GET, addTokenToUrl("/books"),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksByIsbn(String isbn, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?isbn=" + isbn,
+                HttpRequestMethod.GET, addTokenToUrl("/books?isbn=" + isbn),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksByIsbnOwner(String isbn, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?isbn=" + isbn + "&?owner=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?isbn=" + isbn + "&?owner=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksOwned(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?owner=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?owner=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksRented(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?rentedTo=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?rentedTo=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksOwnedAndRented(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?owner=" + userId + "&?rentedTo=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?owner=" + userId + "&?rentedTo=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
@@ -166,28 +166,28 @@ public class NetworkController {
 
     public static void getCrowd(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds/" + crowdId,
+                HttpRequestMethod.GET, addTokenToUrl("/crowds/" + crowdId),
                 null, crowdHandler,
                 dbEventType);
     }
 
     public static void getCrowdBooks(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds/" + crowdId,
+                HttpRequestMethod.GET, addTokenToUrl("/crowds/" + crowdId),
                 null, crowdHandler,
                 dbEventType);
     }
 
     public static void getCrowds(DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds",
+                HttpRequestMethod.GET, addTokenToUrl("/crowds"),
                 null, crowdListHandler,
                 dbEventType);
     }
 
     public static void getCrowdsByMember(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds?member=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/crowds?member=" + userId),
                 null, crowdListHandler,
                 dbEventType);
     }
@@ -226,14 +226,14 @@ public class NetworkController {
 
     public static void getUser(String userId, DbEventType dbEventType){
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/users/" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/users/" + userId),
                 null, userHandler,
                 dbEventType);
     }
 
     public static void getUserByUsername(String username, DbEventType dbEventType){
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/users?username=" + username,
+                HttpRequestMethod.GET, addTokenToUrl("/users?username=" + username),
                 null, userListHandler,
                 dbEventType);
     }
@@ -249,8 +249,11 @@ public class NetworkController {
     }
 
     public static void forgotPassword(String username, DbEventType dbEventType) {
+        JsonObject object = new JsonObject();
+        object.addProperty("username", username);
+        String jsonData = object.toString();
         NetworkHelper.sendRequest(HttpRequestMethod.POST,
-                "/forgotpassword/" + username, null,
+                "/users/forgotpassword", jsonData,
                 null, dbEventType);
     }
 
@@ -258,9 +261,10 @@ public class NetworkController {
         JsonObject object = new JsonObject();
         object.addProperty("key", key);
         object.addProperty("password", password);
+        object.addProperty("username", username);
         String jsonData = object.toString();
         NetworkHelper.sendRequest(HttpRequestMethod.POST,
-                "/resetpassword/" + username, jsonData,
+                "/users/resetpassword", jsonData,
                 null, dbEventType);
     }
 }
