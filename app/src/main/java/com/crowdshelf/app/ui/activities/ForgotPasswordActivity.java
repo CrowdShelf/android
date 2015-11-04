@@ -1,5 +1,8 @@
 package com.crowdshelf.app.ui.activities;
 
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DbEventType;
+
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -61,31 +64,20 @@ public class ForgotPasswordActivity extends AppCompatActivity implements TextVie
         }else if (newPassword.isEmpty()){
             Toast.makeText(this, "Input valid password", Toast.LENGTH_SHORT).show();
         }else{
-
             //TODO: Send code and new password to backend
-
+//            MainController.resetPassword(username, newPassword, code, DbEventType.NONE);
             finish();
-
         }
     }
 
-    private boolean isValidCode(String code) {
-        if (5 < code.length() || 5 > code.length()){
-            return false;
-        }
-        try{
-            Integer.parseInt(code);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
-    }
+
 
     public void resetPasswordButtonClicked(View v){
         username = resetUsernameEditText.getText().toString();
         if (!username.isEmpty()){
 
             //TODO: Send username to backend to receive email
+//            MainController.forgotPassword(username, DbEventType.NONE);
 
             hideResetPasswordElements(true);
 
@@ -97,6 +89,26 @@ public class ForgotPasswordActivity extends AppCompatActivity implements TextVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         finish();
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        switch (v.getId()){
+            case R.id.resetPasswordUsernameTextField:
+                if (actionId == EditorInfo.IME_ACTION_DONE){
+                    resetPasswordButtonClicked(null);
+                }
+                break;
+
+            case R.id.confirmNewPasswordTextField:
+                if (actionId == EditorInfo.IME_ACTION_DONE){
+                    confirmResetPasswordButtonClicked(null);
+                }
+                break;
+        }
         return true;
     }
 
@@ -128,21 +140,15 @@ public class ForgotPasswordActivity extends AppCompatActivity implements TextVie
         }
     }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        switch (v.getId()){
-            case R.id.resetPasswordUsernameTextField:
-                if (actionId == EditorInfo.IME_ACTION_DONE){
-                    resetPasswordButtonClicked(null);
-                }
-                break;
-
-            case R.id.confirmNewPasswordTextField:
-                if (actionId == EditorInfo.IME_ACTION_DONE){
-                    confirmResetPasswordButtonClicked(null);
-                }
-                break;
+    private boolean isValidCode(String code) {
+        if (5 < code.length() || 5 > code.length()){
+            return false;
         }
-        return true;
+        try{
+            Integer.parseInt(code);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 }
