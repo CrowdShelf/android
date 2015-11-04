@@ -1,5 +1,8 @@
 package com.crowdshelf.app.ui.activities;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
 import com.crowdshelf.app.io.DbEventOk;
@@ -20,6 +23,10 @@ import com.squareup.otto.ThreadEnforcer;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -43,6 +50,7 @@ import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class MainTabbedActivity extends AppCompatActivity implements
@@ -93,7 +101,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Set up database
         realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.deleteRealm(realmConfiguration); // Clean slate
+//        Realm.deleteRealm(realmConfiguration); // Clean slate
         Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
         realm = Realm.getDefaultInstance();
         realm.beginTransaction();
@@ -148,13 +156,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.action_testing);
-        item.setVisible(false);
-        super.onPrepareOptionsMenu(menu);
-        return true;
-    }
 
     @Subscribe
     public void handleDBEvents(DbEventOk event) {
@@ -263,14 +264,13 @@ public class MainTabbedActivity extends AppCompatActivity implements
             for (MemberId memberId : crowd.getMembers()) {
                 if (memberId.getId().equals(mainUserId)) {
                     userCrowdsTemp.add(crowd);
+                    break;
                 }
             }
         }
-        if (userCrowdsTemp != null) {
-            userCrowds.clear();
-            userCrowds.addAll(userCrowdsTemp);
-            crowdScreenFragment.updateCrowdList(userCrowds);
-        }
+        userCrowds.clear();
+        userCrowds.addAll(userCrowdsTemp);
+        crowdScreenFragment.updateCrowdList(userCrowds);
     }
 
     public void updateUserCrowdBooks() {
@@ -299,11 +299,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         }
     }
 
-    private void loginUser(String username) {
-        //TODO: Login user
-        Toast.makeText(MainTabbedActivity.this, "User: " + username + " logged in.", Toast.LENGTH_SHORT).show();
-        //TODO: populate userShelfISBNs with users books.
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -319,9 +314,28 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     Log.i(TAG, "Set main user: username " + u.getUsername() + " id " + u.getId());
                     MainController.getMainUserData(mainUserId);
                     getMixpanel().identify(u.getId());
+                    return;
                 }
                 break;
         }
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Log.d(TAG, "Cancelled scan");
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Log.d(TAG, "Scanned");
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                isbnReceived(result.getContents());
+            }
+        } else {
+            Log.d("MainActivity", "Weird");
+            // This is important, otherwise the result will not be passed to the fragment
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+
     }//onActivityResult
 
     public void startViewBook(ScannedBookActions scannedBookAction, String isbn) {
@@ -333,22 +347,9 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivityForResult(intent, SCANNED_BOOK_ACTION);
     }
 
-    public void fakeScan(View v) {
-        isbnReceived("9780670921607");
-    }
-
-    public void fakeScan2(View v) {
-        isbnReceived("1847399304");
-    }
-
     @Override
     public void isbnReceived(String isbn) {
         MainController.getBookInfo(isbn, DbEventType.SCAN_COMPLETE_GET_BOOKINFO);
-    }
-
-    public void addCrowdFabClicked(View v){
-        //TODO: Create new crowd
-        Log.i(TAG, "addCrowdFabClicked");
     }
 
 
@@ -364,14 +365,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         Intent intent = new Intent(this, ViewBookActivity.class);
         intent.putExtra("isbn", b.getIsbn());
-        intent.putExtra("bookID", bookID);
-        intent.putExtra("bookOwnerID", b.getOwner());
 
         startActivityForResult(intent, GET_BOOK_CLICKED_ACTION);
-    }
-
-    public void scannerButtonClicked(View view) {
-        mViewPager.setCurrentItem(1);
     }
 
     public void allBooksButtonClicked(View view) {
@@ -391,6 +386,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_tabbed, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setTextColor(getResources().getColor(R.color.primary_text));
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHintTextColor(getResources().getColor(R.color.primary_text));
 
@@ -400,7 +396,30 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         // Remove to set hint to search in the phones language
         ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHint("Search...");
+
+        Drawable drawable = menu.findItem(R.id.open_scanner).getIcon();
+        if (drawable != null) {
+            drawable.mutate();
+            drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        }
+
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.open_scanner:
+                IntentIntegrator integrator = new IntentIntegrator(this);
+                integrator.setCaptureActivity(ScannerCaptureActivity.class);
+                integrator.setOrientationLocked(false);
+                integrator.setPrompt("");
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.PRODUCT_CODE_TYPES);
+                integrator.initiateScan();
+                Toast.makeText(this, "Scan book barcode", Toast.LENGTH_LONG).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -448,12 +467,6 @@ public class MainTabbedActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-//    public void editCrowdClicked(View view) {
-//        Intent intent = new Intent(this, EditCrowdActivity.class);
-//        intent.putExtra("crowdID", userCrowds.get(0).getId());
-//        startActivity(intent);
-//    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -473,8 +486,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     return userScreenFragment;
                 case 1:
                     return crowdScreenFragment;
-                case 2:
-                    return ScannerScreenFragment.newInstance();
+//                case 2:
+//                    return ScannerScreenFragment.newInstance();
                 default:
                     return null;
             }
@@ -482,8 +495,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-
-            return 3;
+            return 2;
         }
 
         @Override
@@ -494,12 +506,11 @@ public class MainTabbedActivity extends AppCompatActivity implements
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section3).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section2).toUpperCase(l);
+//                case 2:
+//                    return getString(R.string.title_section2).toUpperCase(l);
             }
             return null;
         }
-
     }
 
 

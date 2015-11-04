@@ -1,10 +1,15 @@
 package com.crowdshelf.app.ui.activities;
 
-import android.app.Activity;
+import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DbEventType;
+import com.crowdshelf.app.models.Book;
+import com.crowdshelf.app.models.BookInfo;
+import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.adapter.UserListAdapter;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -22,16 +27,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DbEventType;
-import com.crowdshelf.app.models.Book;
-import com.crowdshelf.app.models.BookInfo;
-import com.crowdshelf.app.models.MemberId;
-import com.crowdshelf.app.models.User;
-import com.crowdshelf.app.ui.adapter.UserListAdapter;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +42,6 @@ public class ViewBookActivity extends ActionBarActivity implements AdapterView.O
     private Realm realm;
     private BookInfo bookInfo;
     private String isbn;
-    private String bookID;
-    private Book book;
     private UserListAdapter listAdapter;
     private UserListAdapter borrowedFromListAdapter;
     private ArrayList<User> renters = new ArrayList<>();
@@ -70,14 +63,10 @@ public class ViewBookActivity extends ActionBarActivity implements AdapterView.O
 
         Intent intent = getIntent();
         isbn = intent.getStringExtra("isbn");
-        bookID = intent.getStringExtra("bookID");
-        String bookOwnerID = intent.getStringExtra("bookOwnerID");
-
 
         listAdapter = new UserListAdapter(this, renters);
         ListView lv = (ListView)findViewById(R.id.rentedToListView);
         lv.setAdapter(listAdapter);
-//        lv.setOnItemClickListener(this);
 
         borrowedFromListAdapter = new UserListAdapter(this, owners);
         ListView lv2 = (ListView)findViewById(R.id.borrowedFromListView);
@@ -96,9 +85,7 @@ public class ViewBookActivity extends ActionBarActivity implements AdapterView.O
                     .equalTo("isbn", isbn)
                     .equalTo("rentedTo", MainTabbedActivity.getMainUserId())
                     .findFirst();
-//            if (rentedToMainUser != null){
-//                returnBookButton.setVisibility(View.VISIBLE);
-//            }
+
 
             // Check if mainUser owns the book
             Book ownedBook = realm.where(Book.class)
@@ -190,20 +177,14 @@ public class ViewBookActivity extends ActionBarActivity implements AdapterView.O
                     .equalTo("isbn", isbn)
                     .findFirst();
         }
+        if (bookInfo != null) {
+            drawBookInfoUI(bookInfo);
+            setTitle(bookInfo.getTitle());
+        }
+        else{
+            super.onBackPressed();
+        }
 
-        setTitle(bookInfo.getTitle());
-        drawBookInfoUI(bookInfo);
-
-
-        /*
-        Buttons to show and when to show them:
-        - Borrow (borrow book from another user): always
-        - Take in return: if you own the book and another user borrows a copy
-        - Lend out: if you own the book and have available copies
-        - Add to shelf: if you don't own the book
-        - Return: you borrow the book from someone else
-        - Remove book (from your own shelf - how do we select specific copy if the owner has many?): WAIT WITH IMPLEMENTATION
-         */
     }
 
 

@@ -2,15 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.crowdshelf.app.ui.activities.MainTabbedActivity">
-    <item
-        android:id="@+id/action_testing"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_search"
         android:title="Menu search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/open_scanner"
+        android:icon="@drawable/barcode_icon2"
+        app:showAsAction="ifRoom"
+        android:title="OpenScanner"
+        />
 </menu>

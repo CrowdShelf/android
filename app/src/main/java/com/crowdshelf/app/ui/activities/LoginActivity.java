@@ -1,6 +1,7 @@
 package com.crowdshelf.app.ui.activities;
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,13 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
+import com.crowdshelf.app.io.DbEventFailure;
 import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
-import com.crowdshelf.app.io.network.NetworkController;
 import com.crowdshelf.app.models.User;
 import com.squareup.otto.Subscribe;
 
@@ -31,6 +34,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     private String password;
     private EditText usernameTextField;
     private EditText passwordTextField;
+    private ProgressBar loginSpinner;
+    private ImageView logoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,9 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         MainTabbedActivity.getBus().register(this);
         usernameTextField = (EditText) findViewById(R.id.usernameTextfield);
         passwordTextField = (EditText) findViewById(R.id.passwordTextField);
+        logoImageView = (ImageView) findViewById(R.id.crowdshelfLogoImageView);
+        loginSpinner = (ProgressBar) findViewById(R.id.loginSpinner);
+        loginSpinner.setVisibility(View.INVISIBLE);
         passwordTextField.setOnEditorActionListener(this);
     }
 
@@ -82,7 +90,6 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         EditText nameTextfield = (EditText) findViewById(R.id.nameTextfield);
         name = nameTextfield.getText().toString();
 
-        EditText passwordTextfield = (EditText) findViewById(R.id.nameTextfield);
         password = passwordTextField.getText().toString();
 
         User user=new User();
@@ -93,17 +100,37 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         MainController.createUser(username, name, email, password, DbEventType.USER_CREATED);
     }
 
-    public void login(View view) {
+    public void signInButtonClicked(View view) {
         username = usernameTextField.getText().toString();
         password = passwordTextField.getText().toString();
-        MainController.login(username, password, DbEventType.LOGIN);
+        if (username.isEmpty()){
+            Toast.makeText(this, "Username required", Toast.LENGTH_LONG).show();
+        }
+        else if (password.isEmpty()){
+            Toast.makeText(this, "Password required", Toast.LENGTH_LONG).show();
+        }
+        else{
+            MainController.login(username, password, DbEventType.LOGIN);
+            logoImageView.setVisibility(View.INVISIBLE);
+            loginSpinner.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Subscribe
+    public void handleLoginFailure(DbEventFailure event) {
+        switch (event.getDbEventType()) {
+            case LOGIN:
+                Toast.makeText(this, "ERROR " + String.valueOf(event.getResponseCode()) + ":\nUsername or password was not correct", Toast.LENGTH_SHORT).show();
+                loginSpinner.setVisibility(View.INVISIBLE);
+                logoImageView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Subscribe
     public void handleLogin(DbEventOk event) {
         Intent returnIntent;
         switch (event.getDbEventType()) {
-            // @todo: Handle unsuccessful login attempts (username not found)
+            // @todo: Handle unsuccessful signInButtonClicked attempts (username not found)
             case LOGIN:
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 returnIntent = new Intent();
@@ -122,11 +149,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                 finish();
                 break;
             case USER_CREATED:
-                /*
-                HACK: Put all new users in a default crowd:
-                 */
+
                 Log.i(TAG, "User created, id:" + event.getDbObjectId());
-                NetworkController.addCrowdMember("561190113d92611100e5c6a1", event.getDbObjectId(), DbEventType.NONE);
                 MainController.login(username, password, DbEventType.LOGIN);
 
                 Toast.makeText(this, "User created", Toast.LENGTH_SHORT).show();
@@ -180,7 +204,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         Log.i(TAG, "onEditorAction");
         switch (actionId){
             case EditorInfo.IME_ACTION_DONE:
-                login(null);
+                signInButtonClicked(null);
                 break;
         }
         return false;
