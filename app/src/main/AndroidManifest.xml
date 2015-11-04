@@ -92,7 +92,8 @@
         <activity
             android:screenOrientation="portrait"
             android:name="com.crowdshelf.app.ui.activities.ForgotPasswordActivity"
-            android:label="@string/title_activity_forgot_password">
+            android:label="@string/title_activity_forgot_password"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
     </application>
 
