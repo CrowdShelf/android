@@ -5,7 +5,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import com.crowdshelf.app.MainController;
 import com.crowdshelf.app.ScannedBookActions;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
@@ -75,6 +75,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
     private String lastScannedBookIsbn;
 
     private static String mainUserId; //= "5602a211a0913f110092352a";
+    private static String mainUserLoginToken;
+    private static String mainUserPassword;
     private static Set<Crowd> userCrowds = new HashSet<>();
     public static Set<Book> userCrowdBooks = new HashSet<>();
     private static Set<Book> ownedBooks = new HashSet<>();
@@ -156,7 +158,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
 
 
     @Subscribe
-    public void handleDBEvents(DbEvent event) {
+    public void handleDBEvents(DbEventOk event) {
         if (event.getDbEventType().equals(DbEventType.NONE)) return;
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
@@ -296,7 +298,7 @@ public class MainTabbedActivity extends AppCompatActivity implements
             userCrowdBooks.addAll(userCrowdBooksTemp);
         }
     }
-    
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -550,5 +552,21 @@ public class MainTabbedActivity extends AppCompatActivity implements
             } catch (InterruptedException ex) {
             }
         }
+    }
+
+    public static String getMainUserLoginToken() {
+        return mainUserLoginToken;
+    }
+
+    public static void setMainUserLoginToken(String s) {
+        mainUserLoginToken = s;
+    }
+
+    public static String getMainUserPassword() {
+        return mainUserPassword;
+    }
+
+    public static void setMainUserPassword(String s) {
+        mainUserPassword = s;
     }
 }
