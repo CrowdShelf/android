@@ -249,8 +249,11 @@ public class NetworkController {
     }
 
     public static void forgotPassword(String username, DbEventType dbEventType) {
+        JsonObject object = new JsonObject();
+        object.addProperty("username", username);
+        String jsonData = object.toString();
         NetworkHelper.sendRequest(HttpRequestMethod.POST,
-                "/forgotpassword/" + username, null,
+                "/users/forgotpassword", jsonData,
                 null, dbEventType);
     }
 
@@ -258,9 +261,10 @@ public class NetworkController {
         JsonObject object = new JsonObject();
         object.addProperty("key", key);
         object.addProperty("password", password);
+        object.addProperty("username", username);
         String jsonData = object.toString();
         NetworkHelper.sendRequest(HttpRequestMethod.POST,
-                "/resetpassword/" + username, jsonData,
+                "/users/resetpassword", jsonData,
                 null, dbEventType);
     }
 }
