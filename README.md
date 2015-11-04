@@ -81,3 +81,6 @@ The main bus instance is in the MainTabbedActivity class and can be retrieved wi
 DBEvents such as BOOK_READY are put onto the bus, and classes on the same thrad as MainTabbedActivity can implement
 listeners with the @Subscribe annotation.
 Any thread can post to this bus using bus.post().
+
+## Licence
+MIT-licence. See the `LICENCE`-file.
