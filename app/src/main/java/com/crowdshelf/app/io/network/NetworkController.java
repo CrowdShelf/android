@@ -78,7 +78,7 @@ public class NetworkController {
     // Remove book to database
     public static void removeBook(String bookId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.DELETE, addTokenToUrl("/books/") + bookId,
+                HttpRequestMethod.DELETE, addTokenToUrl("/books/" + bookId),
                 null, null,
                 dbEventType);
     }
