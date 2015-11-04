@@ -116,6 +116,11 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         }
     }
 
+    public void forgotPasswordButtonClicked(View v){
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        startActivity(intent);
+    }
+
     @Subscribe
     public void handleLoginFailure(DbEventFailure event) {
         switch (event.getDbEventType()) {
@@ -207,6 +212,6 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                 signInButtonClicked(null);
                 break;
         }
-        return false;
+        return true;
     }
 }

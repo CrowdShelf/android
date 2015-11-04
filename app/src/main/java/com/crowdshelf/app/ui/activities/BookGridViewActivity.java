@@ -6,9 +6,9 @@ import com.crowdshelf.app.models.MemberId;
 import com.crowdshelf.app.ui.fragments.BookGridViewFragment;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
