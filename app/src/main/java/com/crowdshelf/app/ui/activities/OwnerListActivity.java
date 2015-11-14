@@ -71,13 +71,11 @@ public class OwnerListActivity extends AppCompatActivity implements AdapterView.
                     usersWithBook.add(user);
                     listAdapter.notifyDataSetChanged();
                 }
-                if (usersWithBook.isEmpty()){
-                    user = new User();
-                    user.setName("No user in your crowds got this book");
-                    usersWithBook.add(user);
-                    listAdapter.notifyDataSetChanged();
-                }
             }
+        }
+        if (usersWithBook.isEmpty()){
+            lv.setVisibility(View.GONE);
+            findViewById(R.id.nooneTextField).setVisibility(View.VISIBLE);
         }
     }
 
