@@ -77,7 +77,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements TextVie
         if (!username.isEmpty()){
 
             //TODO: Send username to backend to receive email
-//            MainController.forgotPassword(username, DbEventType.NONE);
+            MainController.forgotPassword(username, DbEventType.NONE);
 
             hideResetPasswordElements(true);
 

@@ -180,6 +180,11 @@ public class ViewBookActivity extends ActionBarActivity implements AdapterView.O
         if (bookInfo != null) {
             drawBookInfoUI(bookInfo);
             setTitle(bookInfo.getTitle());
+            if (bookInfo.getTitle().equals("not found")){
+                findViewById(R.id.addButton).setVisibility(View.INVISIBLE);
+                findViewById(R.id.borrowButton).setVisibility(View.INVISIBLE);
+                removeBookButton.setVisibility(View.INVISIBLE);
+            }
         }
         else{
             super.onBackPressed();
