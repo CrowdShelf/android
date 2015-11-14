@@ -17,7 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventFailure;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.User;
 import com.squareup.otto.Subscribe;
@@ -121,7 +122,17 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     }
 
     @Subscribe
-    public void handleLogin(DbEvent event) {
+    public void handleLoginFailure(DbEventFailure event) {
+        switch (event.getDbEventType()) {
+            case LOGIN:
+                Toast.makeText(this, "ERROR " + String.valueOf(event.getResponseCode()) + ":\nUsername or password was not correct", Toast.LENGTH_SHORT).show();
+                loginSpinner.setVisibility(View.INVISIBLE);
+                logoImageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Subscribe
+    public void handleLogin(DbEventOk event) {
         Intent returnIntent;
         switch (event.getDbEventType()) {
             // @todo: Handle unsuccessful signInButtonClicked attempts (username not found)
@@ -136,11 +147,10 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
                 User u = realm.where(User.class)
                         .equalTo("username", username)
                         .findFirst();
-                u.setPassword(password);
+                //u.setPassword(password);
+                MainTabbedActivity.setMainUserPassword(password);
                 realm.commitTransaction();
                 realm.close();
-                loginSpinner.setVisibility(View.INVISIBLE);
-
                 finish();
                 break;
             case USER_CREATED:

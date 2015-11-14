@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.crowdshelf.app.MainController;
-import com.crowdshelf.app.io.DbEvent;
+import com.crowdshelf.app.io.DbEventOk;
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.User;
@@ -82,7 +82,7 @@ public class OwnerListActivity extends AppCompatActivity implements AdapterView.
     }
 
     @Subscribe
-    public void handleDBEvents(DbEvent event) {
+    public void handleDBEvents(DbEventOk event) {
         realm.refresh();
         Log.i(TAG, "Handle DB Event: " + event.getDbEventType());
         switch (event.getDbEventType()) {

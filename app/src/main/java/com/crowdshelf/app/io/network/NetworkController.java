@@ -1,5 +1,7 @@
 package com.crowdshelf.app.io.network;
 
+import android.util.Log;
+
 import com.crowdshelf.app.io.DbEventType;
 import com.crowdshelf.app.io.network.responseHandlers.BookHandler;
 import com.crowdshelf.app.io.network.responseHandlers.BookListHandler;
@@ -13,10 +15,13 @@ import com.crowdshelf.app.io.network.serializers.UserSerializer;
 import com.crowdshelf.app.models.Book;
 import com.crowdshelf.app.models.Crowd;
 import com.crowdshelf.app.models.User;
+import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
@@ -41,6 +46,21 @@ public class NetworkController {
             .setPrettyPrinting()
             .create();
 
+    private static String addTokenToUrl(String url) {
+        return url + "?token=" + MainTabbedActivity.getMainUserLoginToken();
+    }
+
+    private static String addTokenToJsonObject(String jsonData) {
+        String jsonDataWithToken = "";
+        try {
+            JSONObject jsonObj = new JSONObject(jsonData);
+            jsonObj.put("token", MainTabbedActivity.getMainUserLoginToken());
+            jsonDataWithToken = jsonObj.toString();
+        } catch (Exception e) {
+            Log.w("Networkcontroller", e.toString());
+        }
+        return jsonDataWithToken;
+    }
 
     /*
     Books
@@ -51,77 +71,77 @@ public class NetworkController {
         String jsonData = gson.toJson(book, Book.class);
         NetworkHelper.sendRequest(
                 HttpRequestMethod.POST, "/books",
-                jsonData, bookHandler,
+                addTokenToJsonObject(jsonData), bookHandler,
                 dbEventType);
     }
 
     // Remove book to database
     public static void removeBook(String bookId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.DELETE, "/books/" + bookId,
+                HttpRequestMethod.DELETE, addTokenToUrl("/books/") + bookId,
                 null, null,
                 dbEventType);
     }
 
     public static void getBook(String id, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books/" + id,
+                HttpRequestMethod.GET, addTokenToUrl("/books/" + id),
                 null, bookHandler,
                 dbEventType);
     }
 
     public static void getBooks(DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books",
+                HttpRequestMethod.GET, addTokenToUrl("/books"),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksByIsbn(String isbn, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?isbn=" + isbn,
+                HttpRequestMethod.GET, addTokenToUrl("/books?isbn=" + isbn),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksByIsbnOwner(String isbn, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?isbn=" + isbn + "&?owner=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?isbn=" + isbn + "&?owner=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksOwned(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?owner=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?owner=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksRented(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?rentedTo=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?rentedTo=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void getBooksOwnedAndRented(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/books?owner=" + userId + "&?rentedTo=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/books?owner=" + userId + "&?rentedTo=" + userId),
                 null, bookListHandler,
                 dbEventType);
     }
 
     public static void addRenter(String bookId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.PUT, "/books/" + bookId +  "/renter/" + userId,
+                HttpRequestMethod.PUT, addTokenToUrl("/books/" + bookId +  "/renter/" + userId),
                 null, bookHandler,
                 dbEventType);
     }
 
     public static void removeRenter(String bookId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.DELETE, "/books/" + bookId + "/renter/" + userId,
+                HttpRequestMethod.DELETE, addTokenToUrl("/books/" + bookId + "/renter/" + userId),
                 null, bookHandler,
                 dbEventType);
     }
@@ -133,41 +153,41 @@ public class NetworkController {
     public static void createCrowd(Crowd crowd, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.POST, "/crowds",
-                gson.toJson(crowd, Crowd.class), crowdHandler,
+                addTokenToJsonObject(gson.toJson(crowd, Crowd.class)), crowdHandler,
                 dbEventType);
     }
 
     public static void deleteCrowd(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.DELETE, "/crowds/" + crowdId,
-                null, null,
+                HttpRequestMethod.DELETE, addTokenToUrl("/crowds/" + crowdId),
+                addTokenToJsonObject(""), null,
                 dbEventType);
     }
 
     public static void getCrowd(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds/" + crowdId,
+                HttpRequestMethod.GET, addTokenToUrl("/crowds/" + crowdId),
                 null, crowdHandler,
                 dbEventType);
     }
 
     public static void getCrowdBooks(String crowdId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds/" + crowdId,
+                HttpRequestMethod.GET, addTokenToUrl("/crowds/" + crowdId),
                 null, crowdHandler,
                 dbEventType);
     }
 
     public static void getCrowds(DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds",
+                HttpRequestMethod.GET, addTokenToUrl("/crowds"),
                 null, crowdListHandler,
                 dbEventType);
     }
 
     public static void getCrowdsByMember(String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/crowds?member=" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/crowds?member=" + userId),
                 null, crowdListHandler,
                 dbEventType);
     }
@@ -175,14 +195,14 @@ public class NetworkController {
     public static void addCrowdMember(String crowdId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.PUT, "/crowds/" + crowdId + "/members/" + userId,
-                null, null,
+                addTokenToJsonObject(""), null,
                 dbEventType);
     }
 
     public static void removeCrowdMember(String crowdId, String userId, DbEventType dbEventType) {
         NetworkHelper.sendRequest(
                 HttpRequestMethod.DELETE, "/crowds/" + crowdId + "/members/" + userId,
-                null, null,
+                addTokenToJsonObject(""), null,
                 dbEventType);
     }
 
@@ -206,14 +226,14 @@ public class NetworkController {
 
     public static void getUser(String userId, DbEventType dbEventType){
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/users/" + userId,
+                HttpRequestMethod.GET, addTokenToUrl("/users/" + userId),
                 null, userHandler,
                 dbEventType);
     }
 
     public static void getUserByUsername(String username, DbEventType dbEventType){
         NetworkHelper.sendRequest(
-                HttpRequestMethod.GET, "/users?username=" + username,
+                HttpRequestMethod.GET, addTokenToUrl("/users?username=" + username),
                 null, userListHandler,
                 dbEventType);
     }
@@ -226,5 +246,25 @@ public class NetworkController {
         NetworkHelper.sendRequest(HttpRequestMethod.POST,
                 "/login/", jsonData,
                 userHandler, dbEventType);
+    }
+
+    public static void forgotPassword(String username, DbEventType dbEventType) {
+        JsonObject object = new JsonObject();
+        object.addProperty("username", username);
+        String jsonData = object.toString();
+        NetworkHelper.sendRequest(HttpRequestMethod.POST,
+                "/users/forgotpassword", jsonData,
+                null, dbEventType);
+    }
+
+    public static void resetPassword(String username, String password, String key, DbEventType dbEventType) {
+        JsonObject object = new JsonObject();
+        object.addProperty("key", key);
+        object.addProperty("password", password);
+        object.addProperty("username", username);
+        String jsonData = object.toString();
+        NetworkHelper.sendRequest(HttpRequestMethod.POST,
+                "/users/resetpassword", jsonData,
+                null, dbEventType);
     }
 }
