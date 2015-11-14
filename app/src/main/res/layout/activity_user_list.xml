@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:id="@+id/nooneTextField"
-        android:text="No user in your groups got this book"/>
+        android:text="No user in your groups got this book"
+        android:visibility="gone"/>
 
 </RelativeLayout>

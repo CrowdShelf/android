@@ -51,7 +51,7 @@ public class NetworkController {
         if (url.contains("?")) {
             s = url + "&token=" + MainTabbedActivity.getMainUserLoginToken();
         } else {
-            url + "?token=" + MainTabbedActivity.getMainUserLoginToken();
+            s = url + "?token=" + MainTabbedActivity.getMainUserLoginToken();
         }
         return s;
     }
