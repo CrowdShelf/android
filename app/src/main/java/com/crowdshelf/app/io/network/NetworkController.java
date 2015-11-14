@@ -47,7 +47,13 @@ public class NetworkController {
             .create();
 
     private static String addTokenToUrl(String url) {
-        return url + "?token=" + MainTabbedActivity.getMainUserLoginToken();
+        String s = "";
+        if (url.contains("?")) {
+            s = url + "&token=" + MainTabbedActivity.getMainUserLoginToken();
+        } else {
+            url + "?token=" + MainTabbedActivity.getMainUserLoginToken();
+        }
+        return s;
     }
 
     private static String addTokenToJsonObject(String jsonData) {
