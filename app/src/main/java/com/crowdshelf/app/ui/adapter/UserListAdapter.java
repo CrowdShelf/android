@@ -33,8 +33,14 @@ public class UserListAdapter extends ArrayAdapter<User> {
         TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
         TextView tvEmail = (TextView) convertView.findViewById(R.id.tvEmail);
         // Populate the data into the template view using the data object
-        tvName.setText(user.getName());
-        tvEmail.setText(user.getEmail());
+        if (user != null) {
+            tvName.setText(user.getName());
+            tvEmail.setText(user.getEmail());
+        }
+        else {
+            tvName.setText("Could not fetch username");
+            tvEmail.setText("");
+        }
         // Return the completed view to render on screen
         return convertView;
     }

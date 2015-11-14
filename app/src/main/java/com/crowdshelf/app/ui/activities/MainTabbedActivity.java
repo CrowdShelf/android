@@ -104,6 +104,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
         realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.clear(Crowd.class);
+        realm.clear(Book.class);
+        realm.clear(User.class);
         realm.commitTransaction();
         mainController = new MainController();
         mainController.onCreate();
