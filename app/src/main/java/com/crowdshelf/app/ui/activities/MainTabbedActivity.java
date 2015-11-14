@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -50,7 +49,6 @@ import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmList;
 import ntnu.stud.markul.crowdshelf.R;
 
 public class MainTabbedActivity extends AppCompatActivity implements

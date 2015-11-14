@@ -141,7 +141,8 @@
         android:elevation="@null"
         android:textColor="#0162ff"
         android:layout_alignTop="@+id/nameTextfield"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="forgotPasswordButtonClicked" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
