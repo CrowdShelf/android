@@ -91,13 +91,18 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         name = nameTextfield.getText().toString();
 
         password = passwordTextField.getText().toString();
+        String confirmPassword = ((EditText) findViewById(R.id.confirmPasswordTextField)).getText().toString();
+        if (password.equals(confirmPassword)) {
+            User user = new User();
+            user.setUsername(username);
+            user.setName(name);
+            user.setEmail(email);
 
-        User user=new User();
-        user.setUsername(username);
-        user.setName(name);
-        user.setEmail(email);
-
-        MainController.createUser(username, name, email, password, DbEventType.USER_CREATED);
+            MainController.createUser(username, name, email, password, DbEventType.USER_CREATED);
+        }
+        else{
+            Toast.makeText(LoginActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void signInButtonClicked(View view) {
@@ -170,6 +175,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     public void onBackPressed() {}*/
 
     public void changeToCreateUserViewButtonClicked(View view) {
+        findViewById(R.id.confirmPasswordTextField).setVisibility(View.VISIBLE);
         findViewById(R.id.mailTextfield).setVisibility(View.VISIBLE);
         findViewById(R.id.nameTextfield).setVisibility(View.VISIBLE);
         findViewById(R.id.registationButton).setVisibility(View.VISIBLE);
@@ -179,12 +185,13 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         findViewById(R.id.createNewUserButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.forgotPasswordButton).setVisibility(View.INVISIBLE);
 
-        passwordTextField.setNextFocusForwardId(R.id.mailTextfield);
+        passwordTextField.setNextFocusForwardId(R.id.confirmPasswordTextField);
         passwordTextField.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
     }
 
     public void cancelCreateNewUserButtonClicked(View view) {
+        findViewById(R.id.confirmPasswordTextField).setVisibility(View.GONE);
         findViewById(R.id.mailTextfield).setVisibility(View.INVISIBLE);
         findViewById(R.id.nameTextfield).setVisibility(View.INVISIBLE);
         findViewById(R.id.registationButton).setVisibility(View.INVISIBLE);
