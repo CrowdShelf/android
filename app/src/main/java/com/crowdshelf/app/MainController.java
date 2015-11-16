@@ -49,6 +49,7 @@ public class MainController {
                 for (Crowd c: crowds) {
                     for (MemberId memberId : c.getMembers()) {
                         if (!memberId.getId().equals(MainTabbedActivity.getMainUserId())) {
+                            getUser(memberId.getId(), DbEventType.NONE);
                             getBooks(memberId.getId(), DbEventType.USER_CROWD_BOOKS_CHANGED);
                         }
                     }
