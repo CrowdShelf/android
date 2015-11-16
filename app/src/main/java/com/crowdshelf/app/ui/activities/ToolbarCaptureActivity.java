@@ -4,18 +4,18 @@ package com.crowdshelf.app.ui.activities;
  * Created by markus on 16.11.2015.
  */
 
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 
 import ntnu.stud.markul.crowdshelf.R;
 
 
-public class ToolbarCaptureActivity extends ActionBarActivity{
+public class ToolbarCaptureActivity extends AppCompatActivity {
 
     private CaptureManager capture;
     private CompoundBarcodeView barcodeScannerView;
@@ -29,9 +29,9 @@ public class ToolbarCaptureActivity extends ActionBarActivity{
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
 //        toolbar.setTitle("Scan Barcode");
 //        setSupportActionBar(toolbar);
-          setTitle("Scan Barcode");
+          setTitle("Scan barcode");
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         barcodeScannerView = (CompoundBarcodeView)findViewById(R.id.zxing_barcode_scanner);
 
@@ -73,6 +73,17 @@ public class ToolbarCaptureActivity extends ActionBarActivity{
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return barcodeScannerView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
