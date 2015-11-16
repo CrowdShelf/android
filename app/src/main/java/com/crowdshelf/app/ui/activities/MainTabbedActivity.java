@@ -409,7 +409,8 @@ public class MainTabbedActivity extends AppCompatActivity implements
         switch (item.getItemId()){
             case R.id.open_scanner:
                 IntentIntegrator integrator = new IntentIntegrator(this);
-                integrator.setCaptureActivity(ScannerCaptureActivity.class);
+//                integrator.setCaptureActivity(ScannerCaptureActivity.class);
+                integrator.setCaptureActivity(ToolbarCaptureActivity.class);
                 integrator.setOrientationLocked(false);
                 integrator.setPrompt("");
                 integrator.setDesiredBarcodeFormats(IntentIntegrator.PRODUCT_CODE_TYPES);

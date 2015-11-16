@@ -88,6 +88,13 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
+            android:name="com.crowdshelf.app.ui.activities.ToolbarCaptureActivity"
+            android:clearTaskOnLaunch="true"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+        <activity
             android:screenOrientation="portrait"
             android:name="com.crowdshelf.app.ui.activities.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
