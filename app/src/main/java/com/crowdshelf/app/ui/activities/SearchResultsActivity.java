@@ -7,6 +7,9 @@ import com.crowdshelf.app.models.BookInfo;
 import com.crowdshelf.app.ui.adapter.SearchResultAdapter;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -78,6 +81,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.search_menu_toggle:
+                MainTabbedActivity.getMixpanel().track("SwitchedFilter");
                 if (isLocalSearchActive){
                     changeSearchToInternet(lastQuery);
                     isLocalSearchActive = false;
@@ -139,6 +143,11 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterV
         pb.setVisibility(View.VISIBLE);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+            try {
+                MainTabbedActivity.getMixpanel().track("BookSearch", new JSONObject().put("Search", query));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             lastQuery = query;
             setTitle(("loading results for \"" + query + "\"..."));
             if (isLocalSearchActive){

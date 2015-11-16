@@ -183,7 +183,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         MainController.removeCrowdMember(crowdID, MainTabbedActivity.getMainUserId(), DbEventType.USER_CROWDS_CHANGED);
-                        MainTabbedActivity.getMixpanel().track("LeaveCrowd");
+
                         Crowd crowd = realm.where(Crowd.class)
                                 .equalTo("id", crowdID)
                                 .findFirst();
@@ -211,7 +211,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         MainController.deleteCrowd(crowdID, DbEventType.USER_CROWDS_CHANGED);
-                        MainTabbedActivity.getMixpanel().track("DeleteCrowd");
+
                         finish();
 
                     }
@@ -237,7 +237,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
             MainController.deleteCrowd(crowdID, DbEventType.USER_CROWDS_CHANGED);
         }
         MainController.createCrowd(crowdName, MainTabbedActivity.getMainUserId(), membersStrings, DbEventType.USER_CROWDS_CHANGED);
-        MainTabbedActivity.getMixpanel().track("CreateCrowd");
+
         finish();
     }
 
@@ -256,6 +256,7 @@ public class EditCrowdActivity extends AppCompatActivity implements AdapterView.
                     Toast.makeText(EditCrowdActivity.this, "Username does not exist", Toast.LENGTH_SHORT).show();
                 }
                 if (!crowdMembers.contains(user)) {
+                    MainTabbedActivity.getMixpanel().track("AddMember");
                     crowdMembers.add(user);
                     listAdapter.notifyDataSetChanged();
                 }

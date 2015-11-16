@@ -151,6 +151,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
             Ringtone r = RingtoneManager.getRingtone(getActivity().getApplicationContext(), notification);
             r.play();
             MainTabbedActivity.getMixpanel().track("BookScanned");
+
         } catch (Exception e) {
         }
         mListener.isbnReceived(rawResult.getText());

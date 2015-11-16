@@ -14,6 +14,9 @@ import com.crowdshelf.app.models.googleBookInfo.GoogleBooksVolumeInfo;
 import com.crowdshelf.app.ui.activities.MainTabbedActivity;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -59,9 +62,9 @@ public class GetBookInfosBySearch {
                     for (GoogleBooksItem item: main.getItems()) {
                         GoogleBooksVolumeInfo info = item.getVolumeInfo();
                         String isbn = "";
-                        isbn = info.getIsbn10();
+                        isbn = info.getIsbn13();
                         if (isbn.equals("")) {
-                            isbn = info.getIsbn13();
+                            isbn = info.getIsbn10();
                         }
                         if (isbn.equals("")) {
                             continue;

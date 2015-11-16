@@ -87,6 +87,8 @@ public class MainController {
         // This user is never stored in the database. It is sent to the server,
         // then retrieved to be stored with the correct _id
         NetworkController.createUser(username, name, email, password, dbEventType);
+        MainTabbedActivity.getMixpanel().track("CreateUser");
+
     }
 
     public static void getUser(String userId, DbEventType dbEventType) {
@@ -114,7 +116,9 @@ public class MainController {
             memberIds.add(memberId);
         }
         crowd.setMembers(memberIds);
+
         NetworkController.createCrowd(crowd, dbEventType);
+        MainTabbedActivity.getMixpanel().track("CreateCrowd");
     }
 
     public static void deleteCrowd(String crowdId, DbEventType dbEventType) {
@@ -125,6 +129,7 @@ public class MainController {
         crowd.removeFromRealm();
         realm.commitTransaction();
         NetworkController.deleteCrowd(crowdId, dbEventType);
+        MainTabbedActivity.getMixpanel().track("DeleteCrowd");
         MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, crowdId));
     }
 
@@ -148,6 +153,9 @@ public class MainController {
         }
         realm.commitTransaction();
         NetworkController.removeCrowdMember(crowdId, userId, dbEventType);
+        if (userId.equals(MainTabbedActivity.getMainUserId())){
+            MainTabbedActivity.getMixpanel().track("LeaveCrowd");
+        }
         MainTabbedActivity.getBus().post(new DbEventOk(dbEventType, userId));
     }
 
