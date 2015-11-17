@@ -59,13 +59,13 @@ public class ForgotPasswordActivity extends AppCompatActivity implements TextVie
         String code = confirmCodeEditText.getText().toString();
         String newPassword = confirmPasswordEditText.getText().toString();
 
-        if (code.isEmpty() || isValidCode(code)){
+        if (code.isEmpty() || !isValidCode(code)){
             Toast.makeText(this, "Input valid code", Toast.LENGTH_SHORT).show();
         }else if (newPassword.isEmpty()){
             Toast.makeText(this, "Input valid password", Toast.LENGTH_SHORT).show();
         }else{
             //TODO: Send code and new password to backend
-//            MainController.resetPassword(username, newPassword, code, DbEventType.NONE);
+            MainController.resetPassword(username, newPassword, Integer.parseInt(code), DbEventType.NONE);
             finish();
         }
     }

@@ -290,7 +290,7 @@ public class MainController {
         NetworkController.forgotPassword(username, dbEventType);
     }
 
-    public static void resetPassword(String username, String password, String key, DbEventType dbEventType) {
+    public static void resetPassword(String username, String password, Integer key, DbEventType dbEventType) {
         NetworkController.resetPassword(username, password, key, dbEventType);
     }
 }

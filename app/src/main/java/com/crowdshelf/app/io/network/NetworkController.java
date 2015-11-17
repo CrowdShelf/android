@@ -263,7 +263,7 @@ public class NetworkController {
                 null, dbEventType);
     }
 
-    public static void resetPassword(String username, String password, String key, DbEventType dbEventType) {
+    public static void resetPassword(String username, String password, Integer key, DbEventType dbEventType) {
         JsonObject object = new JsonObject();
         object.addProperty("key", key);
         object.addProperty("password", password);
