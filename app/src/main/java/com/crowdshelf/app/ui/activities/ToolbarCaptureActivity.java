@@ -26,11 +26,7 @@ public class ToolbarCaptureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_toolbar_capture);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-//        toolbar.setTitle("Scan Barcode");
-//        setSupportActionBar(toolbar);
-          setTitle("Scan barcode");
-
+        setTitle("Scan barcode");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         barcodeScannerView = (CompoundBarcodeView)findViewById(R.id.zxing_barcode_scanner);

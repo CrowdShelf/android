@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -9,20 +9,6 @@
 
     <com.journeyapps.barcodescanner.CompoundBarcodeView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@+id/my_awesome_toolbar"
-        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
         android:id="@+id/zxing_barcode_scanner"/>
-
-    <!-- The Toolbar must be defined after the CompoundBarcodeView, to ensure it's always on top. -->
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_awesome_toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
-
 </RelativeLayout>
